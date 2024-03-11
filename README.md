@@ -47,6 +47,8 @@ Acme Bank has enlisted our team to create a C# application facilitating tellers 
 - Do we a need a personal account to open an ISA or Busisness?
 - Do we need to consider transactions?
 - Do we need to consider loans and business cheques? If so how would we manage cheques?
+- There are 4 types of ISA accounts in the GOV website. Are we expected to implement all of them?
+- There are inflexible and flexible ISA accounts. Are we expecte to account for them?
 
 ## Assumptions:
 - Assume that the user knows their card information
