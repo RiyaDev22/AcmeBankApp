@@ -1,7 +1,7 @@
 # AcmeBankApp
 
 Quations:
-- Do we need to create customer accounts
+- Do we need to create customer accounts?
 
 
 Assumptions:
