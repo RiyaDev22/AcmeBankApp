@@ -45,6 +45,7 @@ Acme Bank has enlisted our team to create a C# application facilitating tellers 
 ## Questions to ASK:
 - Do we need to create customer accounts?
 - Do we a need a personal account to open an ISA or Busisness?
+- Do we need to consider transactions?
 
 ## Assumptions:
 - Assume that the user knows their card information
