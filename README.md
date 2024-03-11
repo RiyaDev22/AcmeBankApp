@@ -54,10 +54,10 @@ Acme Bank has enlisted our team to create a C# application facilitating tellers 
 - Assume that the user knows their card information
 - Trevor has VIsual Paradigm installed on his PC
 
-## UML:
+## UML (Click for clear and full view):
 <div style="text-align: center;">
     <a href="https://ibb.co/YkvccZq">
-        <img src="https://i.ibb.co/0MPCCtd/group2-class-diagram.png" alt="group2-class-diagram" border="0" width="700" height="400">
+        <img src="https://i.ibb.co/0MPCCtd/group2-class-diagram.png" alt="group2-class-diagram" border="1" width="600" height="300">
 </div>
 
 
