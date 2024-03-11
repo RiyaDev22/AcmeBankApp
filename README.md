@@ -52,3 +52,4 @@ Acme Bank has enlisted our team to create a C# application facilitating tellers 
 
 ## Assumptions:
 - Assume that the user knows their card information
+- Trevor has VIsual Paradigm installed on his PC
