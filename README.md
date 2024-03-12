@@ -60,5 +60,8 @@ Acme Bank has enlisted our team to create a C# application facilitating tellers 
         <img src="https://i.ibb.co/0MPCCtd/group2-class-diagram.png" alt="group2-class-diagram" border="1" width="600" height="300">
 </div>
 
-
-
+## FlowChart (Click for clear and full view):
+<div style="text-align: center;">
+    <a href="https://ibb.co/t4VTb00">
+        <img src="https://i.ibb.co/kxNshLL/Flowchart.png" alt="group2-class-diagram" border="1" width="600" height="300">
+</div>
