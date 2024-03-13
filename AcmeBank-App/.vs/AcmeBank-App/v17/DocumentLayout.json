@@ -5,6 +5,22 @@
     {
       "AbsoluteMoniker": "D:0:0:{D4E7046A-8C75-4501-A4BA-94AF3321B16E}|AcmeBank\\AcmeBank.csproj|c:\\users\\tom\\documents\\repos\\acmebankapp\\acmebank-app\\acmebank\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D4E7046A-8C75-4501-A4BA-94AF3321B16E}|AcmeBank\\AcmeBank.csproj|solutionrelative:acmebank\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D4E7046A-8C75-4501-A4BA-94AF3321B16E}|AcmeBank\\AcmeBank.csproj|c:\\users\\tom\\documents\\repos\\acmebankapp\\acmebank-app\\acmebank\\accounts\\personalaccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D4E7046A-8C75-4501-A4BA-94AF3321B16E}|AcmeBank\\AcmeBank.csproj|solutionrelative:acmebank\\accounts\\personalaccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D4E7046A-8C75-4501-A4BA-94AF3321B16E}|AcmeBank\\AcmeBank.csproj|c:\\users\\tom\\documents\\repos\\acmebankapp\\acmebank-app\\acmebank\\accounts\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D4E7046A-8C75-4501-A4BA-94AF3321B16E}|AcmeBank\\AcmeBank.csproj|solutionrelative:acmebank\\accounts\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D4E7046A-8C75-4501-A4BA-94AF3321B16E}|AcmeBank\\AcmeBank.csproj|c:\\users\\tom\\documents\\repos\\acmebankapp\\acmebank-app\\acmebank\\accounts\\buisnessaccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D4E7046A-8C75-4501-A4BA-94AF3321B16E}|AcmeBank\\AcmeBank.csproj|solutionrelative:acmebank\\accounts\\buisnessaccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D4E7046A-8C75-4501-A4BA-94AF3321B16E}|AcmeBank\\AcmeBank.csproj|c:\\users\\tom\\documents\\repos\\acmebankapp\\acmebank-app\\acmebank\\accounts\\isaaccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D4E7046A-8C75-4501-A4BA-94AF3321B16E}|AcmeBank\\AcmeBank.csproj|solutionrelative:acmebank\\accounts\\isaaccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -22,15 +38,58 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Tom\\Documents\\Repos\\AcmeBankApp\\AcmeBank-App\\AcmeBank\\Program.cs",
-              "RelativeDocumentMoniker": "AcmeBank\\Program.cs",
-              "ToolTip": "C:\\Users\\Tom\\Documents\\Repos\\AcmeBankApp\\AcmeBank-App\\AcmeBank\\Program.cs",
-              "RelativeToolTip": "AcmeBank\\Program.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAAAAAA",
+              "DocumentIndex": 2,
+              "Title": "Account.cs",
+              "DocumentMoniker": "C:\\Users\\Tom\\Documents\\Repos\\AcmeBankApp\\AcmeBank-App\\AcmeBank\\Accounts\\Account.cs",
+              "RelativeDocumentMoniker": "AcmeBank\\Accounts\\Account.cs",
+              "ToolTip": "C:\\Users\\Tom\\Documents\\Repos\\AcmeBankApp\\AcmeBank-App\\AcmeBank\\Accounts\\Account.cs",
+              "RelativeToolTip": "AcmeBank\\Accounts\\Account.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAABEAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-11T15:11:07.898Z",
+              "WhenOpened": "2024-03-13T21:47:57.135Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PersonalAccount.cs",
+              "DocumentMoniker": "C:\\Users\\Tom\\Documents\\Repos\\AcmeBankApp\\AcmeBank-App\\AcmeBank\\Accounts\\PersonalAccount.cs",
+              "RelativeDocumentMoniker": "AcmeBank\\Accounts\\PersonalAccount.cs",
+              "ToolTip": "C:\\Users\\Tom\\Documents\\Repos\\AcmeBankApp\\AcmeBank-App\\AcmeBank\\Accounts\\PersonalAccount.cs",
+              "RelativeToolTip": "AcmeBank\\Accounts\\PersonalAccount.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAATAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-13T21:48:47.988Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ISAAccount.cs",
+              "DocumentMoniker": "C:\\Users\\Tom\\Documents\\Repos\\AcmeBankApp\\AcmeBank-App\\AcmeBank\\Accounts\\ISAAccount.cs",
+              "RelativeDocumentMoniker": "AcmeBank\\Accounts\\ISAAccount.cs",
+              "ToolTip": "C:\\Users\\Tom\\Documents\\Repos\\AcmeBankApp\\AcmeBank-App\\AcmeBank\\Accounts\\ISAAccount.cs",
+              "RelativeToolTip": "AcmeBank\\Accounts\\ISAAccount.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-13T21:49:08.523Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "BuisnessAccount.cs",
+              "DocumentMoniker": "C:\\Users\\Tom\\Documents\\Repos\\AcmeBankApp\\AcmeBank-App\\AcmeBank\\Accounts\\BuisnessAccount.cs",
+              "RelativeDocumentMoniker": "AcmeBank\\Accounts\\BuisnessAccount.cs",
+              "ToolTip": "C:\\Users\\Tom\\Documents\\Repos\\AcmeBankApp\\AcmeBank-App\\AcmeBank\\Accounts\\BuisnessAccount.cs",
+              "RelativeToolTip": "AcmeBank\\Accounts\\BuisnessAccount.cs",
+              "ViewState": "AQIAACAAAAAAAAAAAAAgwCEAAAARAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-13T21:49:32.415Z",
+              "IsPinned": true,
               "EditorCaption": ""
             },
             {
@@ -40,6 +99,19 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Tom\\Documents\\Repos\\AcmeBankApp\\AcmeBank-App\\AcmeBank\\Program.cs",
+              "RelativeDocumentMoniker": "AcmeBank\\Program.cs",
+              "ToolTip": "C:\\Users\\Tom\\Documents\\Repos\\AcmeBankApp\\AcmeBank-App\\AcmeBank\\Program.cs",
+              "RelativeToolTip": "AcmeBank\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAQwA4AAAApAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-11T15:11:07.898Z",
+              "EditorCaption": ""
             }
           ]
         }

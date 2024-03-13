@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AcmeBank")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8a34e3ba55936154d659ca0fc4a31d0e059ad21e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b08d8ba68011960a49c9c0604b2ed1945dd33951")]
 [assembly: System.Reflection.AssemblyProductAttribute("AcmeBank")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AcmeBank")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

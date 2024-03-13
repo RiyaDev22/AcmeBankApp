@@ -1,0 +1,15 @@
+C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.AssemblyInfoInputs.cache
+C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.AssemblyInfo.cs
+C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.csproj.CoreCompileInputs.cache
+C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.sourcelink.json
+C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\bin\Debug\net8.0\AcmeBank.exe
+C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\bin\Debug\net8.0\AcmeBank.deps.json
+C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\bin\Debug\net8.0\AcmeBank.runtimeconfig.json
+C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\bin\Debug\net8.0\AcmeBank.dll
+C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\bin\Debug\net8.0\AcmeBank.pdb
+C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.dll
+C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\refint\AcmeBank.dll
+C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.pdb
+C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.genruntimeconfig.cache
+C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\ref\AcmeBank.dll
