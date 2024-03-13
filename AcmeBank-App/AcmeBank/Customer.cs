@@ -63,7 +63,11 @@ class Customer
 
     public bool HasISA 
     { 
-        get { return this._hasISA; } 
+        get
+        {
+            this.checkISA();
+            return this._hasISA;
+        }
     }
 
 
@@ -73,6 +77,7 @@ class Customer
     public void AddAccount(Account account) 
     {
         this._listOfAccounts.Add(account);
+        this.checkISA(); //Checks to see if the added account is an ISA account
     }
 
     //removing an account in the Customer Object
@@ -82,6 +87,7 @@ class Customer
         {
             Console.WriteLine("Account has been removed.");
             this._listOfAccounts.Remove(account);
+            this.checkISA();
         }
         else
         {
@@ -99,4 +105,11 @@ class Customer
         }
         return false;
     }
+
+    //Checks if the Customer object contains any accounts of type ISA. WIll change _hasISA based on the outcome
+    private void checkISA()
+    {
+        //WIll be able to implement once the ISA Class has been implemented
+        throw new NotSupportedException();
+    } 
 }
