@@ -10,20 +10,24 @@ class Customer
     private DateOnly _accountCreationDate;
     private List<Account> _listOfAccounts;
     private bool _hasISA;
+    private string _securityQuestion;
+    private string _securityAnswer;
 
 
     //Constructors
 
-    //Constructor for when AccountCreation() method is run in the Program Class
-    public Customer(string firstName, string lastName, DateOnly dateOfBirth, string otherName = "")
+    //Constructor for when ClassCreation() method is run in the Program Class
+    public Customer(string firstName, string lastName, DateOnly dateOfBirth, string securityQuestion, string securityAnswer, string otherName = "")
     {
-        _firstName = firstName;
-        _lastName = lastName;
-        _otherName = otherName;
-        _dateOfBirth = dateOfBirth;
-        _accountCreationDate = DateOnly.FromDateTime(DateTime.Now);
-        _listOfAccounts = new List<Account>();
-        _hasISA = false;
+        this._firstName = firstName;
+        this._lastName = lastName;
+        this._otherName = otherName;
+        this._dateOfBirth = dateOfBirth;
+        this._accountCreationDate = DateOnly.FromDateTime(DateTime.Now);
+        this._listOfAccounts = new List<Account>();
+        this._hasISA = false;
+        this._securityQuestion = securityQuestion;
+        this._securityAnswer = securityAnswer;
     }
 
     //Getters and Setters for Attributes of the Customer Object
@@ -70,6 +74,17 @@ class Customer
         }
     }
 
+    public string SecurityQuestion
+    {
+        get { return this._securityQuestion; }
+        set { this._securityQuestion = value; }
+    }
+
+    public string SecurityAnswer
+    {
+        get { return this._securityAnswer; }
+        set { this._securityAnswer = value; }
+    }
 
     //Setting Behaviour for Customer Object
     
