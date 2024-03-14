@@ -17,7 +17,7 @@ class Customer
     //Constructors
 
     //Constructor for when ClassCreation() method is run in the Program Class
-    public Customer(string firstName, string lastName, DateOnly dateOfBirth, string securityQuestion, string securityAnswer, string otherName = "")
+    public Customer(string firstName, string lastName, string otherName, DateOnly dateOfBirth, string securityQuestion, string securityAnswer)
     {
         this._firstName = firstName;
         this._lastName = lastName;

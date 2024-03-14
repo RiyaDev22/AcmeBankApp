@@ -6,26 +6,56 @@ namespace AcmeBank
     {
         static void Main(string[] args)
         {
-            CreateCustomer();
+            Customer newCustomer = CreateCustomer();
         }
 
-        public static void CreateCustomer()
+        //This method allows for the creation of a customer object when it is called in the menu
+        public static Customer CreateCustomer()
         {
             Console.WriteLine("""
                 Hello and welcome to a new and Exciting Journey with us.
                 I will start by asking for your name.
                 """);
-            //string firstName = StringInputHandling("What is your first name", true);
-            //string lastName = StringInputHandling("what is your last name", true);
-            //string otherName = StringInputHandling("what is your middle name / names", true, true);
+            string firstName = StringInputHandling("What is your first name", true);
+            string lastName = StringInputHandling("what is your last name", true);
+            string otherName = StringInputHandling("what is your middle name/s", true, true);
 
-            int day = DateInputHandling("What day were you born?", "Input in the format DD", 1, 31, 2);
-            int month = DateInputHandling("What month were you born?", "Input in the format MM", 1, 12, 2);
+            DateOnly dob = CreateDOB();
 
+            string securityQUestion = StringInputHandling("What would you like to set as your security question?");
+            string securityAnswer = StringInputHandling("What would be the answer to yout security question?");
+
+            Customer customer = new Customer(firstName, lastName, otherName, dob, securityQUestion, securityAnswer);
+            return customer;
         }
 
-        //Method to facilitate inputs of integers
-
+        //Method to facilitate the creation of DOB
+        private static DateOnly CreateDOB()
+        {
+            int day = -1 , month = -1, year = -1;
+            bool loop = true;
+            DateOnly dob = new DateOnly();
+            while (loop)
+            {
+                try
+                {
+                    day = DateInputHandling("What day were you born?", "Input in the format DD", 1, 31, 2);
+                    month = DateInputHandling("What month were you born?", "Input in the format MM", 1, 12, 2);
+                    year = DateInputHandling("What year were you born?", "Input in the format YYYY", 1900, DateTime.Now.Year, 4);
+                    dob = new DateOnly(year, month, day);
+                    loop = false;
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    Console.WriteLine("Input a valid date");
+                    day = -1;
+                    month = -1;
+                    year = -1;
+                }
+            }
+            return dob;
+        }
+        //Method to facilitate inputs of integers for dates
         private static int DateInputHandling(string prompt, string helpPrompt, int minValue, int maxValue, uint digits)
         {
             string input;
@@ -61,6 +91,7 @@ namespace AcmeBank
                     input = "";
                 }
 
+                //Checks to see if input FOllows the correct format
                 if (correctInputType)
                 {
                     if (input.Length == digits && (inputNumber >= minValue && inputNumber <= maxValue))
@@ -83,8 +114,7 @@ namespace AcmeBank
         private static string StringInputHandling(string prompt, bool specialCharacterCheck = false, bool isNullable = false)
         {
             string input;
-            bool characterValidation = true;
-            bool inputValidation = false;
+            bool inputValidation = true;
             do
             {
                 Console.WriteLine(prompt);
@@ -115,7 +145,7 @@ namespace AcmeBank
                     Console.Clear();
                     Console.WriteLine("Please do not input an empty string.");
                 }
-            } while ((input == "" && !isNullable) || !inputValidation);
+            } while ((input == "" && !isNullable) ^ !inputValidation);
 
             Console.Clear();
             return input;
