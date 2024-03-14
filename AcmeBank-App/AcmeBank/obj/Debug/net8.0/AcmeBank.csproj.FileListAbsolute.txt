@@ -1,0 +1,15 @@
+C:\Users\moeez\OneDrive\Documents\Bank-App-Project\AcmeBank-App\AcmeBank\bin\Debug\net8.0\AcmeBank.exe
+C:\Users\moeez\OneDrive\Documents\Bank-App-Project\AcmeBank-App\AcmeBank\bin\Debug\net8.0\AcmeBank.deps.json
+C:\Users\moeez\OneDrive\Documents\Bank-App-Project\AcmeBank-App\AcmeBank\bin\Debug\net8.0\AcmeBank.runtimeconfig.json
+C:\Users\moeez\OneDrive\Documents\Bank-App-Project\AcmeBank-App\AcmeBank\bin\Debug\net8.0\AcmeBank.dll
+C:\Users\moeez\OneDrive\Documents\Bank-App-Project\AcmeBank-App\AcmeBank\bin\Debug\net8.0\AcmeBank.pdb
+C:\Users\moeez\OneDrive\Documents\Bank-App-Project\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\moeez\OneDrive\Documents\Bank-App-Project\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.AssemblyInfoInputs.cache
+C:\Users\moeez\OneDrive\Documents\Bank-App-Project\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.AssemblyInfo.cs
+C:\Users\moeez\OneDrive\Documents\Bank-App-Project\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.csproj.CoreCompileInputs.cache
+C:\Users\moeez\OneDrive\Documents\Bank-App-Project\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.sourcelink.json
+C:\Users\moeez\OneDrive\Documents\Bank-App-Project\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.dll
+C:\Users\moeez\OneDrive\Documents\Bank-App-Project\AcmeBank-App\AcmeBank\obj\Debug\net8.0\refint\AcmeBank.dll
+C:\Users\moeez\OneDrive\Documents\Bank-App-Project\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.pdb
+C:\Users\moeez\OneDrive\Documents\Bank-App-Project\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.genruntimeconfig.cache
+C:\Users\moeez\OneDrive\Documents\Bank-App-Project\AcmeBank-App\AcmeBank\obj\Debug\net8.0\ref\AcmeBank.dll
