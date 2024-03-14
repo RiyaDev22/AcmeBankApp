@@ -27,6 +27,15 @@ class AccountManagement
         return input;
     }
 
+    //we want a method that will handle the payment process, as it's used in multiple places
+    private static void HandlePayment()
+    {
+        //TODO: we need verification here, so we'll need some loops and checks
+        //we display the user's accounts, and ask for the destination account and amount to send
+        string destination = HandleInput("Please enter the account number you would like to pay to: ");
+        string paymentAmount = HandleInput("Please enter the amount you would like to pay: ");
+    }
+
     //these functions are used to handle the input for the specific account types
     //we already handle cases 1-6 in the main menu, so we only need to handle the extra options here
     private static void PersonalAccountInput(string input)
@@ -43,16 +52,35 @@ class AccountManagement
             case "6":
                 break;
             case "7":
-                Console.WriteLine("HANDLE PAYMENT");
+                HandlePayment();
                 break;
             case "8":
-                Console.WriteLine("HANDLE DEBIT CARD");
+                //simply inform the customer that a debit card will be sent to their address
+                Console.WriteLine("A debit card will be sent to [ADDRESS]");
                 break;
             case "9":
-                Console.WriteLine("HANDLE STANDING ORDERS");
+                //we need a submenu for standing orders, so we handle those here
+                //TODO: we should probably break this out into a method at least, readability is getting rough
+                Console.WriteLine("""
+                    Please select an option:
+                        1. View Standing Orders
+                        2. Manage Standing Orders
+                        X. Cancel
+                    """);
+                string standingOrderInput = HandleInput("Please enter your selection: ");
+                //TODO: actually handle the options, and make su
                 break;
             case "10":
-                Console.WriteLine("HANDLE DIRECT DEBITS");
+                //we use a similar process for direct debits
+                //TODO: also could be broken out into a method
+                Console.WriteLine("""
+                    Please select an option:
+                        1. View Standing Orders
+                        2. Manage Standing Orders
+                        X. Cancel
+                    """);
+                string directDebitInput = HandleInput("Please enter your selection: ");
+                //TODO: actually handle the options
                 break;
             case "11":
                 Console.WriteLine("HANDLE OVERDRAFT");
@@ -75,22 +103,39 @@ class AccountManagement
             case "6":
                 break;
             case "7":
-                Console.WriteLine("HANDLE PAYMENT");
+                HandlePayment();
                 break;
             case "8":
-                Console.WriteLine("HANDLE CREDIT/DEBIT CARD");
+                //we make a submenu for the card options, as we have two options here
+                string cardInput = HandleInput("""
+                    Please select the type of card you would like to request:
+                        1. Credit Card
+                        2. Debit Card
+                        X. Cancel
+                    """);
+                //TODO: actually handle the options
                 break;
             case "9":
-                Console.WriteLine("HANDLE CHEQUE BOOK");
+                //simply inform the customer that a cheque book will be sent to their address
+                Console.WriteLine("A cheque book will be sent to [ADDRESS]");
                 break;
             case "10":
-                Console.WriteLine("HANDLE OVERDRAFT");
+                //we need a submenu for overdrafts, since we have a few options for them
+                string overdraftInput = HandleInput("""
+                    Please select an option:
+                        1. View Overdraft Limit
+                        2. Manage Overdraft
+                        X. Cancel
+                    """);
+                //TODO: actually handle the options
                 break;
             case "11":
-                Console.WriteLine("HANDLE BUSINESS LOANS");
+                //we inform the user that they are eligible for business loans. this is not something we handle in this app, but we can inform the user
+                Console.WriteLine("This acount is eligible for business loans. Please direct them to the Loans department.");
                 break;
             case "12":
-                Console.WriteLine("HANDLE INTERNATIONAL TRANSFERS");
+                //we inform the user that they are eligible for international transfers. we also don't handle those in this app
+                Console.WriteLine("This account is eligible for international transfers. Please direct them to the International Transfers department.");
                 break;
         }
     }
@@ -115,7 +160,7 @@ class AccountManagement
                 2. Withdraw
                 3. Transfer
                 4. Generate Statement
-                5. Freeze Account
+                5. Freeze/Unfreeze Account
                 6. Close Account
             """;
 
@@ -191,22 +236,48 @@ class AccountManagement
                 switch (input)
                 {
                     case "1":
-                        Console.WriteLine("HANDLE DEPOSIT");
+                        //ask for a number to deposit
+                        string depositAmount = HandleInput("Please enter the amount you would like to deposit: ");
+                        //TODO: add the money to the account
                         break;
                     case "2":
-                        Console.WriteLine("HANDLE WITHDRAW");
+                        //ask for a number to withdraw
+                        string withdrawAmount = HandleInput("Please enter the amount you would like to withdraw: ");
+                        //TODO: subtract the money from the account
                         break;
                     case "3":
-                        Console.WriteLine("HANDLE TRANSFER");
+                        //show the user their accounts, and ask for the destination account and amount to transfer
+                        Console.WriteLine("[LIST OF ACCOUNTS UNDER CURRENT CUSTOMER]");
+                        string destination = HandleInput("Please enter the account number you would like to transfer to: ");
+                        string transferAmount = HandleInput("Please enter the amount you would like to transfer: ");
+                        //TODO: transfer the money from this account to the destination account
                         break;
                     case "4":
-                        Console.WriteLine("HANDLE STATEMENT");
+                        //generate a statement for a selected period
+                        Console.WriteLine("Generating Statement...");
+                        string startDate = HandleInput("Please enter the start date for the statement: ");
+                        string endDate = HandleInput("Please enter the end date for the statement: ");
+                        //TODO: generate a statement for the account for the selected period
                         break;
                     case "5":
-                        Console.WriteLine("HANDLE FREEZE");
+                        //get the account's frozen status
+                        bool accountFrozen = false;
+                        //if the account is not frozen, we freeze it
+                        if (!accountFrozen)
+                        {
+                            Console.WriteLine("This account has been frozen.");
+                        }
+                        //if the account is frozen, we unfreeze it
+                        //TODO: we should probably ask for some form of verification here
+                        else
+                        {
+                            Console.WriteLine("This account has been unfrozen.");
+                        }
                         break;
                     case "6":
-                        Console.WriteLine("HANDLE CLOSE");
+                        //close the account
+                        //TODO: we definitely need verification here, and to handle the account's closure
+                        Console.WriteLine("Closing Account...");
                         break;
                     //if the user wants to exit, we set running to false
                     case "x":
