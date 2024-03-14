@@ -13,3 +13,18 @@ C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\
 C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.pdb
 C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.genruntimeconfig.cache
 C:\Users\Tom\Documents\Repos\AcmeBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\ref\AcmeBank.dll
+E:\Peregrine Projects\GroupBankApp\AcmeBank-App\AcmeBank\bin\Debug\net8.0\AcmeBank.exe
+E:\Peregrine Projects\GroupBankApp\AcmeBank-App\AcmeBank\bin\Debug\net8.0\AcmeBank.deps.json
+E:\Peregrine Projects\GroupBankApp\AcmeBank-App\AcmeBank\bin\Debug\net8.0\AcmeBank.runtimeconfig.json
+E:\Peregrine Projects\GroupBankApp\AcmeBank-App\AcmeBank\bin\Debug\net8.0\AcmeBank.dll
+E:\Peregrine Projects\GroupBankApp\AcmeBank-App\AcmeBank\bin\Debug\net8.0\AcmeBank.pdb
+E:\Peregrine Projects\GroupBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.GeneratedMSBuildEditorConfig.editorconfig
+E:\Peregrine Projects\GroupBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.AssemblyInfoInputs.cache
+E:\Peregrine Projects\GroupBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.AssemblyInfo.cs
+E:\Peregrine Projects\GroupBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.csproj.CoreCompileInputs.cache
+E:\Peregrine Projects\GroupBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.sourcelink.json
+E:\Peregrine Projects\GroupBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.dll
+E:\Peregrine Projects\GroupBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\refint\AcmeBank.dll
+E:\Peregrine Projects\GroupBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.pdb
+E:\Peregrine Projects\GroupBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\AcmeBank.genruntimeconfig.cache
+E:\Peregrine Projects\GroupBankApp\AcmeBank-App\AcmeBank\obj\Debug\net8.0\ref\AcmeBank.dll

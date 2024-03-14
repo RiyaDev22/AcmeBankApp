@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Tom\\Documents\\Repos\\AcmeBankApp\\AcmeBank-App\\AcmeBank\\AcmeBank.csproj": {}
+    "E:\\Peregrine Projects\\GroupBankApp\\AcmeBank-App\\AcmeBank\\AcmeBank.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Tom\\Documents\\Repos\\AcmeBankApp\\AcmeBank-App\\AcmeBank\\AcmeBank.csproj": {
+    "E:\\Peregrine Projects\\GroupBankApp\\AcmeBank-App\\AcmeBank\\AcmeBank.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Tom\\Documents\\Repos\\AcmeBankApp\\AcmeBank-App\\AcmeBank\\AcmeBank.csproj",
+        "projectUniqueName": "E:\\Peregrine Projects\\GroupBankApp\\AcmeBank-App\\AcmeBank\\AcmeBank.csproj",
         "projectName": "AcmeBank",
-        "projectPath": "C:\\Users\\Tom\\Documents\\Repos\\AcmeBankApp\\AcmeBank-App\\AcmeBank\\AcmeBank.csproj",
-        "packagesPath": "C:\\Users\\Tom\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Tom\\Documents\\Repos\\AcmeBankApp\\AcmeBank-App\\AcmeBank\\obj\\",
+        "projectPath": "E:\\Peregrine Projects\\GroupBankApp\\AcmeBank-App\\AcmeBank\\AcmeBank.csproj",
+        "packagesPath": "C:\\Users\\User 1\\.nuget\\packages\\",
+        "outputPath": "E:\\Peregrine Projects\\GroupBankApp\\AcmeBank-App\\AcmeBank\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Tom\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\User 1\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
