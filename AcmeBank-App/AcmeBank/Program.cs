@@ -23,7 +23,7 @@ namespace AcmeBank
 
             DateOnly dob = CreateDOB();
 
-            string securityQUestion = selectSecurityQuestion();
+            string securityQUestion = SelectSecurityQuestion();
             string securityAnswer = StringInputHandling("What would be the answer to your security question?");
 
             Customer customer = new Customer(firstName, lastName, otherName, dob, securityQUestion, securityAnswer);
@@ -32,7 +32,7 @@ namespace AcmeBank
 
         
         //This method allows for the teller to select a security question that the user wants to use
-        private static string selectSecurityQuestion()
+        private static string SelectSecurityQuestion()
         {
             string prompt = """
                 What would you like to select as your security question?
