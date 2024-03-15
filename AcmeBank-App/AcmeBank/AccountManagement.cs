@@ -4,6 +4,7 @@ class AccountManagement
 {
     //this function is used to handle input from the user
     //it takes a string prompt, which is the message to display to the user
+    //TODO: we'll propbably replace this with a more robust input handling system
     private static string HandleInput(string prompt)
     {
         //we initialise the input as an empty string, and a bool to check if we need to try again
@@ -36,108 +37,71 @@ class AccountManagement
         string paymentAmount = HandleInput("Please enter the amount you would like to pay: ");
     }
 
-    //these functions are used to handle the input for the specific account types
-    //we already handle cases 1-6 in the main menu, so we only need to handle the extra options here
-    private static void PersonalAccountInput(string input)
+    private static void HandleOverdraft()
     {
-        switch (input)
+        bool overdraftMenuRunning = true;
+        //we need a submenu for overdrafts, since we have a few options for them
+        do
         {
-            //we want to do nothing here if the input is 1-6, as it would have been handled already
-            //TODO: actually handle the appropriate options
-            case "1":
-            case "2":
-            case "3":
-            case "4":
-            case "5":
-            case "6":
-                break;
-            case "7":
-                HandlePayment();
-                break;
-            case "8":
-                //simply inform the customer that a debit card will be sent to their address
-                Console.WriteLine("A debit card will be sent to [ADDRESS]");
-                break;
-            case "9":
-                //we need a submenu for standing orders, so we handle those here
-                //TODO: we should probably break this out into a method at least, readability is getting rough
-                Console.WriteLine("""
-                    Please select an option:
-                        1. View Standing Orders
-                        2. Manage Standing Orders
-                        X. Cancel
-                    """);
-                string standingOrderInput = HandleInput("Please enter your selection: ");
-                //TODO: actually handle the options, and make su
-                break;
-            case "10":
-                //we use a similar process for direct debits
-                //TODO: also could be broken out into a method
-                Console.WriteLine("""
-                    Please select an option:
-                        1. View Standing Orders
-                        2. Manage Standing Orders
-                        X. Cancel
-                    """);
-                string directDebitInput = HandleInput("Please enter your selection: ");
-                //TODO: actually handle the options
-                break;
-            case "11":
-                Console.WriteLine("HANDLE OVERDRAFT");
-                break;
-        }
-    }
-
-    //we repeat this process for the options available to business accounts
-    private static void BusinessAccountInput(string input)
-    {
-        switch (input)
-        {
-            //we want to do nothing here if the input is 1-6, as it would have been handled already
-            //TODO: actually handle the appropriate options
-            case "1":
-            case "2":
-            case "3":
-            case "4":
-            case "5":
-            case "6":
-                break;
-            case "7":
-                HandlePayment();
-                break;
-            case "8":
-                //we make a submenu for the card options, as we have two options here
-                string cardInput = HandleInput("""
-                    Please select the type of card you would like to request:
-                        1. Credit Card
-                        2. Debit Card
-                        X. Cancel
-                    """);
-                //TODO: actually handle the options
-                break;
-            case "9":
-                //simply inform the customer that a cheque book will be sent to their address
-                Console.WriteLine("A cheque book will be sent to [ADDRESS]");
-                break;
-            case "10":
-                //we need a submenu for overdrafts, since we have a few options for them
-                string overdraftInput = HandleInput("""
+            Console.WriteLine("""
                     Please select an option:
                         1. View Overdraft Limit
                         2. Manage Overdraft
                         X. Cancel
                     """);
-                //TODO: actually handle the options
-                break;
-            case "11":
-                //we inform the user that they are eligible for business loans. this is not something we handle in this app, but we can inform the user
-                Console.WriteLine("This acount is eligible for business loans. Please direct them to the Loans department.");
-                break;
-            case "12":
-                //we inform the user that they are eligible for international transfers. we also don't handle those in this app
-                Console.WriteLine("This account is eligible for international transfers. Please direct them to the International Transfers department.");
-                break;
-        }
+            string overdraftInput = HandleInput("Please enter your selection: ");
+            switch (overdraftInput)
+            {
+                case "1":
+                    Console.WriteLine("The overdraft limit for this account is [LIMIT]");
+                    break;
+                case "2":
+                    //TODO: we need to get input from the user to manage the overdraft
+                    Console.WriteLine("[MANAGE OVERDRAFT]");
+                    break;
+                case "x":
+                    overdraftMenuRunning = false;
+                    break;
+                default:
+                    Console.WriteLine("Invalid input, please try again.");
+                    break;
+            }
+        } while (overdraftMenuRunning);
+    }
+
+    private static void StandingOrderDirectDebitMenu()
+    {
+        //we want a submenu for standing orders and direct debits, so we can manage them
+        bool running = true;
+        do
+        {
+            Console.WriteLine("""
+                Please select an option:
+                    1. View Standing Orders and Direct Debits
+                    2. Manage Standing Orders and Direct Debits
+                    X. Cancel
+                """);
+            string input = HandleInput("Please enter your selection: ");
+            switch (input)
+            {
+                case "1":
+                    //this will just list the standing orders and direct debits for the account
+                    running = false;
+                    Console.WriteLine("[LIST SOs AND DDs]");
+                    break;
+                case "2":
+                    //TODO: we need a submenu for managing standing orders and direct debits
+                    Console.WriteLine("[MANAGE SOs AND DDs]");
+                    running = false;
+                    break;
+                case "x":
+                    running = false;
+                    break;
+                default:
+                    Console.WriteLine("Invalid input, please try again.");
+                    break;
+            }
+        }while(running);
     }
 
     //TODO: change accType to the actual account type, and pass in the account's details
@@ -177,9 +141,9 @@ class AccountManagement
 
                         7. Make Payment 
                         8. Request Debit Card
-                        9. Manage Standing Orders
-                        10. Manage Direct Debits
-                        11. Manage Overdraft
+                        9. Manage Standing Orders and Direct Debits
+                        10. Manage Overdraft
+                        X. Exit
                     """;
                 break;
 
@@ -195,11 +159,16 @@ class AccountManagement
                         10. Manage Overdraft
                         11. Manage Business Loans
                         12. Manage International Transfers
+                        X. Exit
                     """;
                 break;
 
             case "isa":
                 //ISAs have fewer options, so we just use the default ones common to all accounts
+                menuText += """
+
+                        X. Exit
+                    """;
                 validType = true;
                 Console.WriteLine("Account Type: ISA Account ");
                 break;
@@ -210,8 +179,6 @@ class AccountManagement
                 Console.WriteLine("A data error has occured with this account. Please contact IT immediately.");
                 break;
         }
-
-        menuText += "\n\tX. Exit";
 
         //and display the menu, but only if the account type is valid
         if (validType)
@@ -308,6 +275,98 @@ class AccountManagement
                 }
                 //we repeat this process until the user decides to exit
             } while (running);
+        }
+    }
+
+    //these functions are used to handle the input for the specific account types
+    //we already handle cases 1-6 in the main menu, so we only need to handle the extra options here
+    private static void PersonalAccountInput(string input)
+    {
+        switch (input)
+        {
+            //we want to do nothing here if the input is 1-6, as it would have been handled already
+            //TODO: actually handle the appropriate options
+            case "1":
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+            case "6":
+                break;
+            case "7":
+                HandlePayment();
+                break;
+            case "8":
+                //simply inform the customer that a debit card will be sent to their address
+                Console.WriteLine("A debit card will be sent to [ADDRESS]");
+                break;
+            case "9":
+                //we need a submenu for standing orders and direct debits, so we handle those in a separate function
+                //TODO: we need to pass in the account's details to this function
+                StandingOrderDirectDebitMenu();
+                break;
+            case "10":
+                HandleOverdraft();
+                break;
+        }
+    }
+
+    //we repeat this process for the options available to business accounts
+    private static void BusinessAccountInput(string input)
+    {
+        switch (input)
+        {
+            //we want to do nothing here if the input is 1-6, as it would have been handled already
+            //TODO: actually handle the appropriate options
+            case "1":
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+            case "6":
+                break;
+            case "7":
+                HandlePayment();
+                break;
+            case "8":
+                //we make a submenu for the card options, as we have two options here
+                Console.WriteLine("""
+                    Please select the type of card you would like to request:
+                        1. Credit Card
+                        2. Debit Card
+                        X. Cancel
+                    """);
+                string cardInput = HandleInput("Please enter your selection: ");
+                switch (cardInput)
+                {
+                    case "1":
+                        Console.WriteLine("A credit card will be sent to [ADDRESS]");
+                        break;
+                    case "2":
+                        Console.WriteLine("A debit card will be sent to [ADDRESS]");
+                        break;
+                    case "x":
+                        break;
+                    default:
+                        Console.WriteLine("Invalid input, please try again.");
+                        break;
+                }
+                break;
+            case "9":
+                //simply inform the customer that a cheque book will be sent to their address
+                Console.WriteLine("A cheque book will be sent to [ADDRESS]");
+                break;
+            case "10":
+                HandleOverdraft();
+                break;
+            case "11":
+                //we inform the user that they are eligible for business loans. this is not something we handle in this app, but we can inform the user
+                Console.WriteLine("This acount is eligible for business loans. Please direct them to the Loans department.");
+                break;
+            case "12":
+                //we inform the user that they are eligible for international transfers. we also don't handle those in this app
+                Console.WriteLine("This account is eligible for international transfers. Please direct them to the International Transfers department.");
+                break;
         }
     }
 }
