@@ -72,10 +72,11 @@
               "RelativeDocumentMoniker": "AcmeBank\\Accounts\\BusinessAccount.cs",
               "ToolTip": "E:\\Peregrine Projects\\GroupBankApp\\AcmeBank-App\\AcmeBank\\Accounts\\BusinessAccount.cs",
               "RelativeToolTip": "AcmeBank\\Accounts\\BusinessAccount.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAFAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAEAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-03-13T21:49:32.415Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -107,7 +108,7 @@
               "RelativeDocumentMoniker": "AcmeBank\\Teller.cs",
               "ToolTip": "E:\\Peregrine Projects\\GroupBankApp\\AcmeBank-App\\AcmeBank\\Teller.cs",
               "RelativeToolTip": "AcmeBank\\Teller.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAH0AAAABAAAA",
+              "ViewState": "AQIAAGkAAAAAAAAAAAAgwHkAAABPAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-03-14T17:32:26.801Z",
               "EditorCaption": ""
