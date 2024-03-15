@@ -1,4 +1,7 @@
-﻿namespace AcmeBank
+﻿using System.Globalization;
+using System.Xml;
+
+namespace AcmeBank
 {
     class Teller
     {
@@ -114,12 +117,45 @@
             sPassword = "";
         }
 
-        /*This method is invoked when the teller object is initiated*/
+        /*This method is invoked when the teller object is instantiated*/
         private void populateDictionary()
         {
-            //Dummy teller account
-            _dTellerAccounts.Add("username", "password");
-            /*Store the teller accounts from the csv file into the dictionary*/
+            //Initialise local variable that contains the name of the csv file
+            string sFileName = "Teller Accounts.csv"; //Note the csv file is in bin\debug\net8.0
+            
+            try
+            {
+                //Open the file using a stream reader
+                using (StreamReader oReader = File.OpenText(sFileName))
+                {
+                    //Initialise a string that will store the content from the file
+                    string sFileInput = "";
+                    //Initialise a count that will count the number of lines in the csv file
+                    int iCount = 0;
+                    //Read the whole file
+                    while (!oReader.EndOfStream)
+                    {
+                        //Store a line into a string
+                        sFileInput = oReader.ReadLine();                        
+                        //Make sure the headers won't get appended to the dictionary
+                        if (iCount != 0)
+                        {
+                            //Split the string and store into string array
+                            string[] saFileInput = sFileInput.Split(",");
+                            //Add the content to the dictionary
+                            _dTellerAccounts.Add(saFileInput[0], saFileInput[1]);
+                        }
+                        //Increment counter
+                        iCount++;
+                    }
+                }
+            }
+            //Catch exception if file has not been found
+            catch (Exception oException)
+            {
+                //Print message
+                Console.WriteLine($"File '{sFileName}' not found");
+            }
         }
         #endregion
     }
