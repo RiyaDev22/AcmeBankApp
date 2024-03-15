@@ -15,6 +15,7 @@ namespace AcmeBank
             Console.WriteLine("""
                 Hello and welcome to a new and Exciting Journey with us.
                 I will start by asking for your name.
+
                 """);
             string firstName = StringInputHandling("What is your first name", true);
             string lastName = StringInputHandling("what is your last name", true);
@@ -22,13 +23,51 @@ namespace AcmeBank
 
             DateOnly dob = CreateDOB();
 
-            string securityQUestion = StringInputHandling("What would you like to set as your security question?");
-            string securityAnswer = StringInputHandling("What would be the answer to yout security question?");
+            string securityQUestion = selectSecurityQuestion();
+            string securityAnswer = StringInputHandling("What would be the answer to your security question?");
 
             Customer customer = new Customer(firstName, lastName, otherName, dob, securityQUestion, securityAnswer);
             return customer;
         }
 
+        
+        //This method allows for the teller to select a security question that the user wants to use
+        private static string selectSecurityQuestion()
+        {
+            string prompt = """
+                What would you like to select as your security question?
+                Select from the options below
+                1) What is your mother's maiden name?
+                2) What school did you attend when you were 10 years old?
+                3) What is your pets name?
+                4) What was your dream as a child?
+                5) What is your Grandfather's name?
+                6) What is the manufacturer of the first car you owned or drove?
+                """;
+
+            int question = IntegerInputHandling(prompt, "To select a question, input a number", 1, 6, 1);
+
+            switch (question)
+            {
+                case 1:
+                    return "What is your mother's maiden name?";
+                case 2:
+                    return "What school did you attend when you were 10 years old?";
+                case 3:
+                    return "What is your pets name?";
+                case 4:
+                    return "What was your dream as a child?";
+                case 5:
+                    return "What is your Grandfather's name?";
+                case 6:
+                    return "What is the manufacturer of the first car you owned or drove?";
+                default:
+                    break;
+            }
+            return "";
+        }
+
+        
         //Method to facilitate the creation of DOB
         private static DateOnly CreateDOB()
         {
@@ -39,9 +78,9 @@ namespace AcmeBank
             {
                 try
                 {
-                    day = DateInputHandling("What day were you born?", "Input in the format DD", 1, 31, 2);
-                    month = DateInputHandling("What month were you born?", "Input in the format MM", 1, 12, 2);
-                    year = DateInputHandling("What year were you born?", "Input in the format YYYY", 1900, DateTime.Now.Year, 4);
+                    day = IntegerInputHandling("What day were you born?", "Input in the format DD", 1, 31, 2);
+                    month = IntegerInputHandling("What month were you born?", "Input in the format MM", 1, 12, 2);
+                    year = IntegerInputHandling("What year were you born?", "Input in the format YYYY", 1900, DateTime.Now.Year, 4);
                     dob = new DateOnly(year, month, day);
                     loop = false;
                 }
@@ -55,8 +94,10 @@ namespace AcmeBank
             }
             return dob;
         }
-        //Method to facilitate inputs of integers for dates
-        private static int DateInputHandling(string prompt, string helpPrompt, int minValue, int maxValue, uint digits)
+
+        
+        //Method to facilitate inputs of integers
+        private static int IntegerInputHandling(string prompt, string helpPrompt, int minValue, int maxValue, uint digits)
         {
             string input;
             int inputNumber = -1;
@@ -70,8 +111,9 @@ namespace AcmeBank
                 //If the user got the input wrong
                 if (helpConfirm) 
                     Console.WriteLine($"""
-                        {helpPrompt} AND
+                        {helpPrompt}
                         Make sure the value is between {minValue}-{maxValue}
+
                         """);
                 Console.WriteLine(prompt);
                 input = Console.ReadLine();
@@ -91,7 +133,7 @@ namespace AcmeBank
                     input = "";
                 }
 
-                //Checks to see if input FOllows the correct format
+                //Checks to see if input Follows the correct format
                 if (correctInputType)
                 {
                     if (input.Length == digits && (inputNumber >= minValue && inputNumber <= maxValue))
@@ -135,6 +177,7 @@ namespace AcmeBank
                         Console.WriteLine("""
                             Please do not input any numbers or special characters in the input
                             These include 0-9 and the characters "/*-+_@&$#%"
+
                             """);
                     }
                 }
@@ -143,7 +186,7 @@ namespace AcmeBank
                 if ((input == "" && !isNullable))
                 {
                     Console.Clear();
-                    Console.WriteLine("Please do not input an empty string.");
+                    Console.WriteLine("Please do not input an empty string. \n");
                 }
             } while ((input == "" && !isNullable) ^ !inputValidation);
 
