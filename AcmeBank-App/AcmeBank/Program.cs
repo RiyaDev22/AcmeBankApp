@@ -95,8 +95,12 @@ namespace AcmeBank
             return dob;
         }
 
-        
-        //Method to facilitate inputs of integers
+        /*
+        Method to facilitate inputs of integers
+        Parameter minValue sets the minimum value the integer input can be
+        Parameter maxValue sets the maximum value the integer input can be
+        Parameter digits sets the amount of digits the integer input ha to be i.e. setting digits to two accepts inputs between 01 - 99
+        */
         private static int IntegerInputHandling(string prompt, string helpPrompt, int minValue, int maxValue, uint digits)
         {
             string input;
@@ -151,8 +155,11 @@ namespace AcmeBank
         }
 
 
-
-        //Method to facilitate inputting of string inputs
+        /*
+        Method to facilitate inputting of string inputs
+        Parameter specialCharacterCheck checks for the following values in a string "/*-+_@&$#%" and values between 0-9 when set to true
+        Parameter isNullable allows the input to be empty when set to true
+        */
         private static string StringInputHandling(string prompt, bool specialCharacterCheck = false, bool isNullable = false)
         {
             string input;
