@@ -1,4 +1,6 @@
-﻿namespace AcmeBank;
+﻿using AcmeBank.BankAccounts;
+
+namespace AcmeBank;
 
 class Customer
 {
