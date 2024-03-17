@@ -187,12 +187,13 @@ public abstract class Account
         string? input;
         decimal amount = 0;
         StringBuilder invalidPrompt = new StringBuilder();
+        List<string> invalidAccountNumbers = new List<string>() { AccountNumber }; // This is a list of a accounts we cannot pay into e.g the customers own accounts.
 
         // Loop until a valid payee account is selected and a valid payment amount is entered
         do
         {
             // Get payee details (sort code and account number)
-            TransactionUtilities.GetPayeeDetails(out string sortCode, out string accountNumber);
+            TransactionUtilities.GetPayeeDetails(out string sortCode, out string accountNumber,invalidAccountNumbers);
             payeeAccount = AccountUtilities.LoadAccountDetails($"{accountNumber}"); // Load payee account details based on the provided account number
 
         } while (payeeAccount == null);

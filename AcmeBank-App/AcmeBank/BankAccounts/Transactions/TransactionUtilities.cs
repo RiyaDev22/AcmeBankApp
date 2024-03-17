@@ -19,7 +19,7 @@ internal class TransactionUtilities
         return Regex.IsMatch(accountNumber, pattern);
     }
 
-    internal static void GetPayeeDetails(out string sortCode, out string accountNumber)
+    internal static void GetPayeeDetails(out string sortCode, out string accountNumber, List<string> invalidAccountNumbers)
     {
         StringBuilder invalidPrompt = new StringBuilder();
         bool validInputs = false;
@@ -52,10 +52,12 @@ internal class TransactionUtilities
             accountNumber = Console.ReadLine();
 
             // Check if both sort code and account number are valid
-            if (TransactionUtilities.VerifySortCode(sortCode) && TransactionUtilities.VerifyAccountNumber(accountNumber)) 
+            if (invalidAccountNumbers.Contains(accountNumber))
+                invalidPrompt.Append("!!! Payment to own account, Use transfer instead !!!");
+            else if (TransactionUtilities.VerifySortCode(sortCode) && TransactionUtilities.VerifyAccountNumber(accountNumber))
                 validInputs = true;
             else
-                invalidPrompt.Append("!!! invalid inputs !!!");
+                invalidPrompt.Append("!!! Invalid inputs !!!");
 
         } while (!validInputs); // Loops if sort code and account number provided are invalid
     }
