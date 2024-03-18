@@ -65,3 +65,10 @@ Acme Bank has enlisted our team to create a C# application facilitating tellers 
     <a href="https://ibb.co/t4VTb00">
         <img src="https://i.ibb.co/kxNshLL/Flowchart.png" alt="group2-class-diagram" border="1" width="600" height="300">
 </div>
+
+## Application Requirments (Click to open the document):
+<div style="text-align: center;">
+    <a href="https://docs.google.com/document/d/1aQmesj4Bg827qxOpJ2BBC-365B36BvHxO5N-FZGWXD8/edit?usp=sharing">
+      <img src="https://i.ibb.co/dD5g82z/checklist-1919292-1280.jpg" alt="checklist" border="1" width="600" height="350">
+    </a>
+</div>
