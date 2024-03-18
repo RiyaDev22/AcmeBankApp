@@ -1,6 +1,7 @@
 ﻿using AcmeBank.BankAccounts;
 using AcmeBank.BankAccounts.AccountInterfaces;
 using System.Collections.Generic;
+using System.Text;
 
 namespace BankPayments.BankAccounts.DerivedAccounts;
 
@@ -9,6 +10,7 @@ public class ISAAccount : Account, IDepositLimitedAccount
     #region Attributes
     private const decimal _yearlyDepositLimit = 20_000m;
     private decimal _remainingDepositLimit; //store remaining deposit limit
+    private const decimal _InterestRate = 0.0275m;
     #endregion
 
     #region Constructors
@@ -49,9 +51,8 @@ public class ISAAccount : Account, IDepositLimitedAccount
                 --- Account options ---
                 1. Deposit
                 2. Withdraw
-                3. Payment
                 4. Transfer
-                5. Test
+                5. Calculate interest (Test)
                 X. Exit
                 -----------------------
                 """);
@@ -95,6 +96,32 @@ public class ISAAccount : Account, IDepositLimitedAccount
             Thread.Sleep(1500);
             Console.Clear();
         }
+    }
+
+    // Receives an input from the menu loop. The input
+    protected override bool HandleOption(string option, ref StringBuilder invalidPrompt)
+    {
+        switch (option.ToLower()) // Process the user's choice
+        {
+            case "1":
+                Deposit();
+                break;
+            case "2":
+                Withdraw();
+                break;
+            case "3":
+                Transfer();
+                break;
+            case "x":
+                // Exit the loop if the user chooses to exit
+                return true;
+            default:
+                // Display an error message if the user enters an invalid option
+                Console.Clear();
+                invalidPrompt.Append("-- !!! Invalid option !!! --");
+                break;
+        }
+        return false; //does not exit the loop
     }
     #endregion
 
