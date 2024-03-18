@@ -51,8 +51,8 @@ public class ISAAccount : Account, IDepositLimitedAccount
                 --- Account options ---
                 1. Deposit
                 2. Withdraw
-                4. Transfer
-                5. Calculate interest (Test)
+                3. Transfer
+                4. Calculate interest (Test)
                 X. Exit
                 -----------------------
                 """);

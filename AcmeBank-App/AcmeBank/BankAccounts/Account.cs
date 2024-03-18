@@ -202,6 +202,18 @@ public abstract class Account
             TransactionUtilities.GetPayeeDetails(out string sortCode, out string accountNumber,invalidAccountNumbers);
             payeeAccount = AccountUtilities.LoadAccountDetails($"{accountNumber}"); // Load payee account details based on the provided account number
 
+            // Checks if the payee is a savings account if so we provide an error prompt and return preventing the payment
+            if (payeeAccount.Type == AccountType.ISA)
+            {
+                payeeAccount = null;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("!!! Can not make a payment to a savings account !!!");
+                Console.ResetColor();
+
+                Thread.Sleep(1500); // Pause execution briefly to display the error message
+                Console.Clear();
+            }
+
         } while (payeeAccount == null);
 
         do
