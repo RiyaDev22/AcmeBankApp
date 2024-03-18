@@ -1,0 +1,360 @@
+﻿using AcmeBank.BankAccounts.AccountInterfaces;
+using AcmeBank.BankAccounts.Transactions;
+using System.Text;
+
+namespace AcmeBank.BankAccounts;
+
+public abstract class Account
+{
+    #region Attributes
+    private string _accountNumber;
+    private string _sortCode;
+    private decimal _balance;
+    private AccountType _type;
+    #endregion
+
+    #region Constructors
+    public Account(string accountNumber, string sortCode, decimal balance, AccountType accountType)
+    {
+        _accountNumber = accountNumber;
+        _sortCode = sortCode;
+        _balance = balance;
+        _type = accountType;
+    }
+    #endregion
+
+    #region Getters/Setters
+    public string AccountNumber { get { return _accountNumber; } }
+    public string SortCode { get { return _sortCode; } }
+    public decimal Balance { get { return _balance; } }
+    public AccountType Type { get { return _type; } }
+    #endregion
+
+    #region Methods
+    protected virtual void DisplayAccountOptions()
+    {
+        Console.WriteLine("""
+                --- Account options ---
+                1. Deposit
+                2. Withdraw
+                3. Payment
+                4. Transfer
+                X. Exit
+                -----------------------
+                """);
+    }
+
+    public virtual void AccountOptionsLoop()
+    {
+        StringBuilder invalidPrompt = new StringBuilder();
+
+        bool exit = false; // Initialize a flag to control the loop
+        while (!exit) // Loop until the user chooses to exit
+        {
+            // Display account details and options
+            Console.Clear();
+            DisplayAccountDetails();
+            DisplayAccountOptions();
+
+            // Display any error messages
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(invalidPrompt.ToString());
+            Console.ResetColor();
+            invalidPrompt.Clear();
+
+            // Ask the user to enter an option
+            Console.Write("Enter an option: ");
+            string optionInput = Console.ReadLine();
+
+            switch (optionInput.ToLower()) // Process the user's choice
+            {
+                case "1":
+                    Deposit();
+                    break;
+                case "2":
+                    Withdraw();
+                    break;
+                case "3":
+                    Payment();
+                    break;
+                case "4":
+                    Transfer();
+                    break;
+                case "x":
+                    exit = true; // Exit the loop if the user chooses to exit
+                    continue;
+                default:
+                    // Display an error message if the user enters an invalid option
+                    Console.Clear();
+                    invalidPrompt.Append("-- !!! Invalid option !!! --");
+                    continue;
+            }
+
+        }
+    }
+
+    public virtual void DisplayAccountDetails()
+    {
+        Console.WriteLine($"""
+            --- Account details ---
+            Account Number: {AccountNumber}
+            Sort Code: {SortCode}
+            Balance: {Balance:C}
+            Type: {Type} Account
+            -----------------------
+
+            """);
+    }
+
+    protected virtual void Deposit()
+    {
+        // Initialize variables to store user input and error messages
+        string? input;
+        decimal amount = 0;
+        StringBuilder invalidPrompt = new StringBuilder();
+
+        // Loop until a valid deposit amount is entered
+        do
+        {
+            // Display account details and deposit header
+            Console.Clear();
+            DisplayAccountDetails();
+            Console.WriteLine("""
+                ------- Deposit -------
+                """);
+
+            // Display any previous error messages
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(invalidPrompt.ToString());
+            Console.ResetColor();
+            invalidPrompt.Clear();
+
+            // Ask for input
+            Console.Write("Enter an amount: ");
+            input = Console.ReadLine();
+
+        }while(!ValidateDepositInput(ref amount, input, ref invalidPrompt)); // Repeat loop until the deposit amount is valid
+
+        AddToBalance(amount, TransactionType.Deposit); // Add the validated deposit amount to the account balance
+    }
+
+    private void Withdraw()
+    {
+        // Check if there are sufficient funds in the account before proceeding with the withdrawal
+        if (!CheckSufficientFunds()) { return; }
+
+        // Initialize variables to store user input and error messages
+        string? input;
+        decimal amount = 0;
+        StringBuilder invalidPrompt = new StringBuilder();
+
+        // Loop until a valid withdrawal amount is entered
+        do
+        {
+            // Display account details and withdraw header
+            Console.Clear();
+            DisplayAccountDetails();
+            Console.WriteLine("""
+                ------- Withdraw ------
+                """);
+
+            // Display any previous error messages
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(invalidPrompt.ToString());
+            Console.ResetColor();
+            invalidPrompt.Clear();
+
+            // Ask for input
+            Console.Write("Enter an amount: ");
+            input = Console.ReadLine();
+
+        } while (!ValidateWithdrawInput(ref amount, input, ref invalidPrompt)); // Repeat loop until the withdrawal amount is valid
+
+        // If the account implements deposit limit functionality, update the deposit limit
+        if (this is IDepositLimitedAccount depositLimitedAccount)
+            depositLimitedAccount.UpdateDepositLimit(-amount);
+
+        DeductFromBalance(amount, TransactionType.Withdraw); // Deduct the validated withdrawal amount from the account balance
+    }
+
+    private void Payment()
+    {
+        // Check if there are sufficient funds in the account before proceeding with the payment
+        if (!CheckSufficientFunds()) { return; }
+
+        // Initialize variables for payee account details, payment amount, and error messages
+        Account payeeAccount = null;
+        string? input;
+        decimal amount = 0;
+        StringBuilder invalidPrompt = new StringBuilder();
+        List<string> invalidAccountNumbers = new List<string>() { AccountNumber }; // This is a list of a accounts we cannot pay into e.g the customers own accounts.
+
+        // Loop until a valid payee account is selected and a valid payment amount is entered
+        do
+        {
+            // Get payee details (sort code and account number)
+            TransactionUtilities.GetPayeeDetails(out string sortCode, out string accountNumber,invalidAccountNumbers);
+            payeeAccount = AccountUtilities.LoadAccountDetails($"{accountNumber}"); // Load payee account details based on the provided account number
+
+        } while (payeeAccount == null);
+
+        do
+        {
+            // Display account details and payment header including account from and to
+            Console.Clear();
+            DisplayAccountDetails();
+            Console.WriteLine($"""
+                ------- Payment -------
+                From: {this.AccountNumber}
+                To: {payeeAccount.AccountNumber}
+                -----------------------
+                """);
+
+            // Display any previous error messages
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(invalidPrompt.ToString());
+            Console.ResetColor();
+            invalidPrompt.Clear();
+
+            // Ask for input
+            Console.Write("Enter an amount: ");
+            input = Console.ReadLine();
+
+        } while (!ValidateWithdrawInput(ref amount, input, ref invalidPrompt) || !payeeAccount.ValidateDepositInput(ref amount, input, ref invalidPrompt)); // Repeat loop until both withdrawal and deposit validations pass
+
+        //ask for reference
+        //Regex.IsMatch(userInput, @"^(?![,\d\s]*$)[^\d,]*$")
+        /*^ and $ ensure that the entire string matches the pattern.
+         * (?![,\d\s]*$) is a negative lookahead assertion that ensures the string doesn't consist only of commas, digits, and spaces. This prevents empty strings as well.
+         *[^\d,]* matches any character that is not a digit or comma, ensuring that commas and numbers are not allowed. */
+
+        //Console.WriteLine($"""
+        //    ------- Payment -------
+        //    From: {this.AccountNumber}
+        //    To: {payeeAccount.AccountNumber}
+        //    Amount: {amount:C}
+        //    -----------------------
+        //    """);
+
+        //could confirm payment here
+
+        // Deduct the payment amount from the sender's account
+        this.DeductFromBalance(amount,TransactionType.Payment);
+
+        Console.WriteLine();
+        // Add the payment amount to the payee's account
+        payeeAccount.AddToBalance(amount, TransactionType.Payment);
+
+        // Display payment success message
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("Payment successful!");
+        Console.ResetColor();
+        Thread.Sleep(1000);
+    }
+
+    private void Transfer()
+    {
+        //get customer accounts
+
+        //list accounts
+
+        //ask for option
+
+        //ask for amount#
+
+    }
+
+    protected void DeductFromBalance(decimal amount, TransactionType transactionType)
+    {
+        // Deduct funds from the account balance
+        _balance -= amount;
+
+        // Save the updated account details
+        AccountUtilities.SaveAccountDetails(this);
+
+        // Create a transaction log for the withdrawal and save it to the transaction file
+        Transaction withdraw = new Transaction(-amount, _balance, transactionType, DateTime.Now);
+        AccountUtilities.SaveTransaction(withdraw, AccountNumber);
+    }
+
+    protected void AddToBalance(decimal amount, TransactionType transactionType)
+    {
+        // If the account implements overdraft functionality, update the remaining overdraft
+        if (this is IOverdraftAccount overdraft)
+            overdraft.UpdateRemainingOverdraft(-amount);
+
+        // Add funds to the account balance
+        _balance += amount;
+
+        // Save the updated account details
+        AccountUtilities.SaveAccountDetails(this);
+
+        // Create a transaction log for the deposit and save it to the transaction file
+        Transaction deposit = new Transaction(amount, _balance, transactionType, DateTime.Now);
+        AccountUtilities.SaveTransaction(deposit, AccountNumber);
+    }
+
+    private bool CheckSufficientFunds()
+    {
+        // Check if the account has sufficient funds for the requested transaction
+        if ((this is IOverdraftAccount overdraftAccount && overdraftAccount.OverdraftRemaining <= 0) || (this is not IOverdraftAccount && Balance <= 0))
+        {
+            // Display an error message for insufficient funds
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("!!! Insufficient funds  !!!");
+            Console.ResetColor();
+
+            Thread.Sleep(1500); // Pause execution briefly to display the error message
+            Console.Clear();
+            return false;
+        }
+        return true;
+    }
+
+    protected bool ValidateWithdrawInput(ref decimal amount, string? input, ref StringBuilder invalidPrompt)
+    {
+        if (!decimal.TryParse(input, out amount)) // Validate input is a decimal number
+        {
+            invalidPrompt.Append("!!! invalid input !!!");
+        } 
+        else if (amount <= 0) // Validate that its greater than zero
+        {
+            invalidPrompt.Append("!!! Must be greater than zero !!!");
+        } 
+        else if (this is IOverdraftAccount overdraft && !overdraft.UpdateRemainingOverdraft(amount)) // Validate withdrawal does not exceed overdraft limit
+        {
+            invalidPrompt.Append($"!!! Must not exceed overdraft !!!");
+        } 
+        else if (this is not IOverdraftAccount && Balance - amount < 0) // Validate sufficient funds. 
+        {
+            invalidPrompt.Append("!!! Insufficient funds !!!");
+        } 
+        else
+        {
+            return true;
+        }
+        return false;
+    }
+
+    protected bool ValidateDepositInput(ref decimal amount, string? input, ref StringBuilder invalidPrompt)
+    {
+        if (!decimal.TryParse(input, out amount)) // Validate input is a decimal number
+        {
+            invalidPrompt.Append("!!! invalid input !!!");
+        } 
+        else if (amount <= 0) // Validate that its greater than zero
+        {
+            invalidPrompt.Append("!!! Must be greater than zero !!!");
+        } 
+        else if (this is IDepositLimitedAccount depositLimitedAccount && !depositLimitedAccount.UpdateDepositLimit(amount)) // Validate deposit does not exceed deposit limit for ISA (£20,000)
+        {
+            invalidPrompt.Append($"!!! Exceeded deposit limit. Maximum deposit allowed: {depositLimitedAccount.RemainingDepositLimit:C} !!!");
+        } 
+        else
+        {
+            return true;
+        }
+        return false;
+    }
+    #endregion
+}
