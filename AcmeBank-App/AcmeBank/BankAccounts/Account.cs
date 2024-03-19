@@ -26,11 +26,16 @@ public abstract class Account
     #region Getters/Setters
     public string AccountNumber { get { return _accountNumber; } }
     public string SortCode { get { return _sortCode; } }
-    public decimal Balance { get { return _balance; } }
+    public decimal Balance 
+    { 
+        get { return _balance; } 
+        set { _balance = value; }
+    }
     public AccountType Type { get { return _type; } }
     #endregion
 
     #region Methods
+    // Displays a menu of options
     protected virtual void DisplayAccountOptions()
     {
         Console.WriteLine("""
@@ -44,6 +49,7 @@ public abstract class Account
                 """);
     }
 
+    //
     public virtual void AccountOptionsLoop()
     {
         StringBuilder invalidPrompt = new StringBuilder();
@@ -97,7 +103,6 @@ public abstract class Account
         }
         return false; //does not exit the loop
     }
-
 
     public virtual void DisplayAccountDetails()
     {
