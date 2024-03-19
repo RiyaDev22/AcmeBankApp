@@ -49,13 +49,28 @@ public class AccountCreation
     private static void CreatePersonalAccount()
     {
         // Request photo ID until the user confirms identity
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("Type 'back' at any prompt to return to the Main Menu.");
+        Console.ResetColor(); // Reset the color to the default
         string photoID = GetUserInput("Please, provide photo ID (type 'confirm' to proceed): ");
+        if (photoID.ToLower() == "back") // Check if the user wants to go back
+        {
+            return;
+        }
 
         // Request address ID until the user confirms identity
         string addressID = GetUserInput("Please, provide address ID (type 'confirm' to proceed): ");
+        if (addressID.ToLower() == "back") // Check if the user wants to go back
+        {
+            return;
+        }
 
         // Request date of birth
         DateTime dob = GetDateOfBirth();
+        if (dob == DateTime.MinValue) // Check if the user wants to go back
+        {
+            return;
+        }
 
         // Verify age (minimum age: 18)
         if (DateTime.Today.Subtract(dob).TotalDays / 365 < 18)
@@ -66,12 +81,19 @@ public class AccountCreation
 
         // Request initial deposit
         decimal initialDeposit = RequestInitialDeposit(true, false);
+        if (initialDeposit == -1) // Check if the user wants to go back
+        {
+            return;
+        }
 
         // Personal account created auccessfully
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("Personal account created successfully!");
+        Console.ResetColor(); // Reset the color to the default
+
     }
 
-    // CreateISA Mehtod
+    // CreateISA Method
     private static void CreateISA()
     {
         // Check if the customer already has an ISA account
@@ -81,11 +103,29 @@ public class AccountCreation
             return;
         }
 
-        // Request photo and address ID
+        // Request photo ID
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("Type 'back' at any prompt to return to the Main Menu.");
+        Console.ResetColor(); // Reset the color to the default
         string photoID = GetUserInput("Please, provide photo ID (type 'confirm' to proceed): ");
-        string addressID = GetUserInput("Please, provide address ID (type 'confirm' to proceed): ");
+        if (photoID.ToLower() == "back") // Check if the user wants to go back
+        {
+            return;
+        }
 
+        // Request address ID
+        string addressID = GetUserInput("Please, provide address ID (type 'confirm' to proceed): ");
+        if (addressID.ToLower() == "back") // Check if the user wants to go back
+        {
+            return;
+        }
+
+        // Request date of birth
         DateTime dob = GetDateOfBirth();
+        if (dob == DateTime.MinValue) // Check if the user wants to go back
+        {
+            return;
+        }
 
         // Verify age (Minimum age: 16)
         if (DateTime.Today.Subtract(dob).TotalDays / 365 < 16)
@@ -96,9 +136,15 @@ public class AccountCreation
 
         // Request initial deposit
         decimal initialDeposit = RequestInitialDeposit(true, true); // Minimum and maximum requirements
+        if (initialDeposit == -1) // Check if the user wants to go back
+        {
+            return;
+        }
 
-        // ISA account created auccessfully
+        // ISA account created successfully
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("Individual Savings Account (ISA) created successfully!");
+        Console.ResetColor(); // Reset the color to the default
     }
 
     // CreateBusinessAccount Mehtod
@@ -124,8 +170,16 @@ public class AccountCreation
         do
         {
             // Request user input for business type
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Type 'back' at any prompt to return to the Main Menu.");
+            Console.ResetColor(); // Reset the color to the default
             Console.Write("Enter the business type: ");
             businessType = Console.ReadLine()?.Trim();
+
+            if (businessType?.ToLower() == "back") // Check if the user wants to go back
+            {
+                return;
+            }
 
             // Check if the entered business type is valid
             if (!validBusinessTypes.Contains(businessType, StringComparer.OrdinalIgnoreCase))
@@ -136,6 +190,11 @@ public class AccountCreation
 
         // Request proof of business existence and details
         string confirmBusinessDetails = GetUserInput("Please, type 'confirm' to prove your business existence and its details: ");
+        if (confirmBusinessDetails.ToLower() == "back") // Check if the user wants to go back
+        {
+            return;
+        }
+
         if (confirmBusinessDetails != "confirm")
         {
             Console.WriteLine("You have not confirmed your business. Please try again!");
@@ -147,11 +206,15 @@ public class AccountCreation
 
         // Request initial deposit with no minimum requirement
         decimal initialDeposit = RequestInitialDeposit(false, false);
-
-        // No minimum initial deposit for business account
+        if (initialDeposit == -1) // Check if the user wants to go back
+        {
+            return;
+        }
 
         // If all the checks pass, then the account is created
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("Business account created successfully!");
+        Console.ResetColor(); // Reset the color to the default
     }
 
     // CheckForISA Mehtod
@@ -178,7 +241,13 @@ public class AccountCreation
         do
         {
             Console.Write(promptMessage);
-            depositInput = Console.ReadLine();
+            depositInput = Console.ReadLine()?.Trim();
+
+            if (depositInput?.ToLower() == "back") // Check if the user wants to go back
+            {
+                initialDeposit = -1; // Set a flag for the calling method to go back
+                return initialDeposit; // Exit the method
+            }
 
             // Check if the input is valid and can be parsed to decimal
             if (decimal.TryParse(depositInput, out initialDeposit) && initialDeposit >= 0)
@@ -219,11 +288,11 @@ public class AccountCreation
             userInput = Console.ReadLine()?.Trim().ToLower();
 
             // Verify if the input is "confirm"
-            if (userInput != "confirm")
+            if (userInput != "confirm" && userInput != "back")
             {
                 Console.WriteLine("Invalid input. Please type 'confirm' to proceed.");
             }
-        } while (userInput != "confirm");
+        } while (userInput != "confirm" && userInput != "back");
 
         return userInput;
     }
@@ -232,10 +301,17 @@ public class AccountCreation
     public static DateTime GetDateOfBirth()
     {
         DateTime dob;
+        string? dobInput;
         do
         {
             Console.Write("Please, provide your date of birth in this format -> DD-MM-YYYY: ");
-            string? dobInput = Console.ReadLine();
+            dobInput = Console.ReadLine()?.Trim();
+
+            if (dobInput?.ToLower() == "back")
+            {
+                dob = DateTime.MinValue; // Set a flag for the calling method to go back
+                return dob;
+            }
             if (!DateTime.TryParse(dobInput, out dob))
             {
                 Console.WriteLine("Invalid date of birth format. Please try again.");
