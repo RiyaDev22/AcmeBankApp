@@ -170,4 +170,28 @@ internal class AccountUtilities
 
         //Thread.Sleep(1000);
     }
+
+    //Method is used to remove the directory with the specified account number
+    internal static void RemoveAccountDetails(string accountNumberToDelete)
+    {
+        string fileDirectory = $@"{directory}\{accountNumberToDelete}";
+
+        if (File.Exists(fileDirectory))
+        {
+            try
+            {
+                //Deletes the directory containing the files and all the files in said directory
+                Directory.Delete(fileDirectory, true); 
+            }
+            catch (Exception)
+            {
+
+                Console.WriteLine("Error... Account has not been able to be removed");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Account does not exist");
+        }
+    }
 }
