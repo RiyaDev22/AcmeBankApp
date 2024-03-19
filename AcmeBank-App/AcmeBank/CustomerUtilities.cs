@@ -1,9 +1,13 @@
-﻿namespace AcmeBank;
+﻿using AcmeBank.BankAccounts;
+
+namespace AcmeBank;
 
 internal class CustomerUtilities
 {
+    private static string accountFile = $@"{AppDomain.CurrentDomain.BaseDirectory}\Customers.csv";
+
     //This method allows for the creation of a customer object when it is called in the menu
-    public static Customer CreateCustomer()
+    internal static Customer CreateCustomer()
     {
         Console.WriteLine("""
                 Hello and welcome to a new and Exciting Journey with us.
@@ -16,10 +20,12 @@ internal class CustomerUtilities
 
         DateOnly dob = CreateDOB();
 
+        string postCode = InputUtilities.StringInputHandling("What is your postcode?");
+
         string securityQUestion = SelectSecurityQuestion();
         string securityAnswer = InputUtilities.StringInputHandling("What would be the answer to your security question?");
 
-        Customer customer = new Customer(firstName, lastName, otherName, dob, securityQUestion, securityAnswer);
+        Customer customer = new Customer(firstName, lastName, otherName, dob, postCode, securityQUestion, securityAnswer);
         return customer;
     }
 
@@ -84,5 +90,84 @@ internal class CustomerUtilities
             }
         }
         return dob;
+    }
+
+    //Method to load the customer details
+    internal static Customer LoadCustomerDetails(string firstName, string lastName, string otherName, DateOnly dob, string postcode)
+    {
+        Customer customer = null;
+
+        try
+        {
+            if (File.Exists(accountFile))
+            {
+                using (StreamReader sr = File.OpenText(accountFile))
+                {
+                    string customerDetailsString;
+                    string[] customerSplit;
+                    while ((customerDetailsString = sr.ReadLine()) != null)
+                    {
+                        //Splits the string and inserts into array
+                        customerSplit = customerDetailsString.Split(',');
+                        if (customerSplit[2] == "EMPTY") customerSplit[2] = "";
+                        
+                        //Condition for making 
+                        if (string.Equals(customerSplit[0], firstName, StringComparison.OrdinalIgnoreCase) && 
+                            string.Equals(customerSplit[1], lastName, StringComparison.OrdinalIgnoreCase)  && 
+                            string.Equals(customerSplit[2], otherName, StringComparison.OrdinalIgnoreCase) && 
+                            string.Equals(customerSplit[3], dob.ToString("dd/MM/yyyy"), StringComparison.OrdinalIgnoreCase) && 
+                            string.Equals(customerSplit[4], postcode, StringComparison.OrdinalIgnoreCase)) 
+                        { 
+                            //Creating an array for the date so that it can be parsed into the return statement
+                            string[] date = customerSplit[5].Split('/');
+
+                            List<string> listOfAccounts = new List<string>();
+                            int i = 8; //In Customer.csv, the account numbers are from the 8th index onwards
+                            while (i < customerSplit.Length)
+                            {
+                                listOfAccounts.Add(customerSplit[i]);
+                            }
+                            
+                            return new Customer(customerSplit[0], 
+                                customerSplit[1], 
+                                customerSplit[2], 
+                                dob, 
+                                customerSplit[4], 
+                                customerSplit[6], 
+                                customerSplit[7],
+                                new DateOnly(Int32.Parse(date[0]), Int32.Parse(date[1]), Int32.Parse(date[2])), 
+                                listOfAccounts);
+                        }
+                    }
+                }
+
+            }
+        }
+        catch (IndexOutOfRangeException)
+        {
+            // Handle parsing errors
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Something went wrong parsing the file, please check the data!");
+        }
+        catch (FileNotFoundException)
+        {
+            // Handle file not found error
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("The file couldn't be found!");
+        }
+        catch (Exception)
+        {
+            // Handle other exceptions
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Something went wrong while loading the file!");
+        }
+        finally
+        {
+            // Reset console color and provide a delay for user to see the message
+            Console.ResetColor();
+            Thread.Sleep(1000);
+        }
+
+        return customer;
     }
 }

@@ -10,6 +10,7 @@ class Customer
     private string _otherName;
     private string _lastName;
     private DateOnly _dateOfBirth;
+    private string _postCode;
     private DateOnly _customerCreationDate;
     private List<string> _listOfAccounts;
     private bool _hasISA;
@@ -20,17 +21,33 @@ class Customer
     //Constructors
 
     //Constructor for when ClassCreation() method is run in the Program Class
-    public Customer(string firstName, string lastName, string otherName, DateOnly dateOfBirth, string securityQuestion, string securityAnswer)
+    public Customer(string firstName, string lastName, string otherName, DateOnly dateOfBirth, string postCode, string securityQuestion, string securityAnswer)
     {
         this._firstName = firstName;
         this._lastName = lastName;
         this._otherName = otherName;
         this._dateOfBirth = dateOfBirth;
+        this._postCode = postCode;
         this._customerCreationDate = DateOnly.FromDateTime(DateTime.Now);
         this._listOfAccounts = new List<string>();
         this._hasISA = false;
         this._securityQuestion = securityQuestion;
         this._securityAnswer = securityAnswer;
+    }
+
+    //Constructor when reading the Customer.csv file via the LoadCustomerDetails method
+    public Customer(string firstName, string lastName, string otherName, DateOnly dateOfBirth, string postCode, string securityQuestion, string securityAnswer, DateOnly customerCreationDate, List<string> listOfAccounts)
+    {
+        this._firstName = firstName;
+        this._lastName = lastName;
+        this._otherName = otherName;
+        this._dateOfBirth = dateOfBirth;
+        this._postCode = postCode;
+        this._securityQuestion = securityQuestion;
+        this._securityAnswer = securityAnswer;
+        this._customerCreationDate = customerCreationDate;
+        this._listOfAccounts = listOfAccounts;
+        this._hasISA = this.HasISA;
     }
 
    
@@ -57,6 +74,12 @@ class Customer
     public DateOnly DateOfBirth
     {
         get { return this._dateOfBirth; }
+    }
+
+    public string PostCode
+    {
+        get { return this._postCode; }
+        set { this._postCode = value; }
     }
 
     public DateOnly CustomerCreationDate
