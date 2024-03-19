@@ -26,7 +26,11 @@ public abstract class Account
     #region Getters/Setters
     public string AccountNumber { get { return _accountNumber; } }
     public string SortCode { get { return _sortCode; } }
-    public decimal Balance { get { return _balance; } }
+    public decimal Balance 
+    { 
+        get { return _balance; } 
+        set { _balance = value; }
+    }
     public AccountType Type { get { return _type; } }
     #endregion
 

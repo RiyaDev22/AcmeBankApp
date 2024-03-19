@@ -131,7 +131,7 @@ public class ISAAccount : Account, IDepositLimitedAccount
                 Transfer();
                 break;
             case "4":
-                CalculateInterest();
+                CalculateAndApplyInterest();
                 break;
             case "x":
                 // Exit the loop if the user chooses to exit
@@ -145,14 +145,72 @@ public class ISAAccount : Account, IDepositLimitedAccount
         return false; //does not exit the loop
     }
 
-    private void CalculateInterest()
+    private void CalculateAndApplyInterest()
     {
         // Load transaction history
-        TransactionUtilities.LoadTransactionHistory(AccountNumber);
-        // Collect all the last balances of each day.
-        // Use this to calculate an average
-        // Divide by 365 and multiple by 2.75%
-        Console.ReadLine();
+        List<Transaction>transactionHistory = TransactionUtilities.LoadTransactionHistory(AccountNumber);
+        if (transactionHistory.Count == 0) { return; }
+
+        transactionHistory.Reverse();
+
+        DateTime currentDate = DateTime.Now;
+        DateTime targetDate = currentDate.AddDays(-365);
+
+        // Dictionary to store the latest transaction for each day
+        HashSet<DateTime> latestTransactions = new HashSet<DateTime>();
+        List<int> order = new List<int>();
+        // Loop through transaction history and filter transactions between targetDate and currentDate
+        bool hasPreviousBalance = false;
+        decimal previousBalance = 0;
+        for (int i = 0; i < transactionHistory.Count; i++)
+        {
+            // Check if the transaction date is between targetDate and currentDate
+            if (transactionHistory[i].Date >= targetDate && transactionHistory[i].Date <= currentDate && !latestTransactions.Contains(transactionHistory[i].Date.Date))
+            {
+                latestTransactions.Add(transactionHistory[i].Date);
+                order.Add(i);
+
+            } else if (transactionHistory[i].Date < targetDate && !latestTransactions.Contains(transactionHistory[i].Date.Date) && !hasPreviousBalance)
+            {
+                previousBalance = transactionHistory[i].Balance;
+                hasPreviousBalance = true;
+            }
+        }
+
+        order.Reverse();
+        //previous balance
+        // get the previous balance then the days up till the next from the last
+        TimeSpan gap;
+        int daysGap;
+        int daysSum = 0;
+
+        decimal yearlBalanceSum = 0;
+
+        DateTime previousDate = targetDate;
+        foreach (var index in order)
+        {
+            gap = transactionHistory[index].Date - previousDate.Date;
+            daysGap = Math.Abs((int)gap.TotalDays);
+            daysSum += daysGap;
+
+            yearlBalanceSum += previousBalance * daysGap;
+            previousBalance = transactionHistory[index].Balance;
+
+            previousDate = transactionHistory[index].Date;
+        }
+        gap = currentDate - previousDate.Date;
+        daysGap = Math.Abs((int)gap.TotalDays);
+        daysSum += daysGap;
+
+        yearlBalanceSum += previousBalance * daysGap;
+
+        decimal interestGained = (yearlBalanceSum / 365.00m) * 0.0275m;
+        AddToBalance(interestGained, TransactionType.Interest);
+
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"You have recieved: {interestGained:C2} in interest");
+        Console.ResetColor();
+        Thread.Sleep(1500); // Pauses for 1.5seconds
     }
     #endregion
 

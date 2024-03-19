@@ -7,5 +7,6 @@ public enum TransactionType
     Payment,
     Transfer,
     StandingOrder,
-    DirectDebit
+    DirectDebit,
+    Interest
 }
