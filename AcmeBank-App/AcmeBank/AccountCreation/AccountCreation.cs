@@ -65,7 +65,7 @@ public class AccountCreation
         }
 
         // Request initial deposit
-        decimal initialDeposit = RequestInitialDeposit(true);
+        decimal initialDeposit = RequestInitialDeposit(true, false);
 
         // Personal account created auccessfully
         Console.WriteLine("Personal account created successfully!");
@@ -93,6 +93,9 @@ public class AccountCreation
             Console.WriteLine("You must be at least 16 years old to open an ISA account. Account creation failed.");
             return;
         }
+
+        // Request initial deposit
+        decimal initialDeposit = RequestInitialDeposit(true, true); // Minimum and maximum requirements
 
         // ISA account created auccessfully
         Console.WriteLine("Individual Savings Account (ISA) created successfully!");
@@ -143,7 +146,7 @@ public class AccountCreation
         Console.WriteLine("Your business details have been stored successfully!");
 
         // Request initial deposit with no minimum requirement
-        decimal initialDeposit = RequestInitialDeposit(false);
+        decimal initialDeposit = RequestInitialDeposit(false, false);
 
         // No minimum initial deposit for business account
 
@@ -161,10 +164,11 @@ public class AccountCreation
     }
 
     // RequestInitialDeposit Mehtod
-    private static decimal RequestInitialDeposit(bool requireMinimum)
+    private static decimal RequestInitialDeposit(bool requireMinimum, bool requireMaximum)
     {
         // Prompt message based on requirement
         string promptMessage = requireMinimum ? "Please, provide the initial deposit amount (at least £1): " : "Please, provide the initial deposit amount (enter £0 or greater): ";
+        promptMessage += requireMaximum ? " (Maximum £20,000): " : "";
 
         // Request initial deposit amount
         decimal initialDeposit;
@@ -180,13 +184,20 @@ public class AccountCreation
             if (decimal.TryParse(depositInput, out initialDeposit) && initialDeposit >= 0)
             {
                 // Check if the input meets the minimum requirement
-                if (!requireMinimum || initialDeposit >= 1)
+                if ((!requireMinimum || initialDeposit >= 1) && (!requireMaximum || initialDeposit <= 20000))
                 {
                     isValidInput = true; // Exit loop if the input is valid
                 }
                 else
                 {
-                    Console.WriteLine("Invalid initial deposit amount. Please provide at least £1.");
+                    if (requireMaximum)
+                    {
+                        Console.WriteLine("Invalid initial deposit amount. Please provide an amount between £1 and £20,000.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid initial deposit amount. Please provide at least £1.");
+                    }
                 }
             }
             else
@@ -223,7 +234,7 @@ public class AccountCreation
         DateTime dob;
         do
         {
-            Console.WriteLine("Please, provide your date of birth in this format -> DD-MM-YYYY: ");
+            Console.Write("Please, provide your date of birth in this format -> DD-MM-YYYY: ");
             string? dobInput = Console.ReadLine();
             if (!DateTime.TryParse(dobInput, out dob))
             {
