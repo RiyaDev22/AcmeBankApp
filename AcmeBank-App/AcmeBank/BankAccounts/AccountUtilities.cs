@@ -183,10 +183,23 @@ internal class AccountUtilities
                 //Deletes the directory containing the files and all the files in said directory
                 Directory.Delete(fileDirectory, true); 
             }
+            catch (FileNotFoundException)
+            {
+                // Handle file not found error
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Account file could not been found");
+            }
             catch (Exception)
             {
-
-                Console.WriteLine("Error... Account has not been able to be removed");
+                // Handle other exceptions
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Something went wrong while loading the file!");
+            }
+            finally
+            {
+                // Reset console color and provide a delay for user to see the message
+                Console.ResetColor();
+                Thread.Sleep(1000);
             }
         }
         else
