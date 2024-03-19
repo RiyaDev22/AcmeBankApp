@@ -135,7 +135,7 @@ internal class CustomerUtilities
                                 customerSplit[4], 
                                 customerSplit[6], 
                                 customerSplit[7],
-                                new DateOnly(Int32.Parse(date[0]), Int32.Parse(date[1]), Int32.Parse(date[2])), 
+                                new DateOnly(Int32.Parse(date[2]), Int32.Parse(date[1]), Int32.Parse(date[0])), 
                                 listOfAccounts);
                         }
                     }
