@@ -15,7 +15,7 @@ namespace AcmeBank
             //Customer newCustomer = CreateCustomer();
 
             //loads customer and then presents options
-            Account account = AccountUtilities.LoadAccountDetails("23455432");
+            Account account = AccountUtilities.LoadAccountDetails("11112222");
             account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
         }
 

@@ -1,5 +1,6 @@
 ﻿using AcmeBank.BankAccounts;
 using AcmeBank.BankAccounts.AccountInterfaces;
+using AcmeBank.BankAccounts.Transactions;
 using System.Collections.Generic;
 using System.Text;
 
@@ -45,17 +46,21 @@ public class ISAAccount : Account, IDepositLimitedAccount
     #endregion
 
     #region Methods
-    protected override void DisplayAccountOptions()
+
+    public override void DisplayAccountDetails()
     {
-        Console.WriteLine("""
-                --- Account options ---
-                1. Deposit
-                2. Withdraw
-                3. Transfer
-                4. Calculate interest (Test)
-                X. Exit
-                -----------------------
-                """);
+        // Display account details as well as overdraft
+        Console.WriteLine($"""
+            --- Account details ---
+            Account Number: {AccountNumber}
+            Sort Code: {SortCode}
+            Balance: {Balance:C}
+            Type: {Type} Account
+            -
+            Interest Rate: {_InterestRate:P2}
+            -----------------------
+
+            """);
     }
 
     public bool UpdateDepositLimit(decimal amount)
@@ -98,6 +103,19 @@ public class ISAAccount : Account, IDepositLimitedAccount
         }
     }
 
+    protected override void DisplayAccountOptions()
+    {
+        Console.WriteLine("""
+                --- Account options ---
+                1. Deposit
+                2. Withdraw
+                3. Transfer
+                4. Calculate interest (Test)
+                X. Exit
+                -----------------------
+                """);
+    }
+
     // Receives an input from the menu loop. The input
     protected override bool HandleOption(string option, ref StringBuilder invalidPrompt)
     {
@@ -112,6 +130,9 @@ public class ISAAccount : Account, IDepositLimitedAccount
             case "3":
                 Transfer();
                 break;
+            case "4":
+                CalculateInterest();
+                break;
             case "x":
                 // Exit the loop if the user chooses to exit
                 return true;
@@ -122,6 +143,16 @@ public class ISAAccount : Account, IDepositLimitedAccount
                 break;
         }
         return false; //does not exit the loop
+    }
+
+    private void CalculateInterest()
+    {
+        // Load transaction history
+        TransactionUtilities.LoadTransactionHistory(AccountNumber);
+        // Collect all the last balances of each day.
+        // Use this to calculate an average
+        // Divide by 365 and multiple by 2.75%
+        Console.ReadLine();
     }
     #endregion
 

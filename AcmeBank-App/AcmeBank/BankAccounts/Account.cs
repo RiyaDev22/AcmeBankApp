@@ -31,6 +31,7 @@ public abstract class Account
     #endregion
 
     #region Methods
+    // Displays a menu of options
     protected virtual void DisplayAccountOptions()
     {
         Console.WriteLine("""
@@ -44,6 +45,7 @@ public abstract class Account
                 """);
     }
 
+    //
     public virtual void AccountOptionsLoop()
     {
         StringBuilder invalidPrompt = new StringBuilder();
@@ -97,7 +99,6 @@ public abstract class Account
         }
         return false; //does not exit the loop
     }
-
 
     public virtual void DisplayAccountDetails()
     {
