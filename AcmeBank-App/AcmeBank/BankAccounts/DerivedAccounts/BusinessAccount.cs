@@ -64,6 +64,7 @@ public class BusinessAccount : Account, IOverdraftAccount
 
     protected override bool HandleOption(string option, ref StringBuilder invalidPrompt)
     {
+        // Process the user's input
         switch (option.ToLower())
         {
             case "1":
@@ -90,9 +91,11 @@ public class BusinessAccount : Account, IOverdraftAccount
             case "8":
                 ManageOverdraft();
                 break;
+            // exit the loop if the user chooses to exit
             case "x":
                 return true;
             default:
+                // display an error message if the user enters an invalid option
                 Console.Clear();
                 invalidPrompt.Append("-- !!! Invalid option !!! --");
                 break;
