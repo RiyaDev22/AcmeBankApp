@@ -117,7 +117,6 @@ internal class TransactionUtilities
         {
             // Reset console color and provide a delay for user to see the message
             Console.ResetColor();
-            Thread.Sleep(1000); // Pause for 1 second
         }
 
         return transactionHistory;

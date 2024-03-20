@@ -2,6 +2,7 @@
 using AcmeBank.BankAccounts.AccountInterfaces;
 using AcmeBank.BankAccounts.Transactions;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace BankPayments.BankAccounts.DerivedAccounts;
@@ -16,13 +17,13 @@ public class ISAAccount : Account, IDepositLimitedAccount
 
     #region Constructors
     // Used on account creation
-    public ISAAccount(string accountNumber, string sortCode, decimal balance) : base(accountNumber, sortCode, balance, AccountType.ISA)
+    public ISAAccount(string accountNumber, string sortCode, decimal balance, string address) : base(accountNumber, sortCode, balance, AccountType.ISA, address)
     {
         _remainingDepositLimit = DepositLimit;
     }
 
     // Used on loading account from file
-    public ISAAccount(string accountNumber, string sortCode, decimal balance, decimal remainingDepositLimit) : base(accountNumber, sortCode, balance, AccountType.ISA)
+    public ISAAccount(string accountNumber, string sortCode, decimal balance, string address, decimal remainingDepositLimit) : base(accountNumber, sortCode, balance, AccountType.ISA, address)
     {
         _remainingDepositLimit = remainingDepositLimit;
     }

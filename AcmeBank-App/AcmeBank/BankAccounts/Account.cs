@@ -11,15 +11,17 @@ public abstract class Account
     private string _sortCode;
     private decimal _balance;
     private AccountType _type;
+    private string _address;
     #endregion
 
     #region Constructors
-    public Account(string accountNumber, string sortCode, decimal balance, AccountType accountType)
+    public Account(string accountNumber, string sortCode, decimal balance, AccountType accountType, string address)
     {
         _accountNumber = accountNumber;
         _sortCode = sortCode;
         _balance = balance;
         _type = accountType;
+        _address = address;
     }
     #endregion
 
@@ -32,6 +34,8 @@ public abstract class Account
         set { _balance = value; }
     }
     public AccountType Type { get { return _type; } }
+
+    public string Address { get { return _address; } }
     #endregion
 
     #region Methods
