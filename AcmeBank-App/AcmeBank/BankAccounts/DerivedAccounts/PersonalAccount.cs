@@ -60,11 +60,11 @@ public class PersonalAccount : Account, IOverdraftAccount
             --- Account details ---
             Account Number: {AccountNumber}
             Sort Code: {SortCode}
-            Balance: {Balance:C}
+            Balance: {Balance:C2}
             Type: {Type} Account
             -
-            Overdraft limit: {OverdraftLimit:C}
-            Overdraft remaining: {OverdraftRemaining:C}
+            Overdraft limit: {OverdraftLimit:C2}
+            Overdraft remaining: {OverdraftRemaining:C2}
             -----------------------
 
             """);

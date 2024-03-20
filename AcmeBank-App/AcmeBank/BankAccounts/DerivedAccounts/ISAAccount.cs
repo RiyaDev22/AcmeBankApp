@@ -55,7 +55,7 @@ public class ISAAccount : Account, IDepositLimitedAccount
             --- Account details ---
             Account Number: {AccountNumber}
             Sort Code: {SortCode}
-            Balance: {Balance:C}
+            Balance: {Balance:C2}
             Type: {Type} Account
             -
             Interest Rate: {_InterestRate:P2}

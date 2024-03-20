@@ -54,7 +54,6 @@ public abstract class Account
                 """);
     }
 
-    //
     public virtual void AccountOptionsLoop()
     {
         StringBuilder invalidPrompt = new StringBuilder();
