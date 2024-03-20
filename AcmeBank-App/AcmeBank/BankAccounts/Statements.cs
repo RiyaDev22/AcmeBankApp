@@ -1,5 +1,6 @@
 ﻿using AcmeBank.BankAccounts.Transactions;
 using Microsoft.VisualBasic;
+using System.Diagnostics.Metrics;
 using System.Text;
 using System.Text.RegularExpressions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -50,14 +51,44 @@ internal class Statements
             }
         }
 
+        Console.Clear();
+        Console.Write("""
+            -- Statement Options --
+            Would you like to send the statement to the customer?
+            Enter 'y' for yes or any other key to exit.
+
+            Your choice: 
+            """);
+
+        // Save the current cursor position
+        int currentLeft = Console.CursorLeft;
+        int currentTop = Console.CursorTop;
+
+
         Console.WriteLine($"""
+            
+
             ---------------------- Statement {date.Month,2}/{date.Year,4} ---------------------- 
                      Amount         Balance            Type            Date
             {monthlyStatement}
             ---------------------------------------------------------------
             """);
 
-        Console.ReadLine();
+        // Move the cursor position to the line where user input is expected
+        Console.SetCursorPosition(currentLeft, currentTop);
+
+
+        input = Console.ReadLine();
+        if (input.ToLower() == "y")
+        {
+
+        } 
+        else
+        {
+
+        }
         // Then provide the option to send statement or exit
+
+
     }
 }
