@@ -15,8 +15,13 @@ namespace AcmeBank
             //Customer newCustomer = CustomerUtilities.CreateCustomer();
 
             //loads customer and then presents options
-            Account account = AccountUtilities.LoadAccountDetails("23455432");
-            account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
+            //Account account = AccountUtilities.LoadAccountDetails("23455432");
+            //account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
+
+            //DateOnly dob = new DateOnly(2001, 4, 17);
+            //Customer kawsar = CustomerUtilities.LoadCustomerDetails("Kawsar", "Hussain", "", dob, "E15 5DP");
+
+            //CustomerUtilities.RemoveCustomerDetails(kawsar);
         }        
 
     }

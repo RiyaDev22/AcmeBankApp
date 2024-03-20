@@ -105,8 +105,9 @@ internal class CustomerUtilities
                 {
                     string customerDetailsString;
                     string[] customerSplit;
-                    while ((customerDetailsString = sr.ReadLine()) != null)
+                    while (!sr.EndOfStream)
                     {
+                        customerDetailsString = sr.ReadLine();
                         //Splits the string and inserts into array
                         customerSplit = customerDetailsString.Split(',');
                         if (customerSplit[2] == "EMPTY") customerSplit[2] = "";
@@ -117,7 +118,7 @@ internal class CustomerUtilities
                             string.Equals(customerSplit[2], otherName, StringComparison.OrdinalIgnoreCase) && 
                             string.Equals(customerSplit[3], dob.ToString("dd/MM/yyyy"), StringComparison.OrdinalIgnoreCase) && 
                             string.Equals(customerSplit[4], postcode, StringComparison.OrdinalIgnoreCase)) 
-                        { 
+                        {
                             //Creating an array for the date so that it can be parsed into the return statement
                             string[] date = customerSplit[5].Split('/');
 
@@ -126,8 +127,11 @@ internal class CustomerUtilities
                             while (i < customerSplit.Length)
                             {
                                 listOfAccounts.Add(customerSplit[i]);
+                                i++;
                             }
                             
+                            sr.Close();
+                            Console.Clear();
                             return new Customer(customerSplit[0], 
                                 customerSplit[1], 
                                 customerSplit[2], 
@@ -166,8 +170,79 @@ internal class CustomerUtilities
             // Reset console color and provide a delay for user to see the message
             Console.ResetColor();
             Thread.Sleep(1000);
+            Console.Clear();
         }
 
         return customer;
+    }
+
+    //Method to delete customer details
+    internal static void RemoveCustomerDetails(Customer customer)
+    {
+        string tempFile = "Customers.csv";
+        try
+        {
+            if (File.Exists(accountFile))
+            {
+                List<string> customers = new List<string>();
+                //Writes all records to to a list of strings 
+                using (StreamReader sr = File.OpenText(accountFile))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        customers.Add(sr.ReadLine());
+                    }
+                    sr.Close();// Close to prevent IOException
+                }
+
+                //Writes all indexes where it isn't equal to the customer in the parameter
+                using (StreamWriter sw = File.CreateText(tempFile))
+                {
+                    foreach (var i in customers)
+                    {
+                        string[] customerSplit = i.Split(',');
+                        if (customerSplit[2] == "EMPTY") customerSplit[2] = "";
+                        if (!(string.Equals(customerSplit[0], customer.FirstName, StringComparison.OrdinalIgnoreCase) &&
+                            string.Equals(customerSplit[1], customer.LastName, StringComparison.OrdinalIgnoreCase) &&
+                            string.Equals(customerSplit[2], customer.OtherName, StringComparison.OrdinalIgnoreCase) &&
+                            string.Equals(customerSplit[3], customer.DateOfBirth.ToString("dd/MM/yyyy"), StringComparison.OrdinalIgnoreCase) &&
+                            string.Equals(customerSplit[4], customer.PostCode, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            sw.WriteLine(i);
+                        }
+                    }
+                    sw.Close();// Close to prevent IOException
+                    File.Move(tempFile, accountFile, true);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Deleted!!!");
+                }
+            }
+        }
+
+        catch (IndexOutOfRangeException)
+        {
+            // Handle parsing errors
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Something went wrong parsing the file, please check the data!");
+        }
+        catch (FileNotFoundException)
+        {
+            // Handle file not found error
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("The file couldn't be found!");
+        }
+        catch (Exception e )
+        {
+            // Handle other exceptions
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Something went wrong while writing to file! {e}");
+        }
+        finally
+        {
+            // Reset console color and provide a delay for user to see the message
+            Console.ResetColor();
+            Thread.Sleep(1000);
+            Console.Clear();
+        }
     }
 }
