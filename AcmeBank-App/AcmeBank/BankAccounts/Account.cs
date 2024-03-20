@@ -44,6 +44,7 @@ public abstract class Account
                 2. Withdraw
                 3. Payment
                 4. Transfer
+                5. Statement
                 X. Exit
                 -----------------------
                 """);
@@ -91,6 +92,9 @@ public abstract class Account
                 break;
             case "4":
                 Transfer();
+                break;
+            case "5":
+                Statements.StatementOptions(AccountNumber);
                 break;
             case "x":
                 // Exit the loop if the user chooses to exit
@@ -379,5 +383,7 @@ public abstract class Account
         }
         return false;
     }
+
+
     #endregion
 }

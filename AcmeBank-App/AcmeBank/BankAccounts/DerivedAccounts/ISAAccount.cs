@@ -111,6 +111,7 @@ public class ISAAccount : Account, IDepositLimitedAccount
                 2. Withdraw
                 3. Transfer
                 4. Calculate interest (Test)
+                5. Statement
                 X. Exit
                 -----------------------
                 """);
@@ -136,6 +137,9 @@ public class ISAAccount : Account, IDepositLimitedAccount
             case "x":
                 // Exit the loop if the user chooses to exit
                 return true;
+            case "5":
+                Statements.StatementOptions(AccountNumber);
+                break;
             default:
                 // Display an error message if the user enters an invalid option
                 Console.Clear();
@@ -204,7 +208,7 @@ public class ISAAccount : Account, IDepositLimitedAccount
 
         yearlBalanceSum += previousBalance * daysGap;
 
-        decimal interestGained = (yearlBalanceSum / 365.00m) * 0.0275m;
+        decimal interestGained = (yearlBalanceSum / daysSum) * 0.0275m;
         AddToBalance(interestGained, TransactionType.Interest);
 
         Console.ForegroundColor = ConsoleColor.Green;
