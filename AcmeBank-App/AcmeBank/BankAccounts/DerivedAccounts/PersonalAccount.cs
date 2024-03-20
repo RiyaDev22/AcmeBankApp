@@ -12,12 +12,12 @@ public class PersonalAccount : Account, IOverdraftAccount
 
     #region Constructors
     // Account setup
-    public PersonalAccount(string accountNumber, string sortCode, decimal balance) : base(accountNumber, sortCode, balance, AccountType.Personal)
+    public PersonalAccount(string accountNumber, string sortCode, decimal balance, string address) : base(accountNumber, sortCode, balance, AccountType.Personal, address)
     {
         _overdraftRemaining = _overdraftLimit;
     }
     // Loading from file
-    public PersonalAccount(string accountNumber, string sortCode, decimal balance, decimal overdraftRemaining) : base(accountNumber, sortCode, balance, AccountType.Personal)
+    public PersonalAccount(string accountNumber, string sortCode, decimal balance, string address, decimal overdraftRemaining) : base(accountNumber, sortCode, balance, AccountType.Personal, address)
     {
         _overdraftRemaining = overdraftRemaining; 
     }
