@@ -20,16 +20,13 @@ internal class Statements
             date = RetrieveDateYear(invalidPrompt);
             invalidPrompt.Clear();
 
-            // Save the current cursor position
-            int currentLeft = Console.CursorLeft;
-            int currentTop = Console.CursorTop;
-
             dateStatement = GetDateTransactions(accountNumber, date);
 
 
             if (dateStatement.ToString() == "")
                 invalidPrompt.Append($"!!! No transactions during {date.Month:D2}/{date.Year:D4} !!!");
-
+            else
+                validInput = true;
         }
 
         DisplayAndRequestStatement(dateStatement, date, accountNumber);
@@ -108,8 +105,6 @@ internal class Statements
         Console.WriteLine($"""
             
 
-
-
             ---------------------- Statement {date.Month:D2}/{date.Year:D4} ---------------------- 
                      Amount         Balance            Type            Date
             {dateStatement}
@@ -124,6 +119,7 @@ internal class Statements
         if (input.ToLower() == "y")
         {
             Account account = AccountUtilities.LoadAccountDetails(accountNumber);
+            Console.SetCursorPosition(0, currentTop-1);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write($"Statement sent to {account.Address}");
             Console.ResetColor();
