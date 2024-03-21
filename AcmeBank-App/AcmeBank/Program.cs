@@ -11,16 +11,16 @@ namespace AcmeBank
         static void Main(string[] args)
         {
             //Create a new Teller object which displays the login screen once the application starts
-            Teller oTeller = new Teller();            
+            Teller oTeller = new Teller();
 
 
-            //Customer newCustomer = CustomerUtilities.CreateCustomer();
+            Customer newCustomer = CustomerUtilities.CreateCustomer();
 
             //loads customer and then presents options
             //Account account = AccountUtilities.LoadAccountDetails("23455432");
             //account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
 
-            List < Account > accounts = new List<Account>();
+            List< Account > accounts = new List<Account>();
 
             // Adding ISAAccount, BusinessAccount, and PersonalAccount objects to the list
             accounts.Add(new ISAAccount("12345678", "111111", 2000.00m, "1-Main St-ABC123"));

@@ -314,4 +314,62 @@ public class AccountCreation
         } while (dob == DateTime.MinValue); // Ensures the loop runs until a valid date is entered
         return dob;
     }
+
+    // Generate account number method
+    private static string GenerateAccountNumber()
+    {
+        Random random = new Random();
+        return random.Next(100000, 999999).ToString(); // Generating a random 6-digit account number
+    }
+
+    // Save account number method
+    private static void SaveAccountNumber(string accountNumber)
+    {
+        string directory = $@"{AppDomain.CurrentDomain.BaseDirectory}\Accounts\";
+        string filePath = $@"{directory}{accountNumber}.txt";
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        // Save the account number to a file
+        File.WriteAllText(filePath, accountNumber);
+        Console.WriteLine($"Account number {accountNumber} saved successfully.");
+    }
+
+    // Generate sort code method
+    private static string GenerateSortCode()
+    {
+        Random random = new Random();
+        return random.Next(100000, 999999).ToString(); // Generating a random 6-digit sort code
+    }
+
+    // Save sort code method
+    private static void SaveSortCode(string sortCode)
+    {
+        string directory = $@"{AppDomain.CurrentDomain.BaseDirectory}\Accounts\";
+        string filePath = $@"{directory}{sortCode}.txt";
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        // Save the sort code to a file
+        File.WriteAllText(filePath, sortCode);
+        Console.WriteLine($"Sort code {sortCode} saved successfully.");
+    }
+
+    // Call this method to create a random account number and save it
+    public static void CreateAndSaveAccountNumber()
+    {
+        string accountNumber = GenerateAccountNumber();
+        SaveAccountNumber(accountNumber);
+    }
+
+    // Call this method to create a random sort code and save it
+    public static void CreateAndSaveSortCode()
+    {
+        string sortCode = GenerateSortCode();
+        SaveSortCode(sortCode);
+    }
 }
