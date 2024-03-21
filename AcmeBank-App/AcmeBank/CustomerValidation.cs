@@ -1,6 +1,6 @@
 ﻿namespace AcmeBank
 {
-    class CustomerLogin
+    class CustomerValidation
     {
     }
 }
