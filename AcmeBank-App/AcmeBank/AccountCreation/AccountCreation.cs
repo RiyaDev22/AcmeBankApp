@@ -1,7 +1,8 @@
 ﻿namespace AccountCreation.AccountCreation;
 public class AccountCreation
 {
-    // DisplayMenu Mehtod
+    private static string accountCsvFile = "accounts.csv"; // Path to the CSV file
+    // DisplayMenu Method
     public static void DisplayMenu()
     {
         bool condition = true;
@@ -44,7 +45,7 @@ public class AccountCreation
         }
     }
 
-    // CreatePersonalAccount Mehtod
+    // CreatePersonalAccount Method
     private static void CreatePersonalAccount()
     {
         // Request photo ID until the user confirms identity
@@ -90,6 +91,16 @@ public class AccountCreation
         Console.WriteLine("Personal account created successfully!");
         Console.ResetColor(); // Reset the color to the default
 
+        // Generate and save account number
+        string personalAccountNumber = GenerateAccountNumber();
+        SaveAccountNumber(personalAccountNumber);
+
+        // Generate and save sort code
+        string personalSortCode = GenerateSortCode();
+        SaveSortCode(personalSortCode);
+
+        // Append account details to CSV
+        AppendToCsv("Personal", personalAccountNumber, personalSortCode);
     }
 
     // CreateISA Method
@@ -144,6 +155,17 @@ public class AccountCreation
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("Individual Savings Account (ISA) created successfully!");
         Console.ResetColor(); // Reset the color to the default
+
+        // Generate and save account number
+        string ISANumber = GenerateAccountNumber();
+        SaveAccountNumber(ISANumber);
+
+        // Generate and save sort code
+        string ISASortCode = GenerateSortCode();
+        SaveSortCode(ISASortCode);
+
+        // Append account details to CSV
+        AppendToCsv("ISA", ISANumber, ISASortCode);
     }
 
     // CreateBusinessAccount Method
@@ -210,9 +232,20 @@ public class AccountCreation
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("Business account created successfully!");
         Console.ResetColor(); // Reset the color to the default
+
+        // Generate and save account number
+        string businessAccountNumber = GenerateAccountNumber();
+        SaveAccountNumber(businessAccountNumber);
+
+        // Generate and save sort code
+        string businessSortCode = GenerateSortCode();
+        SaveSortCode(businessSortCode);
+
+        // Append account details to CSV
+        AppendToCsv("Business", businessAccountNumber, businessSortCode);
     }
 
-    // CheckForISA Mehtod
+    // CheckForISA Method
     private static bool CheckForISA()
     {
         // Dummy implementation to check if customer already has an ISA account
@@ -221,7 +254,7 @@ public class AccountCreation
         return false;
     }
 
-    // RequestInitialDeposit Mehtod
+    // RequestInitialDeposit Method
     private static decimal RequestInitialDeposit(bool requireMinimum, bool requireMaximum)
     {
         // Prompt message based on requirement
@@ -273,7 +306,7 @@ public class AccountCreation
         return initialDeposit;
     }
 
-    // GetUserInput Mehtod
+    // GetUserInput Method
     private static string GetUserInput(string prompt)
     {
         string? userInput;
@@ -371,5 +404,22 @@ public class AccountCreation
     {
         string sortCode = GenerateSortCode();
         SaveSortCode(sortCode);
+    }
+
+    // Append account details to CSV
+    private static void AppendToCsv(string accountType, string accountNumber, string sortCode)
+    {
+        try
+        {
+            // Open the CSV file in append mode and write the account details
+            using (StreamWriter sw = File.AppendText(accountCsvFile))
+            {
+                sw.WriteLine($"{accountType},{accountNumber},{sortCode}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error appending to CSV: {ex.Message}");
+        }
     }
 }
