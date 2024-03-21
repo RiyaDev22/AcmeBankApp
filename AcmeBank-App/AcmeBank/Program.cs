@@ -3,6 +3,7 @@ using AcmeBank.BankAccounts;
 using BankPayments.BankAccounts.DerivedAccounts;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace AcmeBank
@@ -50,7 +51,22 @@ namespace AcmeBank
             {
                 AccountUtilities.SaveAccountDetails(i);
             }
+          
+            Account account = AccountUtilities.LoadAccountDetails("67890123");
+            account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
+        }
+      
+      public static Customer CreateCustomer()
+        {
+            Console.WriteLine("""
+                Hello and welcome to a new and Exciting Journey with us.
+                I will start by asking for your name.
 
+                """);
+            string firstName = StringInputHandling("What is your first name", true);
+            string lastName = StringInputHandling("what is your last name", true);
+            string otherName = StringInputHandling("what is your middle name/s", true, true);
+                              
             //Initialise a string list which will contains customer's details
             List<string> slCustomersCsv = new List<string>();
             List<Customer> clCustomers = new List<Customer>();
