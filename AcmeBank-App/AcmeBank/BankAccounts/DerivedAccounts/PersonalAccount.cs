@@ -1,5 +1,7 @@
 ﻿using AcmeBank.BankAccounts;
 using AcmeBank.BankAccounts.AccountInterfaces;
+using AcmeBank.BankAccounts.Transactions;
+using System.Text;
 
 namespace BankPayments.BankAccounts.DerivedAccounts;
 
@@ -69,6 +71,57 @@ public class PersonalAccount : Account, IOverdraftAccount
 
             """);
     }
+
+    protected override void DisplayAccountOptions()
+    {
+        Console.WriteLine("""
+                --- Account options ---
+                1. Deposit
+                2. Withdraw
+                3. Payment
+                4. Transfer
+                5. Statement
+                6. Regular Payments
+                X. Exit
+                -----------------------
+                """);
+    }
+    protected override bool HandleOption(string option, ref StringBuilder invalidPrompt)
+    {
+        switch (option.ToLower()) // Process the user's choice
+        {
+            case "1":
+                Deposit();
+                break;
+            case "2":
+                Withdraw();
+                break;
+            case "3":
+                Payment();
+                break;
+            case "4":
+                Transfer();
+                break;
+            case "5":
+                Statements.StatementOptions(AccountNumber);
+                break;
+            case "6":
+                // Standing Orders & Direct Debits
+                RegularPayments.RegularPaymentOptions(this);
+                break;
+            case "x":
+                // Exit the loop if the user chooses to exit
+                return true;
+            default:
+                // Display an error message if the user enters an invalid option
+                Console.Clear();
+                invalidPrompt.Append("-- !!! Invalid option !!! --");
+                break;
+        }
+        return false; //does not exit the loop
+    }
+
+
     #endregion
 
 }
