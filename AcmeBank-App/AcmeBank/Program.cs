@@ -1,6 +1,7 @@
 ﻿
 using AcmeBank.BankAccounts;
 using BankPayments.BankAccounts.DerivedAccounts;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace AcmeBank
@@ -10,13 +11,9 @@ namespace AcmeBank
         static void Main(string[] args)
         {
             //Create a new Teller object which displays the login screen once the application starts
-            Teller oTeller = new Teller();
+            Teller oTeller = new Teller();            
 
-            //Create a new CustomerLogin object which displays customer the login screen after the teller logs in
-            CustomerLogin oCustomerLogin = new CustomerLogin();
-
-            //Customer newCustomer = CreateCustomer();
-            List<Account> accounts = new List<Account>();
+            List < Account > accounts = new List<Account>();
 
             // Adding ISAAccount, BusinessAccount, and PersonalAccount objects to the list
             accounts.Add(new ISAAccount("12345678", "111111", 2000.00m, "1-Main St-ABC123"));
@@ -46,9 +43,77 @@ namespace AcmeBank
                 AccountUtilities.SaveAccountDetails(i);
             }
 
-            //loads customer and then presents options
+            //This while loop will run indefinitely until the user press 'x' to quit - Look at the switch case statement
+            while(true)
+            {
+                //Display main menu
+                Console.Write("""
+                            --- Main Menu ---
+                            1. View a Customer Account
+                            2. Create a Customer Account
+                            3. Remove a Customer Account
+                            *. Log Out
+                            x. Log Out & Quit
+
+                            Enter an option: 
+                            """);
+
+                //Prompt user input
+                string? sUserInput = Console.ReadLine();
+
+                switch (sUserInput)
+                {
+                    case "1":
+                        //Create a new CustomerValidation object which displays the customer validation screen
+                        CustomerValidation oCustomerValidation = new CustomerValidation();
+
+                        //loads customer and then presents options
+                        Account account = AccountUtilities.LoadAccountDetails("11112222");
+                        account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
+                        break;
+                    case "2":
+                        //Clear the console
+                        Console.Clear();
+                        //Invoke function to create a new customer account
+                        CreateCustomer();
+                        break;
+                    case "3":
+                        break;
+                    case "*":
+                        //Logs teller out
+                        oTeller.logout();
+                        //Pause the application for 1 second
+                        Thread.Sleep(1000);
+                        //Clear the console
+                        Console.Clear();
+                        //Promptes the teller to log back in
+                        oTeller.login();
+                        break;
+                    case "x":
+                        //Logs teller out
+                        oTeller.logout();
+                        //Pause the application for 1 second
+                        Thread.Sleep(1000);
+                        //Print message
+                        Console.Write("\nExiting...");
+                        //Pause the application for 1 second
+                        Thread.Sleep(1000);
+                        //Quit the application
+                        Environment.Exit(0);
+                        break;
+                    default:
+                        //Clear the console
+                        Console.Clear();
+                        //Print message
+                        Console.WriteLine("Invalid Input. Please try again.\n");
+                        break;
+                }
+            }
+
+            /*MOVED THIS PART OF THE CODE TO THE SWITCH CASE STATEMENT ABOVE*/
+            /*//loads customer and then presents options
             Account account = AccountUtilities.LoadAccountDetails("11112222");
-            account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
+            account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options*/
         }
 
         //This method allows for the creation of a customer object when it is called in the menu
