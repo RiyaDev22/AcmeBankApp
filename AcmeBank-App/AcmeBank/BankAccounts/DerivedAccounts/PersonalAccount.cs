@@ -1,5 +1,6 @@
 ﻿using AcmeBank.BankAccounts;
 using AcmeBank.BankAccounts.AccountInterfaces;
+using AcmeBank.BankAccounts.RegularPayments;
 using AcmeBank.BankAccounts.Transactions;
 using System.Text;
 
@@ -107,7 +108,7 @@ public class PersonalAccount : Account, IOverdraftAccount
                 break;
             case "6":
                 // Standing Orders & Direct Debits
-                RegularPayments.RegularPaymentOptions(this);
+                RegularPaymentUtilities.RegularPaymentOptions(this);
                 break;
             case "x":
                 // Exit the loop if the user chooses to exit

@@ -1,6 +1,7 @@
 ﻿
 using AcmeBank.BankAccounts;
 using BankPayments.BankAccounts.DerivedAccounts;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace AcmeBank
@@ -12,7 +13,10 @@ namespace AcmeBank
             //Create a new Teller object which displays the login screen once the application starts
             //Teller oTeller = new Teller();
 
-            //loads customer and then presents options
+
+            //Account newAccount = new ISAAccount(accountNumber,"123456",balance,address);
+
+            ////loads customer and then presents options
             Account account = AccountUtilities.LoadAccountDetails("67890123");
             account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
         }

@@ -4,9 +4,7 @@ namespace AcmeBank.BankAccounts.Transactions;
 
 internal class Statements
 {
-
-
-    internal static void StatementOptions(string accountNumber)
+    public static void StatementOptions(string accountNumber)
     {
         DateOnly date = DateOnly.MinValue;
         StringBuilder dateStatement = new StringBuilder();

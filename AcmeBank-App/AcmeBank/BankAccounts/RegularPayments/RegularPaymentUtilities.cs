@@ -1,10 +1,13 @@
 ﻿using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using AcmeBank.BankAccounts.AccountInterfaces;
+using AcmeBank.BankAccounts.Transactions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace AcmeBank.BankAccounts.Transactions
+namespace AcmeBank.BankAccounts.RegularPayments
 {
-    internal class RegularPayments
+    internal class RegularPaymentUtilities
     {
         private static Account _currentAccount { get; set; }
         private static string directory = $@"{AppDomain.CurrentDomain.BaseDirectory}\Accounts\";
@@ -103,7 +106,7 @@ namespace AcmeBank.BankAccounts.Transactions
                     SetupSO();
                     break;
                 case "2":
-                    ManageSOs();
+                    ManageSOs(ref invalidPrompt);
                     break;
                 case "x":
                     // Exit the loop if the user chooses to exit
@@ -122,7 +125,7 @@ namespace AcmeBank.BankAccounts.Transactions
             // Initialize variables for payee account details, payment amount, and error messages
             Account payeeAccount = null;
             string? input;
-            
+
             StringBuilder invalidPrompt = new StringBuilder();
             List<string> invalidAccountNumbers = new List<string>() { _currentAccount.AccountNumber };
 
@@ -179,7 +182,7 @@ namespace AcmeBank.BankAccounts.Transactions
                 Console.SetCursorPosition(currentLeft, currentTop);
                 amountInput = Console.ReadLine();
 
-                if(decimal.TryParse(amountInput, out amount) && amount > 0)
+                if (decimal.TryParse(amountInput, out amount) && amount > 0)
                     amountValid = true;
                 else
                     amountInvalidPrompt.Append("""
@@ -258,7 +261,8 @@ namespace AcmeBank.BankAccounts.Transactions
             if (confirmInput.ToLower() == "y")
             {
                 // Save to a file
-                SaveSO(_currentAccount.AccountNumber,payeeAccount.AccountNumber,amount,startDate);
+                RegularPayment standingOrder = new RegularPayment(payeeAccount.AccountNumber, amount, startDate);
+                SaveSO(_currentAccount.AccountNumber, standingOrder);
                 // Display saved prompt
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("STANDING ORDER SAVED");
@@ -273,7 +277,7 @@ namespace AcmeBank.BankAccounts.Transactions
             Thread.Sleep(1000); // Pause for 1 second
         }
 
-        internal static void SaveSO(string thisAccountNumber, string payeeAccountNumber, decimal amount, DateTime date)
+        private static void SaveSO(string thisAccountNumber, RegularPayment standingOrder)
         {
             // Construct the file directory path
             string fileDirectory = $@"{directory}\{thisAccountNumber}";
@@ -290,15 +294,171 @@ namespace AcmeBank.BankAccounts.Transactions
 
             // Construct the string representation of the transaction
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"{payeeAccountNumber},{amount},{date},Monthly");
+            sb.AppendLine($"{standingOrder.PayeeAccountNumber},{standingOrder.Amount},{standingOrder.Date},Monthly,");
 
             // Append the transaction details to the CSV file
             File.AppendAllText(path, sb.ToString());
         }
 
-        private static void ManageSOs()
-        {
 
+        private static List<RegularPayment> LoadSOs(string accountNumberToLoad)
+        {
+            // Construct the file directory path
+            string fileDirectory = $@"{directory}\{accountNumberToLoad}";
+            string path = $@"{fileDirectory}\StandingOrders.csv";
+
+            List<RegularPayment> regularPayments = new List<RegularPayment>();
+
+            try
+            {
+                if (File.Exists(path))
+                {
+                    // Read the file
+                    string[] payments = File.ReadAllLines(path);
+                    foreach (string regularPayment in payments)
+                    {
+                        string[] regularPaymentSplit = regularPayment.Split(',');
+                        string payeeAccountNumber = regularPaymentSplit[0];
+                        decimal amount = decimal.Parse(regularPaymentSplit[1]);
+                        DateTime date = DateTime.Parse(regularPaymentSplit[2]);
+                        regularPayments.Add(new RegularPayment(payeeAccountNumber, amount, date));
+                    }
+                    return regularPayments;
+                }
+            } catch (IndexOutOfRangeException)
+            {
+                // Handle parsing errors
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Something went wrong parsing the file, please check the data!");
+
+            } catch (FileNotFoundException)
+            {
+                // Handle file not found error
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("The file couldn't be found!");
+
+            } catch (Exception)
+            {
+                // Handle other exceptions
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Something went wrong while loading the file!");
+
+            } finally
+            {
+                // Reset console color and provide a delay for user to see the message
+                Console.ResetColor();
+            }
+
+            return regularPayments;
+        }
+
+        private static void ManageSOs(ref StringBuilder invalidMenuPrompt)
+        {
+            StringBuilder standingOrderPrompt = new StringBuilder();
+            StringBuilder invalidPrompt = new StringBuilder();
+
+            bool exit = false;
+            while (!exit)
+            {
+                Console.Clear();
+
+                List<RegularPayment> standingOrders = LoadSOs(_currentAccount.AccountNumber);
+
+                if (standingOrders.Count <= 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    invalidMenuPrompt.Append("!!! Customer has no standing orders !!!");
+                    Console.ResetColor();
+                    return;
+                }
+
+
+                int count = 1;
+                standingOrderPrompt.Clear();
+                foreach (RegularPayment regularPayment in standingOrders)
+                {
+                    standingOrderPrompt.AppendLine($"{count,3}: {regularPayment.PayeeAccountNumber,15} {regularPayment.Amount,15:C2} {regularPayment.Date.Date,15:D}");
+                    count++;
+                }
+
+                
+                Console.Write("""
+                    --- Manage Standing Orders  ---
+                    Enter the id of the any order you would like to cancel e.g '1'.
+                    Enter 'x' to exit.
+
+                    ID: 
+                    """);
+
+                // Save the current cursor position
+                int currentLeft = Console.CursorLeft;
+                int currentTop = Console.CursorTop;
+
+                if (invalidPrompt.ToString() != "")
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"\n{invalidPrompt}");
+                    invalidPrompt.Clear();
+                    Console.ResetColor();
+                }
+
+                Console.WriteLine($"""
+
+                        
+                    ----------------- Standing Orders ------------------
+                      id   Payee Account          Amount            Date
+                    {standingOrderPrompt}
+                    ----------------------------------------------------
+                    """);
+
+                // Move the cursor position to the line where user input is expected
+                Console.SetCursorPosition(currentLeft, currentTop);
+
+                // Then provide the option to send statement or exit
+                string? input = Console.ReadLine();
+                int id;
+                bool validID = int.TryParse(input, out id);
+                if (input.ToLower() == "x")
+                {
+                    exit = true;
+                } 
+                else if (validID && id > 0 && id <= standingOrders.Count)
+                {
+                    standingOrders.RemoveAt(id-1);
+                    // Save remaining
+                    UpdateSOs(standingOrders);
+                    if(standingOrders.Count <= 0) { exit = true; }
+                } 
+                else
+                {
+                    invalidPrompt.AppendLine("!!! Invalid ID !!!");
+                }
+            }
+
+        }
+
+        private static void UpdateSOs(List<RegularPayment> standingOrders)
+        {
+            string fileDirectory = $@"{directory}\{_currentAccount.AccountNumber}"; // Construct the file directory path
+
+            // Check if the directory exists, if not, create it
+            if (!Directory.Exists(fileDirectory))
+            {
+                Directory.CreateDirectory(fileDirectory);
+                using (File.Create($@"{fileDirectory}\StandingOrders.csv")) ;
+            }
+
+            // Construct the path for AccountDetails.csv
+            string path = @$"{fileDirectory}\StandingOrders.csv";
+
+            // Create a StringBuilder to construct the CSV content
+            StringBuilder sb = new StringBuilder();
+            foreach(RegularPayment payment in standingOrders)
+            {
+                sb.AppendLine($"{payment.PayeeAccountNumber},{payment.Amount},{payment.Date},Monthly,");
+            }
+            // Write the CSV content to the file
+            File.WriteAllText(path, sb.ToString());
         }
     }
 }
