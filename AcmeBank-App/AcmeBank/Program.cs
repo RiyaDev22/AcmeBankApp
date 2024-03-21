@@ -43,8 +43,11 @@ namespace AcmeBank
                 AccountUtilities.SaveAccountDetails(i);
             }
 
+            //Declare object which will display the customer validation screen
+            CustomerValidation oCustomerValidation;
+
             //This while loop will run indefinitely until the user press 'x' to quit - Look at the switch case statement
-            while(true)
+            while (true)
             {
                 //Display main menu
                 Console.Write("""
@@ -64,8 +67,8 @@ namespace AcmeBank
                 switch (sUserInput)
                 {
                     case "1":
-                        //Create a new CustomerValidation object which displays the customer validation screen
-                        CustomerValidation oCustomerValidation = new CustomerValidation();
+                        //Retrieve customer's details by creating a new CustomerValidation object
+                        oCustomerValidation = new CustomerValidation();
 
                         //loads customer and then presents options
                         Account account = AccountUtilities.LoadAccountDetails("11112222");
@@ -78,6 +81,9 @@ namespace AcmeBank
                         CreateCustomer();
                         break;
                     case "3":
+                        //Retrieve customer's details by creating a new CustomerValidation object
+                        oCustomerValidation = new CustomerValidation();
+                        //Invoke function in the Customer class to remove the customer account
                         break;
                     case "*":
                         //Logs teller out
