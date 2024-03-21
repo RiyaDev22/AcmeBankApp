@@ -166,4 +166,41 @@ internal class AccountUtilities
 
         //Thread.Sleep(1000);
     }
+
+    //Method is used to remove the directory with the specified account number
+    internal static void RemoveAccountDetails(string accountNumberToDelete)
+    {
+        string fileDirectory = $@"{directory}\{accountNumberToDelete}";
+
+        if (File.Exists(fileDirectory))
+        {
+            try
+            {
+                //Deletes the directory containing the files and all the files in said directory
+                Directory.Delete(fileDirectory, true); 
+            }
+            catch (FileNotFoundException)
+            {
+                // Handle file not found error
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Account file could not been found");
+            }
+            catch (Exception)
+            {
+                // Handle other exceptions
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Something went wrong while loading the file!");
+            }
+            finally
+            {
+                // Reset console color and provide a delay for user to see the message
+                Console.ResetColor();
+                Thread.Sleep(1000);
+            }
+        }
+        else
+        {
+            Console.WriteLine("Account does not exist");
+        }
+    }
 }
