@@ -1,5 +1,6 @@
 ﻿using AcmeBank.BankAccounts;
 using AcmeBank.BankAccounts.AccountInterfaces;
+using System.Text;
 
 namespace BankPayments.BankAccounts.DerivedAccounts;
 
@@ -40,6 +41,61 @@ public class PersonalAccount : Account, IOverdraftAccount
     #endregion
 
     #region Methods
+
+    // Display account options
+    protected override void DisplayAccountOptions()
+    {
+        Console.WriteLine("""
+            --- Account options ---
+            1. Deposit
+            2. Withdraw
+            3. Payment
+            4. Transfer
+            5. Manage Standing Orders/Direct Debits
+            6. Request Debit Card
+            7. Manage Overdraft
+            """);
+    }
+
+    // Handle account options
+    protected override bool HandleOption(string option, ref StringBuilder invalidPrompt)
+    {
+        // Handle the selected option
+        switch (option)
+        {
+            case "1":
+                Deposit();
+                break;
+            case "2":
+                Withdraw();
+                break;
+            case "3":
+                Payment();
+                break;
+            case "4":
+                Transfer();
+                break;
+            case "5":
+                ManageStandingOrders();
+                break;
+            case "6":
+                RequestDebitCard();
+                break;
+            case "7":
+                ManageOverdraft();
+                break;
+            case "x":
+                // Exit if the user selects 'x'
+                return true;
+            default:
+                // if the user selects an invalid option, set the text for the invalid prompt to be shown next time
+                invalidPrompt.Append("-- !!! Invalid option !!! --");
+                return false;
+        }
+        return false;
+    }
+
+
     public bool UpdateRemainingOverdraft(decimal amount)
     {
         if (Balance > 0) // If the balance is positive, deduct it from the amount to be withdrawn from overdraft
@@ -68,6 +124,34 @@ public class PersonalAccount : Account, IOverdraftAccount
             -----------------------
 
             """);
+    }
+
+    // Request a new debit card
+    // This method will simply inform the user that a new debit card will be sent to the account's address
+    protected void RequestDebitCard()
+    {
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("A new debit card will be sent to this account's address");
+        Console.ResetColor();
+        Thread.Sleep(1500);
+    }
+
+    // Manage the account's standing orders
+    protected void ManageStandingOrders()
+    {
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.WriteLine("This feature is not yet implemented");
+        Console.ResetColor();
+        Thread.Sleep(1500);
+    }
+
+    // Manage the account's overdraft
+    protected void ManageOverdraft()
+    {
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.WriteLine("This feature is not yet implemented");
+        Console.ResetColor();
+        Thread.Sleep(1500);
     }
     #endregion
 
