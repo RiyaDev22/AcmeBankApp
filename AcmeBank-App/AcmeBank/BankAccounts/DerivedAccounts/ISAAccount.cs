@@ -1,8 +1,7 @@
-﻿using AcmeBank.BankAccounts;
+﻿using AcmeBank;
+using AcmeBank.BankAccounts;
 using AcmeBank.BankAccounts.AccountInterfaces;
 using AcmeBank.BankAccounts.Transactions;
-using System.Collections.Generic;
-using System.Net;
 using System.Text;
 
 namespace BankPayments.BankAccounts.DerivedAccounts;
@@ -17,13 +16,13 @@ public class ISAAccount : Account, IDepositLimitedAccount
 
     #region Constructors
     // Used on account creation
-    public ISAAccount(string accountNumber, string sortCode, decimal balance, string address) : base(accountNumber, sortCode, balance, AccountType.ISA, address)
+    public ISAAccount(string accountNumber, string sortCode, decimal balance, string address, Customer customer) : base(accountNumber, sortCode, balance, AccountType.ISA, address, customer)
     {
         _remainingDepositLimit = DepositLimit;
     }
 
     // Used on loading account from file
-    public ISAAccount(string accountNumber, string sortCode, decimal balance, string address, decimal remainingDepositLimit) : base(accountNumber, sortCode, balance, AccountType.ISA, address)
+    public ISAAccount(string accountNumber, string sortCode, decimal balance, string address, decimal remainingDepositLimit, Customer customer) : base(accountNumber, sortCode, balance, AccountType.ISA, address, customer)
     {
         _remainingDepositLimit = remainingDepositLimit;
     }
@@ -60,7 +59,6 @@ public class ISAAccount : Account, IDepositLimitedAccount
             -
             Interest Rate: {_InterestRate:P2}
             -----------------------
-
             """);
     }
 
@@ -139,7 +137,7 @@ public class ISAAccount : Account, IDepositLimitedAccount
                 // Exit the loop if the user chooses to exit
                 return true;
             case "5":
-                Statements.StatementOptions(AccountNumber);
+                Statements.StatementOptions(AccountNumber, CustomerReference);
                 break;
             default:
                 // Display an error message if the user enters an invalid option

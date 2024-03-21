@@ -13,45 +13,27 @@ namespace AcmeBank
         static void Main(string[] args)
         {
             //Create a new Teller object which displays the login screen once the application starts
-            Teller oTeller = new Teller();
-
+            //Teller oTeller = new Teller();
 
             //Customer newCustomer = CustomerUtilities.CreateCustomer();
 
-            //loads customer and then presents options
-            //Account account = AccountUtilities.LoadAccountDetails("23455432");
-            //account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
+            DateOnly dob = DateOnly.Parse("17/04/2001");
+            Customer kawsar = CustomerUtilities.LoadCustomerDetails("Kawsar","Hussain","", dob, "E15 5DP");
+            Account account = AccountUtilities.LoadAccountDetails(kawsar.ListOfAccounts[0], kawsar);
+            account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
+        }
+      
+      public static Customer CreateCustomer()
+        {
+            Console.WriteLine("""
+                Hello and welcome to a new and Exciting Journey with us.
+                I will start by asking for your name.
 
-            List<Account> accounts = new List<Account>();
-
-            // Adding ISAAccount, BusinessAccount, and PersonalAccount objects to the list
-            accounts.Add(new ISAAccount("12345678", "111111", 2000.00m, "ABC 123"));
-            accounts.Add(new BusinessAccount("23456789", "222222", 2500.00m, "DEF 456"));
-            accounts.Add(new PersonalAccount("34567890", "333333", 3000.00m, "GHI 789"));
-            accounts.Add(new ISAAccount("45678901", "444444", 1500.00m, "JKL 012"));
-            accounts.Add(new BusinessAccount("56789012", "555555", 1800.00m, "MNO 345"));
-            accounts.Add(new PersonalAccount("67890123", "666666", 2200.00m, "PQR 678"));
-            accounts.Add(new ISAAccount("78901234", "777777", 1700.00m, "STU 901"));
-            accounts.Add(new BusinessAccount("89012345", "888888", 1900.00m, "VWX 234"));
-            accounts.Add(new PersonalAccount("90123456", "999999", 2100.00m, "YZA B567"));
-            accounts.Add(new ISAAccount("11112222", "101010", 2700.00m, "CDE 890"));
-            accounts.Add(new BusinessAccount("22223333", "202020", 3000.00m, "FGH 123"));
-            accounts.Add(new PersonalAccount("33334444", "303030", 3200.00m, "IJK 456"));
-            accounts.Add(new ISAAccount("44445555", "404040", 1900.00m, "LMN 789"));
-            accounts.Add(new BusinessAccount("55556666", "505050", 2200.00m, "OPQ 012"));
-            accounts.Add(new PersonalAccount("66667777", "606060", 2600.00m, "RST 345"));
-            accounts.Add(new ISAAccount("77778888", "707070", 1800.00m, "UVW 678"));
-            accounts.Add(new BusinessAccount("88889999", "808080", 2100.00m, "XYZ 901"));
-            accounts.Add(new PersonalAccount("99990000", "909090", 2300.00m, "ABC 234"));
-            accounts.Add(new ISAAccount("12344321", "111122", 2400.00m, "DEF 567"));
-            accounts.Add(new BusinessAccount("23455432", "222233", 2600.00m, "GHI 890"));
-
-            // Iterate through the list
-            foreach (var i in accounts)
-            {
-                AccountUtilities.SaveAccountDetails(i);
-            }
-
+                """);
+            string firstName = InputUtilities.StringInputHandling("What is your first name", true);
+            string lastName = InputUtilities.StringInputHandling("what is your last name", true);
+            string otherName = InputUtilities.StringInputHandling("what is your middle name/s", true, true);
+                              
             //Initialise a string list which will contains customer's details
             List<string> slCustomersCsv = new List<string>();
             List<Customer> clCustomers = new List<Customer>();
@@ -113,7 +95,9 @@ namespace AcmeBank
                         * TODO!!!: Display the correct customer's details                                                                                       *
                         /****************************************************************************************************************************************/
 
-                        Account account = AccountUtilities.LoadAccountDetails("67890123");
+                        //loads customer and then presents options
+                        Account account = AccountUtilities.LoadAccountDetails(oCustomer.ListOfAccounts[0], oCustomer);
+
                         account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
                         break;
                     case "2":
@@ -134,17 +118,17 @@ namespace AcmeBank
                         break;
                     case "*":
                         //Log teller out
-                        oTeller.logout();
+                        //oTeller.logout();
                         //Pause the application for 1 second
                         Thread.Sleep(1000);
                         //Clear the console
                         Console.Clear();
                         //Prompt the teller to log back in
-                        oTeller.login();
+                        //oTeller.login();
                         break;
                     case "x":
                         //Logs teller out
-                        oTeller.logout();
+                        //oTeller.logout();
                         //Pause the application for 1 second
                         Thread.Sleep(1000);
                         //Print message

@@ -1,4 +1,5 @@
-﻿using AcmeBank.BankAccounts;
+﻿using AcmeBank;
+using AcmeBank.BankAccounts;
 using AcmeBank.BankAccounts.AccountInterfaces;
 using AcmeBank.BankAccounts.RegularPayments;
 using AcmeBank.BankAccounts.Transactions;
@@ -15,12 +16,12 @@ public class PersonalAccount : Account, IOverdraftAccount
 
     #region Constructors
     // Account setup
-    public PersonalAccount(string accountNumber, string sortCode, decimal balance, string address) : base(accountNumber, sortCode, balance, AccountType.Personal, address)
+    public PersonalAccount(string accountNumber, string sortCode, decimal balance, string address, Customer customer) : base(accountNumber, sortCode, balance, AccountType.Personal, address, customer)
     {
         _overdraftRemaining = _overdraftLimit;
     }
     // Loading from file
-    public PersonalAccount(string accountNumber, string sortCode, decimal balance, string address, decimal overdraftRemaining) : base(accountNumber, sortCode, balance, AccountType.Personal, address)
+    public PersonalAccount(string accountNumber, string sortCode, decimal balance, string address, decimal overdraftRemaining, Customer customer) : base(accountNumber, sortCode, balance, AccountType.Personal, address, customer)
     {
         _overdraftRemaining = overdraftRemaining; 
     }
@@ -79,11 +80,11 @@ public class PersonalAccount : Account, IOverdraftAccount
                 Transfer();
                 break;
             case "5":
-                Statements.StatementOptions(AccountNumber);
+                Statements.StatementOptions(AccountNumber, CustomerReference);
                 break;
             case "6":
                 // Standing Orders & Direct Debits
-                RegularPaymentUtilities.RegularPaymentOptions(this);
+                RegularPaymentUtilities.RegularPaymentOptions(this, CustomerReference);
                 break;
             case "7":
                 RequestDebitCard();
@@ -129,7 +130,6 @@ public class PersonalAccount : Account, IOverdraftAccount
             Overdraft limit: {OverdraftLimit:C2}
             Overdraft remaining: {OverdraftRemaining:C2}
             -----------------------
-
             """);
     }
     

@@ -4,8 +4,11 @@ namespace AcmeBank.BankAccounts.Transactions;
 
 internal class Statements
 {
-    public static void StatementOptions(string accountNumber)
+    private static Customer _currentCustomer { get; set; }
+    public static void StatementOptions(string accountNumber, Customer customer)
     {
+        _currentCustomer = customer;
+
         DateOnly date = DateOnly.MinValue;
         StringBuilder dateStatement = new StringBuilder();
 
@@ -114,7 +117,7 @@ internal class Statements
         string? input = Console.ReadLine();
         if (input.ToLower() == "y")
         {
-            Account account = AccountUtilities.LoadAccountDetails(accountNumber);
+            Account account = AccountUtilities.LoadAccountDetails(accountNumber,_currentCustomer);
             Console.SetCursorPosition(0, currentTop - 1);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write($"Statement sent to {account.Address}");

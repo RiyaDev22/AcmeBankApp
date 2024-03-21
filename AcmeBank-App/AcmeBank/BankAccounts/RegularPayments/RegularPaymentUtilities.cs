@@ -10,10 +10,12 @@ namespace AcmeBank.BankAccounts.RegularPayments
     internal class RegularPaymentUtilities
     {
         private static Account _currentAccount { get; set; }
+        private static Customer _currentCustomer { get; set; }
         private static string directory = $@"{AppDomain.CurrentDomain.BaseDirectory}\Accounts\";
-        internal static void RegularPaymentOptions(Account account)
+        internal static void RegularPaymentOptions(Account account, Customer customer)
         {
             _currentAccount = account;
+            _currentCustomer = customer;
             //Display a menu asking either standing orders or direct debits.
             StringBuilder invalidPrompt = new StringBuilder();
 
@@ -134,7 +136,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
             {
                 // Get payee details (sort code and account number)
                 TransactionUtilities.GetPayeeDetails(out string sortCode, out string accountNumber, invalidAccountNumbers);
-                payeeAccount = AccountUtilities.LoadAccountDetails($"{accountNumber}"); // Load payee account details based on the provided account number
+                payeeAccount = AccountUtilities.LoadAccountDetails($"{accountNumber}",_currentCustomer); // Load payee account details based on the provided account number
 
                 // Checks if the payee is a savings account if so we provide an error prompt and return preventing the payment
                 if (payeeAccount.Type == AccountType.ISA)
