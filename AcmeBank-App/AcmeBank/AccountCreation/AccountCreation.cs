@@ -1,4 +1,4 @@
-﻿namespace AccountCreation.AccountCreation;
+﻿namespace AcmeBank;
 public class AccountCreation
 {
     // DisplayMenu Mehtod
@@ -18,7 +18,7 @@ public class AccountCreation
                 ============================
                 Please, Select Account Type: 
                 """);
-            string? choice = Console.ReadLine();
+            string? choice = InputUtilities.GetInputWithinTimeLimit();
 
             switch (choice)
             {
@@ -167,7 +167,7 @@ public class AccountCreation
             Console.WriteLine("Type 'back' at any prompt to return to the Main Menu.");
             Console.ResetColor(); // Reset the color to the default
             Console.Write("Enter the business type: ");
-            businessType = Console.ReadLine()?.Trim();
+            businessType = InputUtilities.GetInputWithinTimeLimit()?.Trim();
 
             if (businessType?.ToLower() == "back") // Check if the user wants to go back
             {
@@ -236,7 +236,7 @@ public class AccountCreation
         do
         {
             Console.Write(promptMessage);
-            depositInput = Console.ReadLine()?.Trim();
+            depositInput = InputUtilities.GetInputWithinTimeLimit()?.Trim();
 
             if (depositInput?.ToLower() == "back") // Check if the user wants to go back
             {
@@ -280,7 +280,7 @@ public class AccountCreation
         do
         {
             Console.Write(prompt);
-            userInput = Console.ReadLine()?.Trim().ToLower();
+            userInput = InputUtilities.GetInputWithinTimeLimit()?.Trim().ToLower();
 
             // Verify if the input is "confirm"
             if (userInput != "confirm" && userInput != "back")
@@ -300,7 +300,7 @@ public class AccountCreation
         do
         {
             Console.Write("Please, provide your date of birth in this format -> DD-MM-YYYY: ");
-            dobInput = Console.ReadLine()?.Trim();
+            dobInput = InputUtilities.GetInputWithinTimeLimit()?.Trim();
 
             if (dobInput?.ToLower() == "back")
             {
