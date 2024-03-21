@@ -176,7 +176,7 @@ internal class CustomerUtilities
         return customer;
     }
 
-    //Method to delete customer details
+    //Method to delete customer details into the csv
     internal static void RemoveCustomerDetails(Customer customer)
     {
         string tempFile = "Customers.csv";
@@ -213,8 +213,6 @@ internal class CustomerUtilities
                     }
                     sw.Close();// Close to prevent IOException
                     File.Move(tempFile, accountFile, true);
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("Deleted!!!");
                 }
             }
         }
@@ -244,5 +242,70 @@ internal class CustomerUtilities
             Thread.Sleep(1000);
             Console.Clear();
         }
+    }
+
+    //Method to add customer details into the csv
+    internal static void AddCustomerDetails(Customer customer)
+    {
+        List<string> details = CreateCustomerList(customer);
+
+        string entry = string.Join(",", details.ToArray());
+
+        try
+        {
+            File.AppendAllText(accountFile, entry + Environment.NewLine);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Record has been added to the file");
+        }
+        catch (FileNotFoundException)
+        {
+            // Handle file not found error
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("The file couldn't be found!");
+        }
+        catch (Exception e)
+        {
+            // Handle other exceptions
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Something went wrong while writing to file! {e}");
+        }
+        finally
+        {
+            // Reset console color and provide a delay for user to see the message
+            Console.ResetColor();
+            Thread.Sleep(1000);
+            Console.Clear();
+        }
+
+    }
+
+    //A helper method to add a customer detail to a List<string> and return
+    internal static List<string> CreateCustomerList(Customer customer)
+    {
+        List<string> details = new List<string>();
+
+        //Adding customer details to a list to eventually add onto the csv
+        details.Add(customer.FirstName);
+        details.Add(customer.LastName);
+
+        if (customer.OtherName == "")
+            details.Add("EMPTY");
+        else
+            details.Add(customer.OtherName);
+
+        details.Add(customer.DateOfBirth.ToString());
+        details.Add(customer.PostCode);
+        details.Add(customer.CustomerCreationDate.ToString());
+        details.Add(customer.SecurityQuestion);
+        details.Add(customer.SecurityAnswer);
+        details.AddRange(customer.ListOfAccounts);
+        return details;
+    } 
+
+    //Allows for customer details to be changed in the case when they add or remove accounts
+    internal static void EditCustomerDetails(Customer customer)
+    {
+        RemoveCustomerDetails(customer);
+        AddCustomerDetails(customer);
     }
 }
