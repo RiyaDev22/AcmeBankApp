@@ -119,7 +119,7 @@ internal class InputUtilities
         //we create a task to read the input
         var task = Task.Run(() => input = Console.ReadLine());
         //if this task is completed in less than 2 minutes, we just return the input
-        if (task.Wait(TimeSpan.FromMinutes(0.25)))
+        if (task.Wait(TimeSpan.FromMinutes(2)))
         {
             return input;
         }
