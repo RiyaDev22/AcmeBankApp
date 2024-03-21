@@ -10,7 +10,10 @@ namespace AcmeBank
         static void Main(string[] args)
         {
             //Create a new Teller object which displays the login screen once the application starts
-            //Teller oTeller = new Teller();
+            Teller oTeller = new Teller();
+
+            //Create a new CustomerLogin object which displays customer the login screen after the teller logs in
+            CustomerLogin oCustomerLogin = new CustomerLogin();
 
             //Customer newCustomer = CreateCustomer();
             List<Account> accounts = new List<Account>();

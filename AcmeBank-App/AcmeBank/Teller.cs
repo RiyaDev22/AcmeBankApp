@@ -1,7 +1,4 @@
-﻿using System.Globalization;
-using System.Xml;
-
-namespace AcmeBank
+﻿namespace AcmeBank
 {
     class Teller
     {
@@ -73,18 +70,38 @@ namespace AcmeBank
                     //Store the password associated with the username
                     sPassword = _dTellerAccounts[sUsernameInput];
                     //Print the message
-                    Console.Write("Password: ");
-                    do
+                    Console.Write("""
+                                    Enter '*' if you would like to go back
+                                    Password: 
+                                    """);
+                    while (!bPasswordValid)
                     {
                         //Prompt teller to enter their password
                         string? sPasswordInput = Console.ReadLine();
+                        if (sPasswordInput.CompareTo("*") == 0)
+                        {
+                            //Set boolean to false
+                            bUsernameValid = false;
+                            //Clear the console
+                            Console.Clear();
+                            //Print initial login screen
+                            Console.Write("""
+                                            --- Teller Login ---
+                                            Username: 
+                                            """);
+                            break;
+                        }
                         //If password is valid
-                        if (sPasswordInput.CompareTo(sPassword) == 0)
+                        else if (sPasswordInput.CompareTo(sPassword) == 0)
                         {
                             //Set boolean to true
                             bPasswordValid = true;
+                            //Clear console
+                            Console.Clear();
                             //Print message
-                            Console.WriteLine($"Welcome {sUsername}!");
+                            Console.Write($"Welcome {sUsername}!");
+                            //Pause the app for 3 seconds for the above message to be displayed
+                            Thread.Sleep(3000);
                         }
                         //If password is not valid
                         else
@@ -95,7 +112,7 @@ namespace AcmeBank
                                                 Password: 
                                                 """);
                         }
-                    } while (!bPasswordValid); //Loop will keep executing until password is valid
+                    }
                 }
                 //If username does not exist
                 else
@@ -130,23 +147,23 @@ namespace AcmeBank
                 {
                     //Initialise a string that will store the content from the file
                     string sFileInput = "";
-                    //Initialise a count that will count the number of lines in the csv file
-                    int iCount = 0;
+                    //Initialise a boolean that will determine if the headers are skipped
+                    bool bHeadersSkipped = false;
                     //Read the whole file
                     while (!oReader.EndOfStream)
                     {
                         //Store a line into a string
                         sFileInput = oReader.ReadLine();                        
-                        //Make sure the headers won't get appended to the dictionary
-                        if (iCount != 0)
+                        //Make sure the headers will not get appended to the dictionary
+                        if (bHeadersSkipped)
                         {
                             //Split the string and store into string array
                             string[] saFileInput = sFileInput.Split(",");
                             //Add the content to the dictionary
                             _dTellerAccounts.Add(saFileInput[0], saFileInput[1]);
                         }
-                        //Increment counter
-                        iCount++;
+                        //Set boolean to true
+                        bHeadersSkipped = true;
                     }
                 }
             }
