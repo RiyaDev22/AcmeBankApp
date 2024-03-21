@@ -13,12 +13,12 @@ public class BusinessAccount : Account, IOverdraftAccount
 
     #region Constructors
     // Account setup
-    public BusinessAccount(string accountNumber, string sortCode, decimal balance) : base(accountNumber, sortCode, balance, AccountType.Business)
+    public BusinessAccount(string accountNumber, string sortCode, decimal balance, string address) : base(accountNumber, sortCode, balance, AccountType.Business, address)
     {
         _overdraftRemaining = _overdraftLimit; 
     }
     // Loading from file
-    public BusinessAccount(string accountNumber, string sortCode, decimal balance, decimal overdraftRemaining) : base(accountNumber, sortCode, balance, AccountType.Business)
+    public BusinessAccount(string accountNumber, string sortCode, decimal balance, string address, decimal overdraftRemaining) : base(accountNumber, sortCode, balance, AccountType.Business, address)
     {
         _overdraftRemaining = overdraftRemaining;
     }
@@ -62,11 +62,11 @@ public class BusinessAccount : Account, IOverdraftAccount
             --- Account details ---
             Account Number: {AccountNumber}
             Sort Code: {SortCode}
-            Balance: {Balance:C}
+            Balance: {Balance:C2}
             Type: {Type} Account
             -
-            Overdraft limit: {OverdraftLimit:C}
-            Overdraft remaining: {OverdraftRemaining:C}
+            Overdraft limit: {OverdraftLimit:C2}
+            Overdraft remaining: {OverdraftRemaining:C2}
             -----------------------
 
             """);

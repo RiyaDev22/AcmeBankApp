@@ -11,26 +11,35 @@ public abstract class Account
     private string _sortCode;
     private decimal _balance;
     private AccountType _type;
+    private string _address;
     #endregion
 
     #region Constructors
-    public Account(string accountNumber, string sortCode, decimal balance, AccountType accountType)
+    public Account(string accountNumber, string sortCode, decimal balance, AccountType accountType, string address)
     {
         _accountNumber = accountNumber;
         _sortCode = sortCode;
         _balance = balance;
         _type = accountType;
+        _address = address;
     }
     #endregion
 
     #region Getters/Setters
     public string AccountNumber { get { return _accountNumber; } }
     public string SortCode { get { return _sortCode; } }
-    public decimal Balance { get { return _balance; } }
+    public decimal Balance 
+    { 
+        get { return _balance; } 
+        set { _balance = value; }
+    }
     public AccountType Type { get { return _type; } }
+
+    public string Address { get { return _address; } }
     #endregion
 
     #region Methods
+    // Displays a menu of options
     protected virtual void DisplayAccountOptions()
     {
         Console.WriteLine("""
@@ -39,6 +48,7 @@ public abstract class Account
                 2. Withdraw
                 3. Payment
                 4. Transfer
+                5. Statement
                 X. Exit
                 -----------------------
                 """);
@@ -66,31 +76,39 @@ public abstract class Account
             Console.Write("Enter an option: ");
             string optionInput = Console.ReadLine();
 
-            switch (optionInput.ToLower()) // Process the user's choice
-            {
-                case "1":
-                    Deposit();
-                    break;
-                case "2":
-                    Withdraw();
-                    break;
-                case "3":
-                    Payment();
-                    break;
-                case "4":
-                    Transfer();
-                    break;
-                case "x":
-                    exit = true; // Exit the loop if the user chooses to exit
-                    continue;
-                default:
-                    // Display an error message if the user enters an invalid option
-                    Console.Clear();
-                    invalidPrompt.Append("-- !!! Invalid option !!! --");
-                    continue;
-            }
-
+            exit = HandleOption(optionInput, ref invalidPrompt);
         }
+    }
+
+    protected virtual bool HandleOption(string option, ref StringBuilder invalidPrompt)
+    {
+        switch (option.ToLower()) // Process the user's choice
+        {
+            case "1":
+                Deposit();
+                break;
+            case "2":
+                Withdraw();
+                break;
+            case "3":
+                Payment();
+                break;
+            case "4":
+                Transfer();
+                break;
+            case "5":
+                Statements.StatementOptions(AccountNumber);
+                break;
+            case "x":
+                // Exit the loop if the user chooses to exit
+                return true;
+            default:
+                // Display an error message if the user enters an invalid option
+                Console.Clear();
+                invalidPrompt.Append("-- !!! Invalid option !!! --");
+                break;
+        }
+        return false; //does not exit the loop
     }
 
     public virtual void DisplayAccountDetails()
@@ -138,7 +156,7 @@ public abstract class Account
         AddToBalance(amount, TransactionType.Deposit); // Add the validated deposit amount to the account balance
     }
 
-    private void Withdraw()
+    protected void Withdraw()
     {
         // Check if there are sufficient funds in the account before proceeding with the withdrawal
         if (!CheckSufficientFunds()) { return; }
@@ -177,7 +195,7 @@ public abstract class Account
         DeductFromBalance(amount, TransactionType.Withdraw); // Deduct the validated withdrawal amount from the account balance
     }
 
-    private void Payment()
+    protected void Payment()
     {
         // Check if there are sufficient funds in the account before proceeding with the payment
         if (!CheckSufficientFunds()) { return; }
@@ -195,6 +213,18 @@ public abstract class Account
             // Get payee details (sort code and account number)
             TransactionUtilities.GetPayeeDetails(out string sortCode, out string accountNumber,invalidAccountNumbers);
             payeeAccount = AccountUtilities.LoadAccountDetails($"{accountNumber}"); // Load payee account details based on the provided account number
+
+            // Checks if the payee is a savings account if so we provide an error prompt and return preventing the payment
+            if (payeeAccount.Type == AccountType.ISA)
+            {
+                payeeAccount = null;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("!!! Can not make a payment to a savings account !!!");
+                Console.ResetColor();
+
+                Thread.Sleep(1500); // Pause execution briefly to display the error message
+                Console.Clear();
+            }
 
         } while (payeeAccount == null);
 
@@ -252,7 +282,7 @@ public abstract class Account
         Thread.Sleep(1000);
     }
 
-    private void Transfer()
+    protected void Transfer()
     {
         //get customer accounts
 
@@ -356,5 +386,7 @@ public abstract class Account
         }
         return false;
     }
+
+
     #endregion
 }
