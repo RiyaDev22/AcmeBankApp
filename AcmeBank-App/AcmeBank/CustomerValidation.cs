@@ -22,15 +22,14 @@ namespace AcmeBank
          * Display message: "Customer Validation"
          * Prompt teller to enter customer's first name
          * Prompt teller to enter customer's surname
-         * Prompt teller to enter customer's other name if they have one. Otherwise the teller can enter n/a if there is no other name
          * Prompt teller to enter customer's date of birth
-         * Prompt teller to enter customer's postcode 
+         * Prompt teller to enter customer's postcode
          * Validate customer's details using the Accounts list
-         * Prompt teller to enter customer ID
-         * Validate customer ID
          * Display the chosen security question
          * Prompt the teller to enter customer's security answer
          * Validate security answer
+         * 
+         *The method MUST RETURN the account details
          ***/
 
         #endregion
