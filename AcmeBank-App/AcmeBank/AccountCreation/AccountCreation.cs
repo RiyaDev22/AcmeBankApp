@@ -1,4 +1,6 @@
-﻿namespace AccountCreation.AccountCreation;
+﻿using AcmeBank;
+
+namespace AccountCreation.AccountCreation;
 public class AccountCreation
 {
     // DisplayMenu Mehtod
@@ -19,7 +21,7 @@ public class AccountCreation
                 ============================
                 Please, Select Account Type: 
                 """);
-            string? choice = Console.ReadLine();
+            string? choice = InputUtilities.GetInputWithinTimeLimit();
 
             switch (choice)
             {
@@ -122,7 +124,7 @@ public class AccountCreation
         {
             // Request user input for business type
             Console.Write("Enter the business type: ");
-            businessType = Console.ReadLine()?.Trim();
+            businessType = InputUtilities.GetInputWithinTimeLimit()?.Trim();
 
             // Check if the entered business type is valid
             if (!validBusinessTypes.Contains(businessType, StringComparer.OrdinalIgnoreCase))
@@ -174,7 +176,7 @@ public class AccountCreation
         do
         {
             Console.Write(promptMessage);
-            depositInput = Console.ReadLine();
+            depositInput = InputUtilities.GetInputWithinTimeLimit();
 
             // Check if the input is valid and can be parsed to decimal
             if (decimal.TryParse(depositInput, out initialDeposit) && initialDeposit >= 0)
@@ -205,7 +207,7 @@ public class AccountCreation
         do
         {
             Console.Write(prompt);
-            userInput = Console.ReadLine()?.Trim().ToLower();
+            userInput = InputUtilities.GetInputWithinTimeLimit()?.Trim().ToLower();
 
             // Verify if the input is "confirm"
             if (userInput != "confirm")
@@ -224,7 +226,7 @@ public class AccountCreation
         do
         {
             Console.WriteLine("Please, provide your date of birth in this format -> DD-MM-YYYY: ");
-            string? dobInput = Console.ReadLine();
+            string? dobInput = InputUtilities.GetInputWithinTimeLimit();
             if (!DateTime.TryParse(dobInput, out dob))
             {
                 Console.WriteLine("Invalid date of birth format. Please try again.");

@@ -162,7 +162,7 @@ public class BusinessAccount : Account, IOverdraftAccount
 
             //get the user's input
             Console.Write("Enter an option: ");
-            cardInput = Console.ReadLine();
+            cardInput = InputUtilities.GetInputWithinTimeLimit();
 
             //process the user's input
             switch(cardInput.ToLower())
@@ -170,7 +170,8 @@ public class BusinessAccount : Account, IOverdraftAccount
                 //if the user chooses to request a credit card, tell them one will be shipped
                 case "1":
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("A new credit card will be sent to this account's address");
+                    Console.WriteLine("A new credit card will be sent to this account's address:");
+                    Console.WriteLine(Address);
                     Console.ResetColor();
                     Thread.Sleep(1500);
                     exit = true;
@@ -178,7 +179,8 @@ public class BusinessAccount : Account, IOverdraftAccount
                 //same as above, but for a debit card
                 case "2":
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("A new debit card will be sent to this account's address");
+                    Console.WriteLine("A new debit card will be sent to this account's address:");
+                    Console.WriteLine(Address);
                     Console.ResetColor();
                     Thread.Sleep(1500);
                     exit = true;

@@ -131,7 +131,8 @@ public class PersonalAccount : Account, IOverdraftAccount
     protected void RequestDebitCard()
     {
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("A new debit card will be sent to this account's address");
+        Console.WriteLine("A new debit card will be sent to this account's address:");
+        Console.WriteLine(Address);
         Console.ResetColor();
         Thread.Sleep(1500);
     }
@@ -145,13 +146,14 @@ public class PersonalAccount : Account, IOverdraftAccount
         Thread.Sleep(1500);
     }
 
-    // Manage the account's overdraft
+    // Manage overdraft
+    // this is simply an instruction to the teller to direct the customer's inquiry to the appropriate department
     protected void ManageOverdraft()
     {
-        Console.ForegroundColor = ConsoleColor.Magenta;
-        Console.WriteLine("This feature is not yet implemented");
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("Please direct the customer to our Personal Overdrafts division");
         Console.ResetColor();
-        Thread.Sleep(1500);
+        Thread.Sleep(3000);
     }
     #endregion
 

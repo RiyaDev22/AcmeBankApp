@@ -62,7 +62,7 @@ namespace AcmeBank
                             """);
 
                 //Prompt user input
-                string? sUserInput = Console.ReadLine();
+                string? sUserInput = InputUtilities.GetInputWithinTimeLimit();
 
                 switch (sUserInput)
                 {
@@ -71,7 +71,7 @@ namespace AcmeBank
                         oCustomerValidation = new CustomerValidation();
 
                         //loads customer and then presents options
-                        Account account = AccountUtilities.LoadAccountDetails("11112222");
+                        Account account = AccountUtilities.LoadAccountDetails("23456789");
                         account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
                         break;
                     case "2":
@@ -233,7 +233,7 @@ namespace AcmeBank
 
                         """);
                 Console.WriteLine(prompt);
-                input = Console.ReadLine();
+                input = InputUtilities.GetInputWithinTimeLimit();
 
                 //Checks to see if it can convert input to an integer
                 try
@@ -285,7 +285,7 @@ namespace AcmeBank
                 if (isNullable)
                     Console.WriteLine("you can press the RETURN key if this information is not available.");
                 
-                input = Console.ReadLine();
+                input = InputUtilities.GetInputWithinTimeLimit();
 
                 if (specialCharacterCheck)
                 {
