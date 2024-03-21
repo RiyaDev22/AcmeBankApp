@@ -1,6 +1,7 @@
 ﻿
 using AcmeBank.BankAccounts;
 using BankPayments.BankAccounts.DerivedAccounts;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
@@ -58,86 +59,91 @@ internal class Program
         //This while loop will run indefinitely until the user press 'x' to quit - Look at the switch case statement
         while (true)
         {
-            //Display main menu
-            Console.Write("""
-                        --- Main Menu ---
-                        1. View a Customer Account
-                        2. Create a Customer Account
-                        3. Remove a Customer Account
-                        *. Log Out
-                        x. Log Out & Quit
+                //Display main menu
+                Console.Write("""
+                            --- Main Menu ---
+                            1. View a Customer Account
+                            2. Create a Customer Account
+                            3. Remove a Customer Account
+                            *. Log Out
+                            x. Log Out & Quit
 
-                        Enter an option: 
-                        """);
+                            Enter an option: 
+                            """);
 
-            //Prompt user input
-            string? sUserInput = Console.ReadLine();
+                //Prompt user input
+                string? sUserInput = Console.ReadLine();
 
-            switch (sUserInput)
-            {
-                case "1":
-                    //Retrieve customer's details by creating a new CustomerValidation object
-                    oCustomerValidation = new CustomerValidation();
+                switch (sUserInput)
+                {
+                    case "1":
+                        //Create a new CustomerValidation object
+                        oCustomerValidation = new CustomerValidation();
+                        //Retrieve customer's details using the object
+                        oCustomer = oCustomerValidation.ValidateCustomer(clCustomers);
+                        /****************************************************************************************************************************************
+                        * TODO!!!: Display the correct customer's details                                                                                       *
+                        /****************************************************************************************************************************************/
 
-                    //loads customer and then presents options
-                    Account account = AccountUtilities.LoadAccountDetails("11112222");
-                    account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
-                    break;
-                case "2":
-                    //Clear the console
-                    Console.Clear();
-                    //Invoke function to create a new customer account
-                    CustomerUtilities.CreateCustomer();
-                    break;
-                case "3":
-                    //Retrieve customer's details by creating a new CustomerValidation object
-                    oCustomerValidation = new CustomerValidation();
-                    //Invoke function in the Customer class to remove the customer account
-                    break;
-                case "*":
-                    //Logs teller out
-                    oTeller.logout();
-                    //Pause the application for 1 second
-                    Thread.Sleep(1000);
-                    //Clear the console
-                    Console.Clear();
-                    //Promptes the teller to log back in
-                    oTeller.login();
-                    break;
-                case "x":
-                    //Logs teller out
-                    oTeller.logout();
-                    //Pause the application for 1 second
-                    Thread.Sleep(1000);
-                    //Print message
-                    Console.Write("\nExiting...");
-                    //Pause the application for 1 second
-                    Thread.Sleep(1000);
-                    //Quit the application
-                    Environment.Exit(0);
-                    break;
-                default:
-                    //Clear the console
-                    Console.Clear();
-                    //Print message
-                    Console.WriteLine("Invalid Input. Please try again.\n");
-                    break;
+                        //loads customer and then presents options
+                        Account account = AccountUtilities.LoadAccountDetails("11112222");
+                        account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
+                        break;
+                    case "2":
+                        //Clear the console
+                        Console.Clear();
+                        //Invoke function in the Customer Utilities class to create a new customer account
+                        Customer oNewCustomer = CustomerUtilities.CreateCustomer();
+                        /****************************************************************************************************************************************
+                        * TODO!!!: Append the new customer details to the list/csv file                                                                         *
+                        /****************************************************************************************************************************************/
+                        break;
+                    case "3":
+                        //Retrieve customer's details by creating a new CustomerValidation object
+                        oCustomerValidation = new CustomerValidation();
+                        //Retrieve customer's details using the object
+                        oCustomer = oCustomerValidation.ValidateCustomer(clCustomers);
+                        //Invoke function in the Customer Utilities class to remove the customer account
+                        CustomerUtilities.RemoveCustomerDetails(oCustomer);
+                        /****************************************************************************************************************************************
+                        * TODO!!!: Remove the customer details from the list/csv file                                                                           *
+                        /****************************************************************************************************************************************/
+                        break;
+                    case "*":
+                        //Log teller out
+                        oTeller.logout();
+                        //Pause the application for 1 second
+                        Thread.Sleep(1000);
+                        //Clear the console
+                        Console.Clear();
+                        //Prompt the teller to log back in
+                        oTeller.login();
+                        break;
+                    case "x":
+                        //Logs teller out
+                        oTeller.logout();
+                        //Pause the application for 1 second
+                        Thread.Sleep(1000);
+                        //Print message
+                        Console.Write("\nExiting...");
+                        //Pause the application for 1 second
+                        Thread.Sleep(1000);
+                        //Quit the application
+                        Environment.Exit(0);
+                        break;
+                    default:
+                        //Clear the console
+                        Console.Clear();
+                        //Print message
+                        Console.WriteLine("Invalid Input. Please try again.\n");
+                        break;
+                }
             }
         }
-
-        /*MOVED THIS PART OF THE CODE TO THE SWITCH CASE STATEMENT ABOVE*/
-        /*//loads customer and then presents options
-        Account account = AccountUtilities.LoadAccountDetails("11112222");
-        account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options*/
         //DateOnly dob = new DateOnly(2001, 4, 17);
         //Customer kawsar = CustomerUtilities.LoadCustomerDetails("Kawsar", "Hussain", "", dob, "E15 5DP");
 
         //CustomerUtilities.RemoveCustomerDetails(kawsar);
     }
-
-
-}        
-
-
-
+}
 
