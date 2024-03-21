@@ -13,12 +13,13 @@ namespace AcmeBank
         static void Main(string[] args)
         {
             //Create a new Teller object which displays the login screen once the application starts
-            Teller oTeller = new Teller();
-
+            //Teller oTeller = new Teller();
 
             //Customer newCustomer = CustomerUtilities.CreateCustomer();
 
-            Account account = AccountUtilities.LoadAccountDetails("67890123");
+            DateOnly dob = DateOnly.Parse("17/04/2001");
+            Customer kawsar = CustomerUtilities.LoadCustomerDetails("Kawsar","Hussain","", dob, "E15 5DP");
+            Account account = AccountUtilities.LoadAccountDetails(kawsar.ListOfAccounts[0], kawsar);
             account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
         }
       
@@ -29,9 +30,9 @@ namespace AcmeBank
                 I will start by asking for your name.
 
                 """);
-            string firstName = StringInputHandling("What is your first name", true);
-            string lastName = StringInputHandling("what is your last name", true);
-            string otherName = StringInputHandling("what is your middle name/s", true, true);
+            string firstName = InputUtilities.StringInputHandling("What is your first name", true);
+            string lastName = InputUtilities.StringInputHandling("what is your last name", true);
+            string otherName = InputUtilities.StringInputHandling("what is your middle name/s", true, true);
                               
             //Initialise a string list which will contains customer's details
             List<string> slCustomersCsv = new List<string>();
@@ -95,7 +96,7 @@ namespace AcmeBank
                         /****************************************************************************************************************************************/
 
                         //loads customer and then presents options
-                        Account account = AccountUtilities.LoadAccountDetails("11112222");
+                        Account account = AccountUtilities.LoadAccountDetails(oCustomer.ListOfAccounts[0], oCustomer);
                         account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
                         break;
                     case "2":
@@ -120,17 +121,17 @@ namespace AcmeBank
                         break;
                     case "*":
                         //Log teller out
-                        oTeller.logout();
+                        //oTeller.logout();
                         //Pause the application for 1 second
                         Thread.Sleep(1000);
                         //Clear the console
                         Console.Clear();
                         //Prompt the teller to log back in
-                        oTeller.login();
+                        //oTeller.login();
                         break;
                     case "x":
                         //Logs teller out
-                        oTeller.logout();
+                        //oTeller.logout();
                         //Pause the application for 1 second
                         Thread.Sleep(1000);
                         //Print message

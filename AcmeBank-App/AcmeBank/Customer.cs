@@ -3,7 +3,7 @@ using BankPayments.BankAccounts.DerivedAccounts;
 
 namespace AcmeBank;
 
-class Customer
+public class Customer
 {
     //Setting up attributes of the Customer Class
     private string _firstName;
@@ -168,7 +168,7 @@ class Customer
         //Need inner working of account class to finish this function
         if (this._listOfAccounts.Contains(accountNumber))
         {
-            Account account = AccountUtilities.LoadAccountDetails(accountNumber);
+            Account account = AccountUtilities.LoadAccountDetails(accountNumber,this);
             
             AccountType accountType= account.Type;
             
@@ -194,7 +194,7 @@ class Customer
     {
         foreach (string i in this._listOfAccounts)
         {
-            Account account = AccountUtilities.LoadAccountDetails(i);
+            Account account = AccountUtilities.LoadAccountDetails(i,this);
             if (account.GetType() == typeof(ISAAccount))
             {
                 this._hasISA = true;
