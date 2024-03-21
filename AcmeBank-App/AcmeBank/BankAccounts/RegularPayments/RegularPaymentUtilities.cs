@@ -52,7 +52,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
                     StandingOrderOptions();
                     break;
                 case "2":
-                    Console.WriteLine("Direct Debits");
+                    ManageDDs(ref invalidPrompt);
                     break;
                 case "x":
                     // Exit the loop if the user chooses to exit
@@ -355,7 +355,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
         private static void ManageSOs(ref StringBuilder invalidMenuPrompt)
         {
             StringBuilder standingOrderPrompt = new StringBuilder();
-            StringBuilder invalidPrompt = new StringBuilder();
+            StringBuilder invalidOptionPrompt = new StringBuilder();
 
             bool exit = false;
             while (!exit)
@@ -394,11 +394,11 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 int currentLeft = Console.CursorLeft;
                 int currentTop = Console.CursorTop;
 
-                if (invalidPrompt.ToString() != "")
+                if (invalidOptionPrompt.ToString() != "")
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"\n{invalidPrompt}");
-                    invalidPrompt.Clear();
+                    Console.WriteLine($"\n{invalidOptionPrompt}");
+                    invalidOptionPrompt.Clear();
                     Console.ResetColor();
                 }
 
@@ -431,7 +431,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 } 
                 else
                 {
-                    invalidPrompt.AppendLine("!!! Invalid ID !!!");
+                    invalidOptionPrompt.AppendLine("!!! Invalid ID !!!");
                 }
             }
 
@@ -459,6 +459,163 @@ namespace AcmeBank.BankAccounts.RegularPayments
             }
             // Write the CSV content to the file
             File.WriteAllText(path, sb.ToString());
+        }
+
+        private static void ManageDDs(ref StringBuilder invalidMenuPrompt)
+        {
+            StringBuilder directDebitPrompt = new StringBuilder();
+            StringBuilder invalidOptionPrompt = new StringBuilder();
+
+            bool exit = false;
+            while (!exit)
+            {
+                Console.Clear();
+
+                List<RegularPayment> directDebits = LoadDDs(_currentAccount.AccountNumber);
+
+                if (directDebits.Count <= 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    invalidMenuPrompt.Append("!!! Customer has no direct debits !!!");
+                    Console.ResetColor();
+                    return;
+                }
+
+
+                int count = 1;
+                directDebitPrompt.Clear();
+                foreach (RegularPayment regularPayment in directDebits)
+                {
+                    directDebitPrompt.AppendLine($"{count,3}: {regularPayment.PayeeAccountNumber,15} {regularPayment.Amount,15:C2} {regularPayment.Date.Date,15:D}");
+                    count++;
+                }
+
+
+                Console.Write("""
+                    --- Manage Direct Debits  ---
+                    Enter the id of the any order you would like to cancel e.g '1'.
+                    Enter 'x' to exit.
+
+                    ID: 
+                    """);
+
+                // Save the current cursor position
+                int currentLeft = Console.CursorLeft;
+                int currentTop = Console.CursorTop;
+
+                if (invalidOptionPrompt.ToString() != "")
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"\n{invalidOptionPrompt}");
+                    invalidOptionPrompt.Clear();
+                    Console.ResetColor();
+                }
+
+                Console.WriteLine($"""
+
+                        
+                    ------------------ Direct Debits -------------------
+                      id Debtor Account          Amount            Date
+                    {directDebitPrompt}
+                    ----------------------------------------------------
+                    """);
+
+                // Move the cursor position to the line where user input is expected
+                Console.SetCursorPosition(currentLeft, currentTop);
+
+                // Then provide the option to send statement or exit
+                string? input = Console.ReadLine();
+                int id;
+                bool validID = int.TryParse(input, out id);
+                if (input.ToLower() == "x")
+                {
+                    exit = true;
+                } else if (validID && id > 0 && id <= directDebits.Count)
+                {
+                    directDebits.RemoveAt(id - 1);
+                    // Save remaining
+                    UpdateDDs(directDebits);
+                    if (directDebits.Count <= 0) { exit = true; }
+                } else
+                {
+                    invalidOptionPrompt.AppendLine("!!! Invalid ID !!!");
+                }
+            }
+        }
+
+        private static void UpdateDDs(List<RegularPayment> directDebits)
+        {
+            string fileDirectory = $@"{directory}\{_currentAccount.AccountNumber}"; // Construct the file directory path
+
+            // Check if the directory exists, if not, create it
+            if (!Directory.Exists(fileDirectory))
+            {
+                Directory.CreateDirectory(fileDirectory);
+                using (File.Create($@"{fileDirectory}\DirectDebits.csv")) ;
+            }
+
+            // Construct the path for AccountDetails.csv
+            string path = @$"{fileDirectory}\DirectDebits.csv";
+
+            // Create a StringBuilder to construct the CSV content
+            StringBuilder sb = new StringBuilder();
+            foreach (RegularPayment payment in directDebits)
+            {
+                sb.AppendLine($"{payment.PayeeAccountNumber},{payment.Amount},{payment.Date},Monthly,");
+            }
+            // Write the CSV content to the file
+            File.WriteAllText(path, sb.ToString());
+        }
+
+        private static List<RegularPayment> LoadDDs(string accountNumberToLoad)
+        {
+            // Construct the file directory path
+            string fileDirectory = $@"{directory}\{accountNumberToLoad}";
+            string path = $@"{fileDirectory}\DirectDebits.csv";
+
+            List<RegularPayment> regularPayments = new List<RegularPayment>();
+
+            try
+            {
+                if (File.Exists(path))
+                {
+                    // Read the file
+                    string[] payments = File.ReadAllLines(path);
+                    foreach (string regularPayment in payments)
+                    {
+                        string[] regularPaymentSplit = regularPayment.Split(',');
+                        string payeeAccountNumber = regularPaymentSplit[0];
+                        decimal amount = decimal.Parse(regularPaymentSplit[1]);
+                        DateTime date = DateTime.Parse(regularPaymentSplit[2]);
+                        regularPayments.Add(new RegularPayment(payeeAccountNumber, amount, date));
+                    }
+                    return regularPayments;
+                }
+            } catch (IndexOutOfRangeException)
+            {
+                // Handle parsing errors
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Something went wrong parsing the file, please check the data!");
+
+            } catch (FileNotFoundException)
+            {
+                // Handle file not found error
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("The file couldn't be found!");
+
+            } catch (Exception)
+            {
+                // Handle other exceptions
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Something went wrong while loading the file!");
+
+            } finally
+            {
+                // Reset console color and provide a delay for user to see the message
+                Console.ResetColor();
+            }
+
+            return regularPayments;
         }
     }
 }
