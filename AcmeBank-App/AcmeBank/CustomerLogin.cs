@@ -1,0 +1,6 @@
+﻿namespace AcmeBank
+{
+    class CustomerLogin
+    {
+    }
+}
