@@ -86,13 +86,13 @@ namespace AcmeBank
                         //Invoke function in the Customer class to remove the customer account
                         break;
                     case "*":
-                        //Logs teller out
+                        //Log teller out
                         oTeller.logout();
                         //Pause the application for 1 second
                         Thread.Sleep(1000);
                         //Clear the console
                         Console.Clear();
-                        //Promptes the teller to log back in
+                        //Prompt the teller to log back in
                         oTeller.login();
                         break;
                     case "x":
