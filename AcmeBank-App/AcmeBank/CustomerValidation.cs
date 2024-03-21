@@ -2,75 +2,36 @@
 
 namespace AcmeBank
 {
-    internal class CustomerValidation
+    class CustomerValidation
     {
-        #region Global Variables        
+        #region Global Variables
+        #endregion
+
+        #region Constructor
+        public CustomerValidation()
+        {
+        }
         #endregion
 
         #region Getters and Setters
         #endregion
 
         #region Methods
-        public Customer? ValidateCustomer(List<Customer> clCustomers)
-        {
-            //Clear the console
-            Console.Clear();
-            //Display the Customer Validation menu
-            Console.Write("""
-                            --- Customer Validation ---
-                            Please enter the customer's details in the following fields.
-
-                            First Name: 
-                            """);
-
-            //Prompt teller to enter customer's first name
-            string? sFirstName = Console.ReadLine();
-            //Display message
-            Console.Write("Last Name: ");
-            //Prompt teller to enter customer's last name
-            string? sLastName = Console.ReadLine();
-            //Display message
-            Console.Write("Postcode: ");
-            //Prompt teller to enter customer's postcode
-            string? sPostcode = Console.ReadLine();
-            //Display message
-            Console.Write("Date Of Birth (YYYY-MM-DD): ");
-            //Prompt teller to enter customer's date of birth
-            string? sDob = Console.ReadLine();
-
-            //Check if user input is valid
-            if(DateOnly.TryParse(sDob, out DateOnly doDob))
-            {             
-                //Loop through the customer list
-                foreach (Customer oCustomer in clCustomers)
-                {
-                    //Check if customer exists
-                    if (oCustomer.FirstName.CompareTo(sFirstName) == 0 &&
-                       oCustomer.LastName.CompareTo(sLastName) == 0 &&
-                       oCustomer.DateOfBirth.CompareTo(doDob) == 0 &&
-                       oCustomer.PostCode.CompareTo(sPostcode) == 0)
-                    {
-                        //Display chosen security question
-                        Console.Write($"\nPlease answer this security question\n{oCustomer.SecurityQuestion}: ");
-                        //Prompt teller to enter customer's security answer
-                        string? sAnswerInput = Console.ReadLine();
-                        //If the answer is correct
-                        if (oCustomer.SecurityAnswer.CompareTo(sAnswerInput) == 0)
-                        {
-                            //Clear the console
-                            Console.Clear();
-                            //Display message
-                            Console.Write("Valid Customer\nLoading...");
-                            //Pause the application for 2 seconds
-                            Thread.Sleep(2000);
-                            //Return customer
-                            return oCustomer;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
+        /***
+         * Logic:
+         * Display message: "Customer Validation"
+         * Prompt teller to enter customer's first name
+         * Prompt teller to enter customer's surname
+         * Prompt teller to enter customer's other name if they have one. Otherwise the teller can enter n/a if there is no other name
+         * Prompt teller to enter customer's date of birth
+         * Prompt teller to enter customer's postcode 
+         * Validate customer's details using the Accounts list
+         * Prompt teller to enter customer ID
+         * Validate customer ID
+         * Display the chosen security question
+         * Prompt the teller to enter customer's security answer
+         * Validate security answer
+         ***/
 
         #endregion
     }
