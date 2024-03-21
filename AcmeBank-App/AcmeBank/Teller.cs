@@ -1,7 +1,4 @@
-﻿using System.Globalization;
-using System.Xml;
-
-namespace AcmeBank
+﻿namespace AcmeBank
 {
     class Teller
     {
@@ -55,6 +52,8 @@ namespace AcmeBank
             //Print initial login screen
             Console.Write("""
                                 --- Teller Login ---
+                                x. Quit
+
                                 Username: 
                                 """);
 
@@ -63,48 +62,90 @@ namespace AcmeBank
                 //Prompt teller to enter their username
                 string? sUsernameInput = Console.ReadLine();
 
-                //If username exists
-                if (_dTellerAccounts.ContainsKey(sUsernameInput))
-                {
-                    //Set boolean to true
-                    bUsernameValid = true;
-                    //Store the username
-                    sUsername = sUsernameInput;
-                    //Store the password associated with the username
-                    sPassword = _dTellerAccounts[sUsernameInput];
-                    //Print the message
-                    Console.Write("Password: ");
-                    do
-                    {
-                        //Prompt teller to enter their password
-                        string? sPasswordInput = Console.ReadLine();
-                        //If password is valid
-                        if (sPasswordInput.CompareTo(sPassword) == 0)
-                        {
-                            //Set boolean to true
-                            bPasswordValid = true;
-                            //Print message
-                            Console.WriteLine($"Welcome {sUsername}!");
-                        }
-                        //If password is not valid
-                        else
-                        {
-                            //Print message
-                            Console.Write("""
-                                                Invalid password. Please try again.
-                                                Password: 
-                                                """);
-                        }
-                    } while (!bPasswordValid); //Loop will keep executing until password is valid
-                }
-                //If username does not exist
-                else
+                if (sUsernameInput.CompareTo("x") == 0)
                 {
                     //Print message
-                    Console.Write("""
-                                        Username does not exist. Please try again.
-                                        Username: 
+                    Console.Write("\nExiting...");
+                    //Pause the application for 1 second
+                    Thread.Sleep(1000);
+                    //Quit the application
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    //If username exists
+                    if (_dTellerAccounts.ContainsKey(sUsernameInput))
+                    {
+                        //Set boolean to true
+                        bUsernameValid = true;
+                        //Store the username
+                        sUsername = sUsernameInput;
+                        //Store the password associated with the username
+                        sPassword = _dTellerAccounts[sUsernameInput];
+                        //Clear the console
+                        Console.Clear();
+                        //Print the message
+                        Console.Write($"""
+                                        --- Teller Login ---
+                                        *. Go Back
+
+                                        Username: {sUsername}
+                                        Password: 
                                         """);
+
+                        while (!bPasswordValid)
+                        {
+                            //Prompt teller to enter their password
+                            string? sPasswordInput = Console.ReadLine();
+                            if (sPasswordInput.CompareTo("*") == 0)
+                            {
+                                //Set boolean to false
+                                bUsernameValid = false;
+                                //Clear the console
+                                Console.Clear();
+                                //Print initial login screen
+                                Console.Write("""
+                                                --- Teller Login ---
+                                                x. Quit
+
+                                                Username: 
+                                                """);
+                                break;
+                            }
+                            //If password is valid
+                            else if (sPasswordInput.CompareTo(sPassword) == 0)
+                            {
+                                //Set boolean to true
+                                bPasswordValid = true;
+                                //Clear console
+                                Console.Clear();
+                                //Print message
+                                Console.Write($"Welcome {sUsername}!");
+                                //Pause the app for 2 seconds for the above message to be displayed
+                                Thread.Sleep(2000);
+                                //Clear the console
+                                Console.Clear();
+                            }
+                            //If password is not valid
+                            else
+                            {
+                                //Print message
+                                Console.Write("""
+                                                    Invalid password. Please try again.
+                                                    Password: 
+                                                    """);
+                            }
+                        }
+                    }
+                    //If username does not exist
+                    else
+                    {
+                        //Print message
+                        Console.Write("""
+                                            Username does not exist. Please try again.
+                                            Username: 
+                                            """);
+                    }
                 }
             } while (!bUsernameValid); //Loop will keep executing until username is valid
         }
@@ -115,6 +156,10 @@ namespace AcmeBank
             //Reset the global variables
             sUsername = "";
             sPassword = "";
+            //Clear the console
+            Console.Clear();
+            //Print message
+            Console.Write("Logging out...");
         }
 
         /*This method is invoked when the teller object is instantiated*/
@@ -130,23 +175,23 @@ namespace AcmeBank
                 {
                     //Initialise a string that will store the content from the file
                     string sFileInput = "";
-                    //Initialise a count that will count the number of lines in the csv file
-                    int iCount = 0;
+                    //Initialise a boolean that will determine if the headers are skipped
+                    bool bHeadersSkipped = false;
                     //Read the whole file
                     while (!oReader.EndOfStream)
                     {
                         //Store a line into a string
                         sFileInput = oReader.ReadLine();                        
-                        //Make sure the headers won't get appended to the dictionary
-                        if (iCount != 0)
+                        //Make sure the headers will not get appended to the dictionary
+                        if (bHeadersSkipped)
                         {
                             //Split the string and store into string array
                             string[] saFileInput = sFileInput.Split(",");
                             //Add the content to the dictionary
                             _dTellerAccounts.Add(saFileInput[0], saFileInput[1]);
                         }
-                        //Increment counter
-                        iCount++;
+                        //Set boolean to true
+                        bHeadersSkipped = true;
                     }
                 }
             }

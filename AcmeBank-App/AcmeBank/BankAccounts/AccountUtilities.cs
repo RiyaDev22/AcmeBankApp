@@ -18,8 +18,8 @@ internal class AccountUtilities
         if (!Directory.Exists(fileDirectory))
         {
             Directory.CreateDirectory(fileDirectory);
-            using (File.Create($@"{fileDirectory}\AccountDetails.csv"));
-            using (File.Create($@"{fileDirectory}\Transaction.csv"));
+            using (File.Create($@"{fileDirectory}\AccountDetails.csv")) ;
+            using (File.Create($@"{fileDirectory}\Transaction.csv")) ;
         }
 
         // Construct the path for AccountDetails.csv
@@ -31,6 +31,7 @@ internal class AccountUtilities
         sb.Append($"{accountToSave.SortCode},");
         sb.Append($"{accountToSave.Balance},");
         sb.Append($"{accountToSave.Type},");
+        sb.Append($"{accountToSave.Address},");
 
         // Append additional details based on the account type
         switch (accountToSave.Type)
@@ -90,28 +91,24 @@ internal class AccountUtilities
                 string accountNumber = accountSplit[0];
                 string sortCode = accountSplit[1];
                 decimal balance = decimal.Parse(accountSplit[2]);
+                string address = accountSplit[4];
                 switch (accountSplit[3])
                 {
                     case "Personal":
-                        account = new PersonalAccount(accountNumber, sortCode, balance);
+                        decimal remainingOverdraftPA = decimal.Parse(accountSplit[5]);
+                        account = new PersonalAccount(accountNumber, sortCode, balance, address, remainingOverdraftPA);
                         break;
                     case "ISA":
-                        decimal remainingDepositLimit = decimal.Parse(accountSplit[4]);
-                        account = new ISAAccount(accountNumber, sortCode, balance, remainingDepositLimit);
+                        decimal remainingDepositLimit = decimal.Parse(accountSplit[5]);
+                        account = new ISAAccount(accountNumber, sortCode, balance, address,remainingDepositLimit);
                         break ;
                     case "Business":
-                        decimal remainingOverdraft = decimal.Parse(accountSplit[4]);
-                        account = new BusinessAccount(accountNumber, sortCode, balance, remainingOverdraft);
+                        decimal remainingOverdraftBA = decimal.Parse(accountSplit[5]);
+                        account = new BusinessAccount(accountNumber, sortCode, balance, address, remainingOverdraftBA);
                         break;
                     default:
-                        Console.WriteLine("somethings wrong");
                         return null;
                 }
-
-                // Provide feedback to the user
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"Loaded Account!\n");
-
             }
         } catch (IndexOutOfRangeException)
         {
@@ -135,7 +132,6 @@ internal class AccountUtilities
         {
             // Reset console color and provide a delay for user to see the message
             Console.ResetColor();
-            Thread.Sleep(1000);
         }
 
         return account;
