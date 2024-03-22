@@ -74,6 +74,11 @@ namespace AcmeBank
                         //If customer is not null, invoke function
                         if (oCustomer != null)
                         {
+                            
+                            foreach (string account in oCustomer.ListOfAccounts)
+                            {
+                                AccountUtilities.RemoveAccountDetails(account);
+                            }
                             //Remove the customer object from the list
                             clCustomers.Remove(oCustomer);
                             //Invoke function in the Customer Utilities class to remove the customer account from the csv file
