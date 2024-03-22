@@ -14,8 +14,8 @@ namespace AcmeBank
           
             DateOnly dob = DateOnly.Parse("17/04/2001");
             Customer kawsar = CustomerUtilities.LoadCustomerDetails("Kawsar","Hussain","", dob, "E15 5DP");
-            Account account = AccountUtilities.LoadAccountDetails(kawsar.ListOfAccounts[0], kawsar);
-            account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
+            //Account account = AccountUtilities.LoadAccountDetails(kawsar.ListOfAccounts[0], kawsar);
+            //account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
           
           //Initialise a string list which will contain customer's details
             List<string> slCustomers = populateStringList();
@@ -115,7 +115,7 @@ namespace AcmeBank
             }
         }
       
-      public static Customer CreateCustomer()
+      /*public static Customer CreateCustomer()
         {
             Console.WriteLine("""
                 Hello and welcome to a new and Exciting Journey with us.
@@ -125,7 +125,7 @@ namespace AcmeBank
             string firstName = InputUtilities.StringInputHandling("What is your first name", true);
             string lastName = InputUtilities.StringInputHandling("what is your last name", true);
             string otherName = InputUtilities.StringInputHandling("what is your middle name/s", true, true);            
-        }
+        }*/
 
         private static List<string> populateStringList()
         {
