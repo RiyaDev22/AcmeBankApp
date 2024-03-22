@@ -5,7 +5,7 @@ using AcmeBank.BankAccounts.RegularPayments;
 using AcmeBank.BankAccounts.Transactions;
 using System.Text;
 
-namespace BankPayments.BankAccounts.DerivedAccounts;
+namespace AcmeBank;
 
 public class PersonalAccount : Account, IOverdraftAccount
 {
@@ -107,6 +107,7 @@ public class PersonalAccount : Account, IOverdraftAccount
         return false;
     }
 
+    // Deduct amount from the overdraft remaining
     public bool UpdateRemainingOverdraft(decimal amount)
     {
         if (Balance > 0) // If the balance is positive, deduct it from the amount to be withdrawn from overdraft
@@ -120,6 +121,7 @@ public class PersonalAccount : Account, IOverdraftAccount
         return true;
     }
 
+    // Displays account information and additonally the overdraft limit
     public override void DisplayAccountDetails()
     {
         // Display account details as well as overdraft
@@ -150,7 +152,7 @@ public class PersonalAccount : Account, IOverdraftAccount
     protected void ManageOverdraft()
     {
         Console.ForegroundColor = ConsoleColor.Magenta;
-        Console.WriteLine("Please direct the customer to our Business Overdraft division");
+        Console.WriteLine("Please direct the customer to our Overdraft division");
         Console.ResetColor();
         Thread.Sleep(1500);
     }

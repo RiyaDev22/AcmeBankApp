@@ -11,8 +11,9 @@ namespace AcmeBank.BankAccounts.Transactions;
 
 internal class TransactionUtilities
 {
-    private static string directory = $@"{AppDomain.CurrentDomain.BaseDirectory}\Accounts\";
+    private static string directory = $@"{AppDomain.CurrentDomain.BaseDirectory}\Accounts\"; // directory for accounts file
 
+    // Checks sort code is 6 numeric digits
     internal static bool VerifySortCode(string sortCode)
     {
         // Define regex pattern for 6-digit numeric string
@@ -20,6 +21,7 @@ internal class TransactionUtilities
         return Regex.IsMatch(sortCode, pattern);
     }
 
+    // Checks account number is 8 numeric digits
     internal static bool VerifyAccountNumber(string accountNumber)
     {
         // Define regex pattern for 8-digit numeric string
@@ -27,15 +29,16 @@ internal class TransactionUtilities
         return Regex.IsMatch(accountNumber, pattern);
     }
 
+    // Method to get payee details such as sort code and account number for making a payment.
     internal static void GetPayeeDetails(out string sortCode, out string accountNumber, List<string> invalidAccountNumbers, ref bool exit)
     {
-        sortCode = "";
-        accountNumber = "";
+        sortCode = ""; // Initialize sort code
+        accountNumber = ""; // Initialize account number
 
         StringBuilder invalidPrompt = new StringBuilder();
         StringBuilder helpPrompt = new StringBuilder();
 
-        bool validInputs = false;
+        bool validInputs = false; // Flag to indicate if inputs are valid
         do
         {
             // Display payee header
@@ -64,7 +67,7 @@ internal class TransactionUtilities
                 exit = true;
                 return;
             }
-            else if(!TransactionUtilities.VerifySortCode(sortCode))
+            else if(!TransactionUtilities.VerifySortCode(sortCode)) // Checks its 6 digits long
             {
                 invalidPrompt.Append("!!! Invalid sort code !!!");
                 continue;
@@ -80,27 +83,27 @@ internal class TransactionUtilities
             if (accountNumber.ToLower() == "x")
             {
                 exit = true;
-                return;
+                return; //Exits payment or standing order setup
             } 
-            else if (!TransactionUtilities.VerifyAccountNumber(accountNumber))
+            else if (!TransactionUtilities.VerifyAccountNumber(accountNumber)) // Checks its 8 digits long
             {
                 invalidPrompt.Append("!!! Invalid account number !!!");
                 continue;
             }
-            else if (invalidAccountNumbers.Contains(accountNumber))
+            else if (invalidAccountNumbers.Contains(accountNumber)) // Ensures its not to this customers owned account(s)
             {
                 invalidPrompt.Append("!!! Payment to own account, Use transfer instead !!!");
                 continue;
             } 
             else
             {
-                validInputs = true;
+                validInputs = true; // Inputs are valid
             }
 
         } while (!validInputs); // Loops if sort code and account number provided are invalid
     }
 
-
+    // Loads transaction history from a file based on the provided account number.
     internal static List<Transaction> LoadTransactionHistory(string accountNumberToLoad)
     {
         // Construct the file directory path
@@ -117,14 +120,17 @@ internal class TransactionUtilities
                 string[] transactions = File.ReadAllLines(path);
                 foreach (string transaction in transactions)
                 {
+                    // Split each transaction entry by comma and parse values
                     string[] transactionSplit = transaction.Split(',');
                     decimal amount = decimal.Parse(transactionSplit[0]);
                     decimal balance = decimal.Parse(transactionSplit[1]);
                     TransactionType type = (TransactionType)Enum.Parse(typeof(TransactionType), transactionSplit[2]);
                     DateTime date = DateTime.Parse(transactionSplit[3]);
+
+                    // Create a new Transaction object and add it to the transaction history list
                     transactionHistory.Add(new Transaction(amount, balance, type, date));
                 }
-                return transactionHistory;
+                return transactionHistory; // Return the transaction history list
             }
         } catch (IndexOutOfRangeException)
         {
@@ -150,7 +156,7 @@ internal class TransactionUtilities
             Console.ResetColor();
         }
 
-        return transactionHistory;
+        return transactionHistory; // Return an empty list if file doesn't exist or an error occurs
     }
-
 }
+
