@@ -168,7 +168,7 @@ It first checks to see if the customer can pay another account. Then it tells th
 Prompts the teller to select from a range of accounts to transfer money to. The customer directs them to the account they want money transferred to. The accounts listed will be the other accounts said customer has. Once selected, the teller then inputs a value which deposits the money to the stated account.
 
 ### Manage Standing Order / Direct debits
-This is a method exclusive to a personal account type. Still in **TODO**
+This is a method exclusive to a personal account type.
 
 ### Statement
 Method which displays the statement of the account to the teller
