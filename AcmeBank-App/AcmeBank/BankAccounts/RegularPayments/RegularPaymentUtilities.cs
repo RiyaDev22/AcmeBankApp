@@ -184,7 +184,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 Console.ResetColor();
 
                 Console.Write("Amount: ");
-                amountInput = Console.ReadLine();
+                amountInput = InputUtilities.GetInputWithinTimeLimit();
 
                 if (amountInput.ToLower() == "x")
                     return;
@@ -224,7 +224,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 Console.ResetColor();
 
                 Console.Write("Date: ");
-                startDateInput = Console.ReadLine();
+                startDateInput = InputUtilities.GetInputWithinTimeLimit();
 
                 bool checkDate = DateTime.TryParse(startDateInput, out startDate);
                 if (startDateInput.ToLower() == "x")

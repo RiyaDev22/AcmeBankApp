@@ -59,7 +59,7 @@ internal class Statements
 
             // Takes an input from the user
             Console.Write("Month-Year: ");
-            input = Console.ReadLine();
+            input = InputUtilities.GetInputWithinTimeLimit();
 
             if (input.ToLower() == "x")
                 exit = true;

@@ -171,7 +171,7 @@ public abstract class Account
             helpPrompt.Clear();
 
             Console.SetCursorPosition(currentLeft, currentTop);
-            input = Console.ReadLine();
+            input = InputUtilities.GetInputWithinTimeLimit();
 
             if (input.ToLower() == "x")
                 exit = true;
@@ -240,7 +240,7 @@ public abstract class Account
             helpPrompt.Clear();
 
             Console.SetCursorPosition(currentLeft, currentTop);
-            input = Console.ReadLine();
+            input = InputUtilities.GetInputWithinTimeLimit();
 
 
             if (input.ToLower() == "x")
@@ -340,7 +340,7 @@ public abstract class Account
             helpPrompt.Clear();
 
             Console.SetCursorPosition(currentLeft, currentTop);
-            input = Console.ReadLine();
+            input = InputUtilities.GetInputWithinTimeLimit();
 
             if (input.ToLower() == "x")
                 return;
