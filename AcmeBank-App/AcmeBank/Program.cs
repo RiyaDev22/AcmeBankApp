@@ -12,10 +12,10 @@ namespace AcmeBank
 
             //Customer newCustomer = CustomerUtilities.CreateCustomer();
           
-            DateOnly dob = DateOnly.Parse("17/04/2001");
+          /*  DateOnly dob = DateOnly.Parse("17/04/2001");
             Customer kawsar = CustomerUtilities.LoadCustomerDetails("Kawsar","Hussain","", dob, "E15 5DP");
             Account account = AccountUtilities.LoadAccountDetails(kawsar.ListOfAccounts[0], kawsar);
-            account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
+            account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options*/
           
             //Initialise a string list which will contain customer's details
             List<string> slCustomers = populateStringList();
