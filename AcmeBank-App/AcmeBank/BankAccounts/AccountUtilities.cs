@@ -175,7 +175,7 @@ internal class AccountUtilities
     {
         string fileDirectory = $@"{directory}\{accountNumberToDelete}";
 
-        if (File.Exists(fileDirectory))
+        if (Directory.Exists(fileDirectory))
         {
             try
             {
