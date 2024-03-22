@@ -12,32 +12,32 @@ namespace AcmeBank
 
             //Customer newCustomer = CustomerUtilities.CreateCustomer();
           
-            DateOnly dob = DateOnly.Parse("17/04/2001");
+            /*DateOnly dob = DateOnly.Parse("17/04/2001");
             Customer kawsar = CustomerUtilities.LoadCustomerDetails("Kawsar","Hussain","", dob, "E15 5DP");
             Account account = AccountUtilities.LoadAccountDetails(kawsar.ListOfAccounts[0], kawsar);
-            account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
+            account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options*/
           
             //Initialise a string list which will contain customer's details
             List<string> slCustomers = populateStringList();
             //Initialise a customer list which will contain customer's details from the string list
-            List<Customer> clCustomers = populateCustomerList(slCustomers);    
+            List<Customer> clCustomers = populateCustomerList(slCustomers);
 
             //Declare object which will display the customer validation screen
             CustomerValidation oCustomerValidation;
             //Declare object which will hold the customer's attributes
             Customer? oCustomer;
-
-        //This while loop will run indefinitely until the user press 'x' to quit - Look at the switch case statement
-        while (true)
-        {
-            //Display main menu
-            Console.Write("""
-                        --- Main Menu ---
-                        1. View a Customer Account
-                        2. Create a Customer Account
-                        3. Remove a Customer Account
-                        *. Log Out
-                        x. Log Out & Quit
+          
+            //This while loop will run indefinitely until the user press 'x' to quit - Look at the switch case statement
+            while (true)
+            {
+                //Display main menu
+                Console.Write("""
+                            --- Main Menu ---
+                            1. View a Customer Account
+                            2. Create a Customer Account
+                            3. Remove a Customer Account
+                            [*] Log Out
+                            [x] Log Out & Quit
 
                         Enter an option: 
                         """);
@@ -80,10 +80,21 @@ namespace AcmeBank
                         oCustomerValidation = new CustomerValidation();
                         //Retrieve customer's details using the object
                         oCustomer = oCustomerValidation.ValidateCustomer(clCustomers);
-                        //Remove the customer object from the list
-                        clCustomers.Remove(oCustomer);
-                        //Invoke function in the Customer Utilities class to remove the customer account from the csv file
-                        CustomerUtilities.RemoveCustomerDetails(oCustomer);
+                        //If customer is not null, invoke function
+                        if (oCustomer != null)
+                        {
+                            //Remove the customer object from the list
+                            clCustomers.Remove(oCustomer);
+                            //Invoke function in the Customer Utilities class to remove the customer account from the csv file
+                            CustomerUtilities.RemoveCustomerDetails(oCustomer);
+                        }
+                        else //Customer is null
+                        {
+                            //Clear the console
+                            Console.Clear();
+                            //Display message
+                            Console.WriteLine("Customer Not Found\n");
+                        }
                         break;
                     case "*":
                         //Log teller out
@@ -216,14 +227,18 @@ namespace AcmeBank
             //If the customer has 1 account number, store the account details into a variable
             if (oCustomer.ListOfAccounts.Count == 1)
             {
+                //Store account details
                 Account oAccount = AccountUtilities.LoadAccountDetails(oCustomer.ListOfAccounts[0], oCustomer);
+                //Display account options based on the account number and customer
                 oAccount.AccountOptionsLoop();
             }
             //Else if the customer has multiple account numbers
             else if (oCustomer.ListOfAccounts.Count > 1)
             {
-                string? sAccountNumber = "";
+                string? sAccountNumber;
+                //Set boolean to false
                 bool bInputValid = false;
+                //Store the string
                 string sOutput = "The customer has multiple account numbers:\n";
                 //Append all account numbers to the output string
                 foreach (string sAccountNum in oCustomer.ListOfAccounts) sOutput += $"{sAccountNum}\n";
@@ -235,7 +250,7 @@ namespace AcmeBank
                     sAccountNumber = InputUtilities.GetInputWithinTimeLimit();
 
                     //If the user input is not null and exclusively numeric
-                    if (!string.IsNullOrEmpty(sAccountNumber) && isNumeric(sAccountNumber))
+                    if (!string.IsNullOrEmpty(sAccountNumber) && checkIfNumeric(sAccountNumber))
                     {
                         //Go through each account number
                         foreach (string sAccountNum in oCustomer.ListOfAccounts)
@@ -243,33 +258,40 @@ namespace AcmeBank
                             //Check if user input matches with any of the account numbers, set boolean to true and break out of the foreach loop
                             if (sAccountNumber.CompareTo(sAccountNum) == 0)
                             {
+                                //Set boolean to true
                                 bInputValid = true;
+                                //Break out of the foreach loop
                                 break;
                             }
                         }
                         //If the user input is invalid, clear the console and display the message
                         if (!bInputValid)
                         {
+                            //Clear console
                             Console.Clear();
+                            //Print message
                             Console.WriteLine("Account number has not been chosen. Please try again.\n");
                         }
                     }
                     //If the user input is invalid, clear the console and display the message
                     else
                     {
+                        //Clear console
                         Console.Clear();
+                        //Print message
                         Console.WriteLine("Invalid Input. Please try again.\n");
                     }
                 } while (!bInputValid); //The loop will keep executing until the input is valid
-
+                //Store account details
                 Account oAccount = AccountUtilities.LoadAccountDetails(sAccountNumber, oCustomer);
+                //Display account options based on the account number and customer
                 oAccount.AccountOptionsLoop();
             }
             /*Account account = AccountUtilities.LoadAccountDetails("67890123");
             account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options*/
         }
 
-        public static bool isNumeric(string sInput)
+        public static bool checkIfNumeric(string sInput)
         {
             //Iterate through each charcater and if a non-digit character is found, return false
             foreach (char c in sInput) if (!char.IsDigit(c)) return false;
