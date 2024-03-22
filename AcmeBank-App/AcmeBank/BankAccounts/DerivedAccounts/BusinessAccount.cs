@@ -58,7 +58,7 @@ public class BusinessAccount : Account, IOverdraftAccount
             7. Manage Loans
             8. Manage Overdraft
 
-            X. Exit
+            x. Exit
             -----------------------
             """);
     }
@@ -170,7 +170,7 @@ public class BusinessAccount : Account, IOverdraftAccount
                 //if the user chooses to request a credit card, tell them one will be shipped
                 case "1":
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("A new credit card will be sent to this account's address");
+                    Console.WriteLine($"A new credit card will be sent to {Address}"); 
                     Console.ResetColor();
                     Thread.Sleep(1500);
                     exit = true;
@@ -178,7 +178,7 @@ public class BusinessAccount : Account, IOverdraftAccount
                 //same as above, but for a debit card
                 case "2":
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("A new debit card will be sent to this account's address");
+                    Console.WriteLine($"A new debit card will be sent to {Address}");
                     Console.ResetColor();
                     Thread.Sleep(1500);
                     exit = true;

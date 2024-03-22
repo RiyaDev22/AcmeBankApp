@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Transactions;
+using System.Xml.Linq;
 
 namespace AcmeBank.BankAccounts.Transactions;
 
@@ -26,8 +27,11 @@ internal class TransactionUtilities
         return Regex.IsMatch(accountNumber, pattern);
     }
 
-    internal static void GetPayeeDetails(out string sortCode, out string accountNumber, List<string> invalidAccountNumbers)
+    internal static void GetPayeeDetails(out string sortCode, out string accountNumber, List<string> invalidAccountNumbers, ref bool exit)
     {
+        sortCode = "";
+        accountNumber = "";
+
         StringBuilder invalidPrompt = new StringBuilder();
         bool validInputs = false;
         do
@@ -36,16 +40,15 @@ internal class TransactionUtilities
             Console.Clear();
             Console.WriteLine("""
                 ---- Payee details ----
+                ## Please provide the details of the account they want to make a payment to
+                <- Enter x at any point to exit.
                 """);
 
             // Display any error messages
-            if(invalidPrompt.ToString() != "")
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(invalidPrompt.ToString());
-                Console.ResetColor();
-                invalidPrompt.Clear();
-            }
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(invalidPrompt.ToString());
+            Console.ResetColor();
+            invalidPrompt.Clear();
 
             // Ask user to input sort code
             Console.Write("""
@@ -54,6 +57,17 @@ internal class TransactionUtilities
                 """);
             sortCode = Console.ReadLine();
 
+            if(sortCode.ToLower() == "x") 
+            { 
+                exit = true;
+                return;
+            } 
+            else if(!TransactionUtilities.VerifySortCode(sortCode))
+            {
+                invalidPrompt.Append("!!! Invalid sort code !!!");
+                continue;
+            }
+
             // Ask user to input account number
             Console.Write("""
                 Please enter Account Number. e.g (12345678)
@@ -61,13 +75,25 @@ internal class TransactionUtilities
                 """);
             accountNumber = Console.ReadLine();
 
-            // Check if both sort code and account number are valid
-            if (invalidAccountNumbers.Contains(accountNumber))
+            if (accountNumber.ToLower() == "x")
+            {
+                exit = true;
+                return;
+            } 
+            else if (!TransactionUtilities.VerifyAccountNumber(accountNumber))
+            {
+                invalidPrompt.Append("!!! Invalid account number !!!");
+                continue;
+            }
+            else if (invalidAccountNumbers.Contains(accountNumber))
+            {
                 invalidPrompt.Append("!!! Payment to own account, Use transfer instead !!!");
-            else if (TransactionUtilities.VerifySortCode(sortCode) && TransactionUtilities.VerifyAccountNumber(accountNumber))
-                validInputs = true;
+                continue;
+            } 
             else
-                invalidPrompt.Append("!!! Invalid inputs !!!");
+            {
+                validInputs = true;
+            }
 
         } while (!validInputs); // Loops if sort code and account number provided are invalid
     }

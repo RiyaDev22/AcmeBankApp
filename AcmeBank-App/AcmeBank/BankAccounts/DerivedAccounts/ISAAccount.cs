@@ -112,7 +112,8 @@ public class ISAAccount : Account, IDepositLimitedAccount
                 3. Transfer
                 4. Calculate interest (Test)
                 5. Statement
-                X. Exit
+
+                x. Exit
                 -----------------------
                 """);
     }

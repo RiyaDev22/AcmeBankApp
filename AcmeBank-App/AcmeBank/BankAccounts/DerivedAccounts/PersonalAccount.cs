@@ -59,6 +59,9 @@ public class PersonalAccount : Account, IOverdraftAccount
             6. Manage Standing Orders/Direct Debits
             7. Request Debit Card
             8. Manage Overdraft
+
+            x. Exit
+            -----------------------
             """);
     }
 
@@ -104,7 +107,6 @@ public class PersonalAccount : Account, IOverdraftAccount
         return false;
     }
 
-
     public bool UpdateRemainingOverdraft(decimal amount)
     {
         if (Balance > 0) // If the balance is positive, deduct it from the amount to be withdrawn from overdraft
@@ -139,7 +141,7 @@ public class PersonalAccount : Account, IOverdraftAccount
     protected void RequestDebitCard()
     {
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("A new debit card will be sent to this account's address");
+        Console.WriteLine($"A new debit card will be sent to {Address}");
         Console.ResetColor();
         Thread.Sleep(1500);
     }
@@ -148,7 +150,7 @@ public class PersonalAccount : Account, IOverdraftAccount
     protected void ManageOverdraft()
     {
         Console.ForegroundColor = ConsoleColor.Magenta;
-        Console.WriteLine("This feature is not yet implemented");
+        Console.WriteLine("Please direct the customer to our Business Overdraft division");
         Console.ResetColor();
         Thread.Sleep(1500);
     }

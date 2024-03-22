@@ -28,7 +28,8 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 --- Regular Payments ---
                 1. Standing Orders
                 2. Direct Debits
-                X. Exit
+
+                x. Exit
                 ------------------------
                 """);
 
@@ -82,7 +83,8 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 --- Standing Orders ---
                 1. Setup Standing Order
                 2. Manage Standing Orders
-                X. Exit
+
+                x. Exit
                 -----------------------
                 """);
 
@@ -131,11 +133,15 @@ namespace AcmeBank.BankAccounts.RegularPayments
             StringBuilder invalidPrompt = new StringBuilder();
             List<string> invalidAccountNumbers = new List<string>() { _currentAccount.AccountNumber };
 
+            bool exit = false;
             // Loop until a valid payee account is selected and a valid payment amount is entered
             do
             {
                 // Get payee details (sort code and account number)
-                TransactionUtilities.GetPayeeDetails(out string sortCode, out string accountNumber, invalidAccountNumbers);
+                TransactionUtilities.GetPayeeDetails(out string sortCode, out string accountNumber, invalidAccountNumbers, ref exit);
+
+                if(exit) { return; }
+
                 payeeAccount = AccountUtilities.LoadAccountDetails($"{accountNumber}",_currentCustomer); // Load payee account details based on the provided account number
 
                 // Checks if the payee is a savings account if so we provide an error prompt and return preventing the payment
@@ -161,19 +167,15 @@ namespace AcmeBank.BankAccounts.RegularPayments
             {
                 // Display account details and payment header including account from and to
                 Console.Clear();
-                Console.Write($"""
+                Console.WriteLine($"""
                 --- Standing Orders ---
                 From: {_currentAccount.AccountNumber}
                 To: {payeeAccount.AccountNumber}
                 -----------------------
-                Please provide the amount for the standing order
-
-                Amount: 
+                ## Please provide the amount for the standing order.
+                <- Enter 'x' to exit.
                 """);
 
-                // Save the current cursor position
-                int currentLeft = Console.CursorLeft;
-                int currentTop = Console.CursorTop;
 
                 // Display any previous error messages
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -181,20 +183,15 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 amountInvalidPrompt.Clear();
                 Console.ResetColor();
 
-                Console.SetCursorPosition(currentLeft, currentTop);
+                Console.Write("Amount: ");
                 amountInput = Console.ReadLine();
 
-                if (decimal.TryParse(amountInput, out amount) && amount > 0)
-                    amountValid = true;
+                if (!decimal.TryParse(amountInput, out amount))
+                    amountInvalidPrompt.Append("!!! Must be a number !!!");
+                else if (amount <= 0)
+                    amountInvalidPrompt.Append("!!! Must be greater than 0 !!!");
                 else
-                    amountInvalidPrompt.Append("""
-
-
-                        !!! Invalid amount !!!
-                        - must a number
-                        - cannot be less than 0
-                        """);
-
+                    amountValid = true;
             }
 
 
@@ -208,39 +205,32 @@ namespace AcmeBank.BankAccounts.RegularPayments
             while (!dateValid)
             {
                 Console.Clear();
-                Console.Write($"""
+                Console.WriteLine($"""
                 --- Standing Orders ---
                 From: {_currentAccount.AccountNumber}
                 To: {payeeAccount.AccountNumber}
                 Amount: {amount:C2}
                 -----------------------
-                When would you like monthly payments to start 
-                Enter a date in the format (DD-MM-YYYY)
-                
-                Date: 
+                ## When would you like monthly payments to start.
+                ## Enter a date in the format (DD-MM-YYYY).
+                <- Enter x to exit.
                 """);
-
-                // Save the current cursor position
-                int currentLeft = Console.CursorLeft;
-                int currentTop = Console.CursorTop;
 
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(startDateInvalidPrompt);
                 startDateInvalidPrompt.Clear();
                 Console.ResetColor();
 
-                Console.SetCursorPosition(currentLeft, currentTop);
+                Console.Write("Date: ");
                 startDateInput = Console.ReadLine();
-                if (dateRegex.IsMatch(startDateInput) && DateTime.TryParse(startDateInput, out startDate) && startDate >= DateTime.Today)
-                    dateValid = true;
+
+                bool checkDate = DateTime.TryParse(startDateInput, out startDate);
+                if (!(dateRegex.IsMatch(startDateInput) && checkDate))
+                    startDateInvalidPrompt.Append("!!! Invalid date - must follow the format (DD-MM-YYYY) !!!");
+                else if (startDate <= DateTime.Today)
+                    startDateInvalidPrompt.Append("!!! Invalid date - cannot be a date in the past !!!");
                 else
-                    startDateInvalidPrompt.Append("""
-
-
-                        !!! Invalid date !!!
-                        - must follow the format (DD-MM-YYYY)
-                        - cannot be a date in the past
-                        """);
+                    dateValid = true;
             }
 
 
@@ -253,8 +243,8 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 Amount: {amount:C2}
                 Date: {startDate:D}
                 -----------------------
-                Can you confirm this is correct
-                Enter 'y' for yes or any other key for no.
+                ## Can you confirm this is correct.
+                ## Enter 'y' for yes or any other key for no.
                 
                 Your choice: 
                 """);
@@ -267,13 +257,13 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 SaveSO(_currentAccount.AccountNumber, standingOrder);
                 // Display saved prompt
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("STANDING ORDER SAVED");
+                Console.Write("STANDING ORDER SAVED");
                 Console.ResetColor();
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("STANDING ORDER CANCELLED");
+                Console.Write("STANDING ORDER CANCELLED");
                 Console.ResetColor();
             }
             Thread.Sleep(1000); // Pause for 1 second
@@ -386,8 +376,8 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 
                 Console.Write("""
                     --- Manage Standing Orders  ---
-                    Enter the id of the any order you would like to cancel e.g '1'.
-                    Enter 'x' to exit.
+                    ## Enter the id of the any order you would like to cancel e.g '1'.
+                    <- Enter 'x' to exit.
 
                     ID: 
                     """);
