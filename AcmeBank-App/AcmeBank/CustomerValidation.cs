@@ -38,7 +38,7 @@ namespace AcmeBank
             //Prompt teller to enter customer's date of birth
             string? sDob = Console.ReadLine();
 
-            //Check if date of birth is valid
+            //Check if name, postcode, and date of birth is valid
             if(DateOnly.TryParse(sDob, out DateOnly doDob))
             {             
                 //Loop through the customer list

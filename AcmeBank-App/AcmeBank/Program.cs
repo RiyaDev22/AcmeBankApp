@@ -8,16 +8,16 @@ namespace AcmeBank
         static void Main(string[] args)
         {
             //Create a new Teller object which displays the login screen once the application starts
-            //Teller oTeller = new Teller();
+            Teller oTeller = new Teller();
 
             //Customer newCustomer = CustomerUtilities.CreateCustomer();
           
             DateOnly dob = DateOnly.Parse("17/04/2001");
             Customer kawsar = CustomerUtilities.LoadCustomerDetails("Kawsar","Hussain","", dob, "E15 5DP");
-            //Account account = AccountUtilities.LoadAccountDetails(kawsar.ListOfAccounts[0], kawsar);
-            //account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
+            Account account = AccountUtilities.LoadAccountDetails(kawsar.ListOfAccounts[0], kawsar);
+            account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
           
-          //Initialise a string list which will contain customer's details
+            //Initialise a string list which will contain customer's details
             List<string> slCustomers = populateStringList();
             //Initialise a customer list which will contain customer's details from the string list
             List<Customer> clCustomers = populateCustomerList(slCustomers);    
@@ -52,14 +52,16 @@ namespace AcmeBank
                         oCustomerValidation = new CustomerValidation();
                         //Retrieve customer's details using the object
                         oCustomer = oCustomerValidation.ValidateCustomer(clCustomers);
-
+                        //If customer is not null, invoke function
                         if (oCustomer != null)
                         {
                             displayCorrectDetails(oCustomer);
                         }
-                        else
+                        else //Customer is null
                         {
+                            //Clear the console
                             Console.Clear();
+                            //Display message
                             Console.WriteLine("Customer Not Found\n");
                         }
                         break;
@@ -85,17 +87,17 @@ namespace AcmeBank
                         break;
                     case "*":
                         //Log teller out
-                        //oTeller.logout();
+                        oTeller.logout();
                         //Pause the application for 1 second
                         Thread.Sleep(1000);
                         //Clear the console
                         Console.Clear();
                         //Prompt the teller to log back in
-                        //oTeller.login();
+                        oTeller.login();
                         break;
                     case "x":
                         //Logs teller out
-                        //oTeller.logout();
+                        oTeller.logout();
                         //Pause the application for 1 second
                         Thread.Sleep(1000);
                         //Print message
@@ -127,6 +129,7 @@ namespace AcmeBank
             string otherName = InputUtilities.StringInputHandling("what is your middle name/s", true, true);            
         }*/
 
+        /*This method stores the data from the Customers.csv file and stores it directly into the string list. The string list is returned.*/
         private static List<string> populateStringList()
         {
             //Populate customer list with data from the Customers.csv file
@@ -161,7 +164,8 @@ namespace AcmeBank
             //Return string list
             return slCustomers;
         }
-      
+        
+        /*This method takes the data from the string list, splits the string into a string array and assigns values to the customer's attributes*/
         private static List<Customer> populateCustomerList(List<string> slCustomers)
         {
             //Populate customer list with data from the string list
@@ -206,12 +210,13 @@ namespace AcmeBank
             return clCustomers;
         }
 
+        /*This method displays the correct customer account details based on the associated account numbers*/
         private static void displayCorrectDetails(Customer oCustomer)
         {
             //If the customer has 1 account number, store the account details into a variable
             if (oCustomer.ListOfAccounts.Count == 1)
             {
-                Account oAccount = AccountUtilities.LoadAccountDetails(oCustomer.ListOfAccounts[0]);
+                Account oAccount = AccountUtilities.LoadAccountDetails(oCustomer.ListOfAccounts[0], oCustomer);
                 oAccount.AccountOptionsLoop();
             }
             //Else if the customer has multiple account numbers
@@ -257,7 +262,7 @@ namespace AcmeBank
                     }
                 } while (!bInputValid); //The loop will keep executing until the input is valid
 
-                Account oAccount = AccountUtilities.LoadAccountDetails(sAccountNumber);
+                Account oAccount = AccountUtilities.LoadAccountDetails(sAccountNumber, oCustomer);
                 oAccount.AccountOptionsLoop();
             }
             /*Account account = AccountUtilities.LoadAccountDetails("67890123");
