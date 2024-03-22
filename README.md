@@ -92,7 +92,7 @@ Acme Bank has enlisted our team to create a C# application facilitating tellers 
         - Date of Birth (YYYY-MM-DD): '**2001-04-17**'
         - Postcode: '**E15 5DP**'
         - What is the manufacturer of the first car you owned or drove?: '**Toyota**'
-- If all these have been done correctly, It should display the accounts you have. Select which account you want selected and then the 
+- If all these have been done correctly, It should display the accounts you have. Select which account you want selected and then the options given to that account will be displayed 
 ### Create a Customer account
 - Input in the your customer details
     - The details are as follows
@@ -133,6 +133,7 @@ Acme Bank has enlisted our team to create a C# application facilitating tellers 
         5. Manage Standing Orders/Direct Debits
         6. Request Debit Card
         7. Manage Overdraft
+        8. Exit
     - ISA Account
         1. Deposit
         2. Withdraw
@@ -162,7 +163,7 @@ The teller inputs a value which gets withdrawn from the account. The value is ch
 It first checks to see if the customer can pay another account. Then it tells the teller inputs an account number to which the customer wants to put it into, excluding the account which is doing the payment and excluding ISA accounts. Once a calid account number is inputted, the teller is then prompted to put an amount to pay to the inputted account. Once the value inputted has been validated, the money is withdrawn from the customer account and deposited to the payee account.
 
 ### Transfer
-TODO
+Prompts the teller to select from a range of accounts to transfer money to. The customer directs them to the account they want money transferred to. The accounts listed will be the other accounts said customer has. Once selected, the teller then inputs a value which deposits the money to the stated account.
 
 ### Manage Standing Order / Direct debits
 This is a method exclusive to a personal account type. Still in **TODO**
@@ -174,4 +175,7 @@ Method which displays the statement of the account to the teller
 A method to say that a card would be delivered to the account address. A personal account can only request for a debit card but a business account can request for both credit and debit
 
 ### Manage Overdraft
-For the business account, the teller is told to direct the customer to the business overdraft division.
+The teller is told to direct the customer to the business overdraft division.
+
+### Exit
+Selecting this option exits out of the account options loop and go back to the view customer accounts option. 
