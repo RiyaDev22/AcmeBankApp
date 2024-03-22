@@ -1,11 +1,23 @@
-﻿using System.IO;
-
-namespace AcmeBank;
+﻿namespace AcmeBank;
 public class AccountCreation
 {
-    // DisplayMenu Mehtod
+    private static string accountCsvFile = "accounts.csv"; // Path to the CSV file
+    // DisplayMenu Method
     public static void DisplayMenu()
     {
+        string? customerId;
+
+        // Prompt the user to enter the customer ID
+        do
+        {
+            Console.WriteLine("Enter customer ID: ");
+            customerId = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(customerId))
+            {
+                Console.WriteLine("Customer ID cannot be empty. Please try again.");
+            }
+        } while (string.IsNullOrWhiteSpace(customerId));
         bool condition = true;
 
         while (condition)
@@ -20,6 +32,7 @@ public class AccountCreation
                 ============================
                 Please, Select Account Type: 
                 """);
+
             string? choice = InputUtilities.GetInputWithinTimeLimit();
 
             switch (choice)
@@ -27,17 +40,17 @@ public class AccountCreation
                 case "1":
                     Console.WriteLine("\nCreating Personal Account...");
                     // Call personal account creation method
-                    CreatePersonalAccount();
+                    CreatePersonalAccount(customerId);
                     break;
                 case "2":
                     Console.WriteLine("\nCreating Individual Savings Account (ISA)...");
                     // Call ISA account creation method
-                    CreateISA();
+                    CreateISA(customerId);
                     break;
                 case "3":
                     Console.WriteLine("\nCreating Business Account...");
                     // Call business account creation method
-                    CreateBusinessAccount();
+                    CreateBusinessAccount(customerId);
                     break;
                 default:
                     Console.WriteLine("\nInvalid choice. Please try again.");
@@ -46,8 +59,8 @@ public class AccountCreation
         }
     }
 
-    // CreatePersonalAccount Mehtod
-    private static void CreatePersonalAccount()
+    // CreatePersonalAccount Method
+    private static void CreatePersonalAccount(string customerId)
     {
         // Request photo ID until the user confirms identity
         Console.ForegroundColor = ConsoleColor.Red;
@@ -92,13 +105,23 @@ public class AccountCreation
         Console.WriteLine("Personal account created successfully!");
         Console.ResetColor(); // Reset the color to the default
 
+        // Generate and save account number
+        string personalAccountNumber = GenerateAccountNumber();
+        SaveAccountNumber(personalAccountNumber);
+
+        // Generate and save sort code specific to the customer
+        string personalSortCode = GenerateSortCode(customerId);
+        SaveSortCode(personalSortCode, customerId);
+
+        // Append account details to CSV
+        AppendToCsv("Personal", personalAccountNumber, personalSortCode);
     }
 
     // CreateISA Method
-    private static void CreateISA()
+    private static void CreateISA(string customerId)
     {
         // Check if the customer already has an ISA account
-        if (CheckForISA())
+        if (CheckForISA(customerId))
         {
             Console.WriteLine("Customer already has an ISA account. Account creation canceled.");
             return;
@@ -146,10 +169,21 @@ public class AccountCreation
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("Individual Savings Account (ISA) created successfully!");
         Console.ResetColor(); // Reset the color to the default
+
+        // Generate and save account number
+        string ISANumber = GenerateAccountNumber();
+        SaveAccountNumber(ISANumber);
+
+        // Generate and save sort code specific to the customer
+        string ISASortCode = GenerateSortCode(customerId);
+        SaveSortCode(ISASortCode, customerId);
+
+        // Append account details to CSV
+        AppendToCsv("ISA", ISANumber, ISASortCode);
     }
 
     // CreateBusinessAccount Method
-    private static void CreateBusinessAccount()
+    private static void CreateBusinessAccount(string customerId)
     {
         // List of disallowed business types
         List<string> disallowedBusinessTypes = new List<string>
@@ -212,18 +246,49 @@ public class AccountCreation
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("Business account created successfully!");
         Console.ResetColor(); // Reset the color to the default
+
+        // Generate and save account number
+        string businessAccountNumber = GenerateAccountNumber();
+        SaveAccountNumber(businessAccountNumber);
+
+        // Generate and save sort code specific to the customer
+        string businessSortCode = GenerateSortCode(customerId);
+        SaveSortCode(businessSortCode, customerId);
+
+        // Append account details to CSV
+        AppendToCsv("Business", businessAccountNumber, businessSortCode);
     }
 
-    // CheckForISA Mehtod
-    private static bool CheckForISA()
+    // CheckForISA Method
+    private static bool CheckForISA(string customerId)
     {
-        // Dummy implementation to check if customer already has an ISA account
-        // This could be replaced with actual logic to check in the database or CSV
-        // For demonstration purpose, always return false (indicating customer doesn't have an ISA account)
+        try
+        {
+            // Read the CSV file to check if the customer already has an ISA account
+            using (StreamReader sr = new StreamReader(accountCsvFile))
+            {
+                string? line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    string[] parts = line.Split(',');
+                    if (parts.Length >= 3 && parts[0] == "ISA" && parts[2] == customerId)
+                    {
+                        // Found an ISA account associated with the customer ID
+                        return true;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error checking for ISA: {ex.Message}");
+        }
+
+        // No ISA account found for the customer
         return false;
     }
 
-    // RequestInitialDeposit Mehtod
+    // RequestInitialDeposit Method
     private static decimal RequestInitialDeposit(bool requireMinimum, bool requireMaximum)
     {
         // Prompt message based on requirement
@@ -275,7 +340,7 @@ public class AccountCreation
         return initialDeposit;
     }
 
-    // GetUserInput Mehtod
+    // GetUserInput Method
     private static string GetUserInput(string prompt)
     {
         string? userInput;
@@ -317,4 +382,85 @@ public class AccountCreation
         return dob;
     }
 
+    // Generate account number method
+    private static string GenerateAccountNumber()
+    {
+        Random random = new Random();
+        return random.Next(10000000, 99999999).ToString(); // Generating a random 8-digit account number
+    }
+
+    // Save account number method
+    private static void SaveAccountNumber(string accountNumber)
+    {
+        string directory = $@"{AppDomain.CurrentDomain.BaseDirectory}\Accounts\";
+        string filePath = $@"{directory}{accountNumber}.txt";
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        // Save the account number to a file
+        File.WriteAllText(filePath, accountNumber);
+        Console.WriteLine($"Account number {accountNumber} saved successfully.");
+    }
+
+    // Generate sort code method
+    private static string GenerateSortCode()
+    {
+        Random random = new Random();
+        return random.Next(100000, 999999).ToString(); // Generating a random 6-digit sort code
+    }
+
+    // Save sort code method with customer ID parameter
+    private static void SaveSortCode(string sortCode, string customerId)
+    {
+        string directory = $@"{AppDomain.CurrentDomain.BaseDirectory}\Accounts\";
+        string filePath = $@"{directory}{customerId}{sortCode}_sortCode.txt";
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        // Save the sort code to a file
+        File.WriteAllText(filePath, sortCode);
+        Console.WriteLine($"Sort code {sortCode} saved successfully for customer {customerId}.");
+    }
+
+    // Call this method to create a random account number and save it
+    public static void CreateAndSaveAccountNumber()
+    {
+        string accountNumber = GenerateAccountNumber();
+        SaveAccountNumber(accountNumber);
+    }
+
+    // Call this method to create a random sort code and save it
+    public static void CreateAndSaveSortCode(string customerId)
+    {
+        string sortCode = GenerateSortCode();
+        SaveSortCode(sortCode, customerId);
+    }
+
+    // Append account details to CSV
+    private static void AppendToCsv(string accountType, string accountNumber, string sortCode)
+    {
+        try
+        {
+            // Open the CSV file in append mode and write the account details
+            using (StreamWriter sw = File.AppendText(accountCsvFile))
+            {
+                sw.WriteLine($"{accountType},{accountNumber},{sortCode}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error appending to CSV: {ex.Message}");
+        }
+    }
+
+    // Generate sort code method with customer ID parameter
+    private static string GenerateSortCode(string customerId)
+    {
+        Random random = new Random();
+        return $"{customerId.Substring(0, Math.Min(6, customerId.Length))}{random.Next(100000, 999999)}"; // Generating a sort code based on customer ID
+    }
 }
