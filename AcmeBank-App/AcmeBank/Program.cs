@@ -10,14 +10,15 @@ namespace AcmeBank
             //Create a new Teller object which displays the login screen once the application starts
             Teller oTeller = new Teller();
 
-
-            Customer newCustomer = CustomerUtilities.CreateCustomer();
-
-            //loads customer and then presents options
-            //Account account = AccountUtilities.LoadAccountDetails("23455432");
+           /* DateOnly dob = DateOnly.Parse("04/17/2001");
+            Customer kawsar = CustomerUtilities.LoadCustomerDetails("Kawsar", "Hussain", "", dob, "E15 5DP");
+            Account account = AccountUtilities.LoadAccountDetails(kawsar.ListOfAccounts[0], kawsar);*/
             //account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
 
-            List< Account > accounts = new List<Account>();
+            //Initialise a string list which will contain customer's details
+            List<string> slCustomers = populateStringList();
+            //Initialise a customer list which will contain customer's details from the string list
+            List<Customer> clCustomers = populateCustomerList(slCustomers);
 
             //Declare object which will display the customer validation screen
             CustomerValidation oCustomerValidation;
