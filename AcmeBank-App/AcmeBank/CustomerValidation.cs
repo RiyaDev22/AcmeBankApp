@@ -8,6 +8,8 @@
         private string? _sLastName;
         private string? _sDob;
         private string? _sPostcode;
+        private string? _sMenu;
+        private string? _sMenuTitle = "---Customer Validation---";
 
         #endregion
 
@@ -21,10 +23,16 @@
             foreach (Customer oCustomer in clCustomers)
             {
                 //Check if customer exists by validating details
-                if (validateDetails(oCustomer))
-                {                    
+                if (_sFirstName.ToLower().CompareTo(oCustomer.FirstName.ToLower()) == 0 &&
+                    _sLastName.ToLower().CompareTo(oCustomer.LastName.ToLower()) == 0 &&
+                    (DateOnly.TryParse(_sDob, out DateOnly doDob) && doDob.CompareTo(oCustomer.DateOfBirth) == 0) &&
+                    _sPostcode.ToLower().Replace(" ", "").CompareTo(oCustomer.PostCode.ToLower().Replace(" ", "")) == 0)
+                {
+                    //Clear console
+                    Console.Clear();
                     //Display chosen security question
-                    Console.Write($"\nPlease answer this security question\n{oCustomer.SecurityQuestion}: ");
+                    Console.Write($"{_sMenu}\n\nPlease answer this security question\n{oCustomer.SecurityQuestion}: ");
+
                     //Prompt teller to enter customer's security answer
                     string? sAnswerInput = InputUtilities.GetInputWithinTimeLimit().Trim();
                     //If the answer is correct
@@ -41,8 +49,12 @@
                         //Return customer
                         return oCustomer;
                     }
-                    //If the answer is incorrect, return null
-                    else return null;
+                    //If the answer is incorrect
+                    else
+                    {
+                        //Return null
+                        return null;
+                    }
                 }
             }
             //Return null if customer does not exist
@@ -81,18 +93,19 @@
             sMenu += _sPostcode;
             //Print the menu
             Console.WriteLine(sMenu);
+
+            _sMenu = _sMenuTitle + sMenu;
         }
 
         private string askForInputAndCheck(string sMenu)
         {
-            string sMenuTitle = "---Customer Validation---";
             //Boolean which determines if the input is valid
             bool bInputValid = false;
             //String which stores the user input
             string? sInput;
 
             //Print the menu title
-            Console.WriteLine(sMenuTitle);
+            Console.WriteLine(_sMenuTitle);
 
             do
             {
@@ -112,7 +125,7 @@
                     //Clear console
                     Console.Clear();
                     //Display message
-                    Console.WriteLine($"{sMenuTitle}\nInvalid Input. The input must contain at least 2 characters. Please try again.\n");
+                    Console.WriteLine($"{_sMenuTitle}\nInvalid Input. The input must contain at least 2 characters. Please try again.\n");
                 }
             } while (!bInputValid); //Keep executing until the input meets the basic requirements
             //Clear console
@@ -122,28 +135,17 @@
             return sInput;
         }
 
-        private bool validateDetails(Customer oCustomer)
+        /*private bool validateDetails(Customer oCustomer)
         {
-            if (_sFirstName.ToLower().CompareTo(oCustomer.FirstName.ToLower()) == 1 &&
-                _sLastName.ToLower().CompareTo(oCustomer.LastName.ToLower()) == 1)
+            if (_sFirstName.ToLower().CompareTo(oCustomer.FirstName.ToLower()) == 0 &&
+                _sLastName.ToLower().CompareTo(oCustomer.LastName.ToLower()) == 0 &&
+                (DateOnly.TryParse(_sDob, out DateOnly doDob) && doDob.CompareTo(oCustomer.DateOfBirth) == 0) &&
+                _sPostcode.ToLower().Replace(" ", "").CompareTo(oCustomer.PostCode.ToLower().Replace(" ", "")) == 0)
             {
-                Console.WriteLine("First Name & Last Name does not exist");
-                return false;
+                return true;
             }
-
-            if (!DateOnly.TryParse(_sDob, out DateOnly doDob))
-            {
-                Console.WriteLine("The date must be in the correct format");
-                return false;
-            }
-
-            if (_sPostcode.ToLower().Replace(" ", "").CompareTo(oCustomer.PostCode.ToLower().Replace(" ", "")) == 1)
-            {
-                return false;
-            }
-            
-            return true;
-        }
+            else return false;
+        }*/
         #endregion
     }
 }
