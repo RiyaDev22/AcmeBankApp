@@ -73,7 +73,7 @@ internal class AccountUtilities
         //Thread.Sleep(1000);
     }
 
-    internal static Account LoadAccountDetails(string accountNumberToLoad)
+    internal static Account LoadAccountDetails(string accountNumberToLoad, Customer customer)
     {
         // Construct the file directory path
         string fileDirectory = $@"{directory}\{accountNumberToLoad}";
@@ -96,15 +96,15 @@ internal class AccountUtilities
                 {
                     case "Personal":
                         decimal remainingOverdraftPA = decimal.Parse(accountSplit[5]);
-                        account = new PersonalAccount(accountNumber, sortCode, balance, address, remainingOverdraftPA);
+                        account = new PersonalAccount(accountNumber, sortCode, balance, address, remainingOverdraftPA, customer);
                         break;
                     case "ISA":
                         decimal remainingDepositLimit = decimal.Parse(accountSplit[5]);
-                        account = new ISAAccount(accountNumber, sortCode, balance, address,remainingDepositLimit);
+                        account = new ISAAccount(accountNumber, sortCode, balance, address,remainingDepositLimit, customer);
                         break ;
                     case "Business":
                         decimal remainingOverdraftBA = decimal.Parse(accountSplit[5]);
-                        account = new BusinessAccount(accountNumber, sortCode, balance, address, remainingOverdraftBA);
+                        account = new BusinessAccount(accountNumber, sortCode, balance, address, remainingOverdraftBA, customer);
                         break;
                     default:
                         return null;

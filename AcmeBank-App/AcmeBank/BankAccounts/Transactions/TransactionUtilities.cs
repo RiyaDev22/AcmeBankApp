@@ -39,10 +39,13 @@ internal class TransactionUtilities
                 """);
 
             // Display any error messages
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(invalidPrompt.ToString());
-            Console.ResetColor();
-            invalidPrompt.Clear();
+            if(invalidPrompt.ToString() != "")
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(invalidPrompt.ToString());
+                Console.ResetColor();
+                invalidPrompt.Clear();
+            }
 
             // Ask user to input sort code
             Console.Write("""

@@ -1,18 +1,17 @@
-﻿using AcmeBank.BankAccounts.Transactions;
-using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using System.Text;
 
-namespace AcmeBank.BankAccounts;
+namespace AcmeBank.BankAccounts.Transactions;
 
 internal class Statements
 {
-    
-
-    internal static void StatementOptions(string accountNumber)
+    private static Customer _currentCustomer { get; set; }
+    public static void StatementOptions(string accountNumber, Customer customer)
     {
+        _currentCustomer = customer;
+
         DateOnly date = DateOnly.MinValue;
         StringBuilder dateStatement = new StringBuilder();
-        
+
         StringBuilder invalidPrompt = new StringBuilder();
         bool validInput = false;
         while (!validInput)
@@ -65,7 +64,7 @@ internal class Statements
 
 
         } while (!DateOnly.TryParse(input, out date));//Validate input
-        
+
         return date;
     }
 
@@ -118,8 +117,8 @@ internal class Statements
         string? input = InputUtilities.GetInputWithinTimeLimit();
         if (input.ToLower() == "y")
         {
-            Account account = AccountUtilities.LoadAccountDetails(accountNumber);
-            Console.SetCursorPosition(0, currentTop-1);
+            Account account = AccountUtilities.LoadAccountDetails(accountNumber,_currentCustomer);
+            Console.SetCursorPosition(0, currentTop - 1);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write($"Statement sent to {account.Address}");
             Console.ResetColor();
