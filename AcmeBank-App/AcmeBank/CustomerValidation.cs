@@ -21,7 +21,7 @@
             if(checkIfDetailsValid(_sFirstName, _sLastName, _sPostcode) && DateOnly.TryParse(_sDob, out DateOnly doDob))
             {
             }*/
-
+          
             //Loop through the customer list
             foreach (Customer oCustomer in clCustomers)
             {
@@ -31,7 +31,7 @@
                     //Display chosen security question
                     Console.Write($"\nPlease answer this security question\n{oCustomer.SecurityQuestion}: ");
                     //Prompt teller to enter customer's security answer
-                    string? sAnswerInput = Console.ReadLine();
+                    string? sAnswerInput = InputUtilities.GetInputWithinTimeLimit();
                     //If the answer is correct
                     if (oCustomer.SecurityAnswer.CompareTo(sAnswerInput) == 0)
                     {
@@ -102,7 +102,7 @@
                 //Display the Customer Validation menu
                 Console.Write(sMenu);
                 //Prompt teller to enter information
-                sInput = Console.ReadLine();
+                sInput = InputUtilities.GetInputWithinTimeLimit();;
 
                 //Check if input meets the basic requirements (length > 1 && does NOT contain only whitespaces)
                 if (sInput.Length > 1 && sInput.Trim().Length > 0)
