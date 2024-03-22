@@ -203,7 +203,7 @@ namespace AcmeBank
         /*This method displays the correct customer account details based on the associated account numbers*/
         private static void displayCorrectDetails(Customer oCustomer)
         {
-            bool runningMenu = true;
+            bool bRunningMenu = true;
             do{
                 //Clear the console
                 Console.Clear();
@@ -292,9 +292,10 @@ namespace AcmeBank
                         break;
 
                     case "x":
-                        //back out of this menu, and save any changes to accounts
+                        //Back out of this menu, and save any changes to accounts
                         CustomerUtilities.EditCustomerDetails(oCustomer);
-                        runningMenu = false;
+                        //Set boolean to true
+                        bRunningMenu = false;
                         break;
 
                     default:
@@ -303,11 +304,8 @@ namespace AcmeBank
                         //Print message
                         Console.WriteLine("Invalid Input. Please try again.\n");
                         break;
-                }
-                
-            } while (runningMenu);
-            /*Account account = AccountUtilities.LoadAccountDetails("67890123");
-            account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options*/
+                }                
+            } while (bRunningMenu); //This loop will keep executing until the teller logs out & exits
         }
 
         public static bool checkIfNumeric(string sInput)
