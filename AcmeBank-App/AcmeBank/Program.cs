@@ -53,7 +53,7 @@ namespace AcmeBank
                 string[] saCustomerDetails = sCustomerDetails.Split(',');
                 DateOnly doDate = DateOnly.Parse(saCustomerDetails[3]);
 
-                clCustomers.Add(new Customer (saCustomerDetails[0].ToString(),
+                clCustomers.Add(new Customer(saCustomerDetails[0].ToString(),
                                               saCustomerDetails[1].ToString(),
                                               saCustomerDetails[2].ToString(),
                                               doDate,
@@ -97,6 +97,7 @@ namespace AcmeBank
 
                         //loads customer and then presents options
                         Account account = AccountUtilities.LoadAccountDetails(oCustomer.ListOfAccounts[0], oCustomer);
+
                         account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
                         break;
                     case "2":
@@ -104,20 +105,16 @@ namespace AcmeBank
                         Console.Clear();
                         //Invoke function in the Customer Utilities class to create a new customer account
                         Customer oNewCustomer = CustomerUtilities.CreateCustomer();
-                        /****************************************************************************************************************************************
-                        * TODO!!!: Append the new customer details to the list/csv file                                                                         *
-                        /****************************************************************************************************************************************/
+                        //Invoke function in the Customer Utilities class to add the new customer account to the csv file
+                        CustomerUtilities.AddCustomerDetails(oNewCustomer);
                         break;
                     case "3":
                         //Retrieve customer's details by creating a new CustomerValidation object
                         oCustomerValidation = new CustomerValidation();
                         //Retrieve customer's details using the object
                         oCustomer = oCustomerValidation.ValidateCustomer(clCustomers);
-                        //Invoke function in the Customer Utilities class to remove the customer account
+                        //Invoke function in the Customer Utilities class to remove the customer account from the csv file
                         CustomerUtilities.RemoveCustomerDetails(oCustomer);
-                        /****************************************************************************************************************************************
-                        * TODO!!!: Remove the customer details from the list/csv file                                                                           *
-                        /****************************************************************************************************************************************/
                         break;
                     case "*":
                         //Log teller out
@@ -150,6 +147,19 @@ namespace AcmeBank
                 }
             }
         }
+      
+      /*public static Customer CreateCustomer()
+        {
+            Console.WriteLine("""
+                Hello and welcome to a new and Exciting Journey with us.
+                I will start by asking for your name.
+
+                """);
+            string firstName = StringInputHandling("What is your first name", true);
+            string lastName = StringInputHandling("what is your last name", true);
+            string otherName = StringInputHandling("what is your middle name/s", true, true);                             
+            
+        }*/
 
         //DateOnly dob = new DateOnly(2001, 4, 17);
         //Customer kawsar = CustomerUtilities.LoadCustomerDetails("Kawsar", "Hussain", "", dob, "E15 5DP");
