@@ -5,7 +5,7 @@ using AcmeBank.BankAccounts.RegularPayments;
 using AcmeBank.BankAccounts.Transactions;
 using System.Text;
 
-namespace BankPayments.BankAccounts.DerivedAccounts;
+namespace AcmeBank;
 
 public class PersonalAccount : Account, IOverdraftAccount
 {

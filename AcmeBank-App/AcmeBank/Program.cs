@@ -203,73 +203,111 @@ namespace AcmeBank
         /*This method displays the correct customer account details based on the associated account numbers*/
         private static void displayCorrectDetails(Customer oCustomer)
         {
-            //If the customer has 1 account number, store the account details into a variable
-            if (oCustomer.ListOfAccounts.Count == 1)
-            {
-                //Store account details
-                Account oAccount = AccountUtilities.LoadAccountDetails(oCustomer.ListOfAccounts[0], oCustomer);
-                //Display account options based on the account number and customer
-                oAccount.AccountOptionsLoop();
-                //Clear console
+            bool runningMenu = true;
+            do{
+                //Clear the console
                 Console.Clear();
-            }
-            //Else if the customer has multiple account numbers
-            else if (oCustomer.ListOfAccounts.Count > 1)
-            {
-                string? sAccountNumber;
-                //Set boolean to false
-                bool bInputValid = false;
-                //Store the string
-                string sOutput = "The customer has multiple account numbers:\n";
-                //Append all account numbers to the output string
-                foreach (string sAccountNum in oCustomer.ListOfAccounts) sOutput += $"{sAccountNum}\n";
-                do
-                {
-                    //Display message
-                    Console.Write($"{sOutput}\nPlease select one account number: ");
-                    //Prompt user to select an account number
-                    sAccountNumber = InputUtilities.GetInputWithinTimeLimit();
+                //Display message
+                Console.WriteLine("""---Account Selection---""");
+                Console.WriteLine("""
+                        1. View Accounts
+                        2. Create Account
 
-                    //If the user input is not null and exclusively numeric
-                    if (!string.IsNullOrEmpty(sAccountNumber) && checkIfNumeric(sAccountNumber))
-                    {
-                        //Go through each account number
-                        foreach (string sAccountNum in oCustomer.ListOfAccounts)
+                        X. Exit
+                    """);
+                Console.Write("Enter an option: ");
+                string? sUserInput = InputUtilities.GetInputWithinTimeLimit().ToLower();
+
+                switch (sUserInput)
+                {
+                    case "1":
+                        //If the customer has 1 account number, store the account details into a variable
+                        if (oCustomer.ListOfAccounts.Count == 1)
                         {
-                            //Check if user input matches with any of the account numbers, set boolean to true and break out of the foreach loop
-                            if (sAccountNumber.CompareTo(sAccountNum) == 0)
+                            //Store account details
+                            Account oAccount = AccountUtilities.LoadAccountDetails(oCustomer.ListOfAccounts[0], oCustomer);
+                            //Display account options based on the account number and customer
+                            oAccount.AccountOptionsLoop();
+                        }
+                        //Else if the customer has multiple account numbers
+                        else if (oCustomer.ListOfAccounts.Count > 1)
+                        {
+                            string? sAccountNumber;
+                            //Set boolean to false
+                            bool bInputValid = false;
+                            //Store the string
+                            string sOutput = "The customer has multiple account numbers:\n";
+                            //Append all account numbers to the output string
+                            foreach (string sAccountNum in oCustomer.ListOfAccounts) sOutput += $"{sAccountNum}\n";
+                            do
                             {
-                                //Set boolean to true
-                                bInputValid = true;
-                                //Break out of the foreach loop
-                                break;
-                            }
+                                //Display message
+                                Console.Write($"{sOutput}\nPlease select one account number: ");
+                                //Prompt user to select an account number
+                                sAccountNumber = InputUtilities.GetInputWithinTimeLimit();
+
+                                //If the user input is not null and exclusively numeric
+                                if (!string.IsNullOrEmpty(sAccountNumber) && checkIfNumeric(sAccountNumber))
+                                {
+                                    //Go through each account number
+                                    foreach (string sAccountNum in oCustomer.ListOfAccounts)
+                                    {
+                                        //Check if user input matches with any of the account numbers, set boolean to true and break out of the foreach loop
+                                        if (sAccountNumber.CompareTo(sAccountNum) == 0)
+                                        {
+                                            //Set boolean to true
+                                            bInputValid = true;
+                                            //Break out of the foreach loop
+                                            break;
+                                        }
+                                    }
+                                    //If the user input is invalid, clear the console and display the message
+                                    if (!bInputValid)
+                                    {
+                                        //Clear console
+                                        Console.Clear();
+                                        //Print message
+                                        Console.WriteLine("Account number has not been chosen. Please try again.\n");
+                                    }
+                                }
+                                //If the user input is invalid, clear the console and display the message
+                                else
+                                {
+                                    //Clear console
+                                    Console.Clear();
+                                    //Print message
+                                    Console.WriteLine("Invalid Input. Please try again.\n");
+                                }
+                            } while (!bInputValid); //The loop will keep executing until the input is valid
+                                                    //Store account details
+                            Account oAccount = AccountUtilities.LoadAccountDetails(sAccountNumber, oCustomer);
+                            //Display account options based on the account number and customer
+                            oAccount.AccountOptionsLoop();
                         }
-                        //If the user input is invalid, clear the console and display the message
-                        if (!bInputValid)
-                        {
-                            //Clear console
-                            Console.Clear();
-                            //Print message
-                            Console.WriteLine("Account number has not been chosen. Please try again.\n");
-                        }
-                    }
-                    //If the user input is invalid, clear the console and display the message
-                    else
-                    {
-                        //Clear console
+                        break;
+
+                    case "2":
+                        //Invoke function in the AccountCreation class to create a new account
+                        AccountCreation.DisplayMenu(oCustomer);
+                        break;
+
+                    case "x":
+                        //back out of this menu, and save any changes to accounts
+                        CustomerUtilities.EditCustomerDetails(oCustomer);
+                        runningMenu = false;
+                        break;
+
+                    default:
+                        //Clear the console
                         Console.Clear();
                         //Print message
                         Console.WriteLine("Invalid Input. Please try again.\n");
-                    }
-                } while (!bInputValid); //The loop will keep executing until the input is valid
-                //Store account details
-                Account oAccount = AccountUtilities.LoadAccountDetails(sAccountNumber, oCustomer);
-                //Display account options based on the account number and customer
-                oAccount.AccountOptionsLoop();
-                //Clear console
-                Console.Clear();
-            }
+                        break;
+                }
+                
+            } while (runningMenu);
+            /*Account account = AccountUtilities.LoadAccountDetails("67890123");
+            account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options*/
         }
 
         public static bool checkIfNumeric(string sInput)
