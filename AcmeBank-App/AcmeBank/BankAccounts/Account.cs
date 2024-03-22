@@ -51,6 +51,7 @@ public abstract class Account
     protected virtual void DisplayAccountOptions()
     {
         Console.WriteLine("""
+
                 --- Account options ---
                 1. Deposit
                 2. Withdraw
@@ -145,6 +146,7 @@ public abstract class Account
             Console.Clear();
             DisplayAccountDetails();
             Console.WriteLine("""
+
                 ------- Deposit -------
                 """);
 
@@ -180,6 +182,7 @@ public abstract class Account
             Console.Clear();
             DisplayAccountDetails();
             Console.WriteLine("""
+
                 ------- Withdraw ------
                 """);
 
@@ -241,6 +244,7 @@ public abstract class Account
             Console.Clear();
             DisplayAccountDetails();
             Console.WriteLine($"""
+
                 ------- Payment -------
                 From: {this.AccountNumber}
                 To: {payeeAccount.AccountNumber}

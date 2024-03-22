@@ -19,7 +19,7 @@ namespace AcmeBank
 
             DateOnly dob = DateOnly.Parse("17/04/2001");
             Customer kawsar = CustomerUtilities.LoadCustomerDetails("Kawsar","Hussain","", dob, "E15 5DP");
-            Account account = AccountUtilities.LoadAccountDetails(kawsar.ListOfAccounts[0], kawsar);
+            Account account = AccountUtilities.LoadAccountDetails(kawsar.ListOfAccounts[1], kawsar);
             account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
         }
       
