@@ -52,7 +52,7 @@
             //Print initial login screen
             Console.Write("""
                                 --- Teller Login ---
-                                x. Quit
+                                [x] Quit
 
                                 Username: 
                                 """);

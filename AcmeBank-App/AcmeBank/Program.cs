@@ -32,18 +32,18 @@ namespace AcmeBank
             {
                 //Display main menu
                 Console.Write("""
-                            --- Main Menu ---
-                            1. View a Customer Account
-                            2. Create a Customer Account
-                            3. Remove a Customer Account
-                            [*] Log Out
-                            [x] Log Out & Quit
+                                --- Main Menu ---
+                                [1] View a Customer Account
+                                [2] Create a Customer Account
+                                [3] Remove a Customer Account
+                                [*] Log Out
+                                [x] Log Out & Quit
 
-                        Enter an option: 
-                        """);
+                                Enter an option: 
+                                """);
 
-            //Prompt user input
-            string? sUserInput = InputUtilities.GetInputWithinTimeLimit();
+                //Prompt user input
+                string? sUserInput = InputUtilities.GetInputWithinTimeLimit();
 
                 switch (sUserInput)
                 {
