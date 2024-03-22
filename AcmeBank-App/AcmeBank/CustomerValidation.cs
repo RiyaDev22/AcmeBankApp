@@ -34,11 +34,11 @@ namespace AcmeBank
             //Prompt teller to enter customer's postcode
             string? sPostcode = Console.ReadLine();
             //Display message
-            Console.Write("Date Of Birth (YYYY-MM-DD): ");
+            Console.Write("Date Of Birth (DD/MM/YYYY): ");
             //Prompt teller to enter customer's date of birth
             string? sDob = Console.ReadLine();
 
-            //Check if user input is valid
+            //Check if date of birth is valid
             if(DateOnly.TryParse(sDob, out DateOnly doDob))
             {             
                 //Loop through the customer list
@@ -60,9 +60,11 @@ namespace AcmeBank
                             //Clear the console
                             Console.Clear();
                             //Display message
-                            Console.Write("Valid Customer\nLoading...");
+                            Console.Write("Customer Found\nLoading...");
                             //Pause the application for 2 seconds
                             Thread.Sleep(2000);
+                            //Clear the console
+                            Console.Clear();
                             //Return customer
                             return oCustomer;
                         }
