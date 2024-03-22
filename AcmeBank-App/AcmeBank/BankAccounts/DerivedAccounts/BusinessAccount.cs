@@ -14,12 +14,12 @@ public class BusinessAccount : Account, IOverdraftAccount
 
     #region Constructors
     // Account setup
-    public BusinessAccount(string accountNumber, string sortCode, decimal balance, string address) : base(accountNumber, sortCode, balance, AccountType.Business, address)
+    public BusinessAccount(string accountNumber, string sortCode, decimal balance, string address, Customer customer) : base(accountNumber, sortCode, balance, AccountType.Business, address, customer)
     {
         _overdraftRemaining = _overdraftLimit; 
     }
     // Loading from file
-    public BusinessAccount(string accountNumber, string sortCode, decimal balance, string address, decimal overdraftRemaining) : base(accountNumber, sortCode, balance, AccountType.Business, address)
+    public BusinessAccount(string accountNumber, string sortCode, decimal balance, string address, decimal overdraftRemaining, Customer customer) : base(accountNumber, sortCode, balance, AccountType.Business, address, customer)
     {
         _overdraftRemaining = overdraftRemaining;
     }
@@ -129,7 +129,6 @@ public class BusinessAccount : Account, IOverdraftAccount
             Overdraft limit: {OverdraftLimit:C2}
             Overdraft remaining: {OverdraftRemaining:C2}
             -----------------------
-
             """);
     }
 
@@ -162,7 +161,7 @@ public class BusinessAccount : Account, IOverdraftAccount
 
             //get the user's input
             Console.Write("Enter an option: ");
-            cardInput = Console.ReadLine();
+            cardInput = InputUtilities.GetInputWithinTimeLimit();
 
             //process the user's input
             switch(cardInput.ToLower())
@@ -170,7 +169,7 @@ public class BusinessAccount : Account, IOverdraftAccount
                 //if the user chooses to request a credit card, tell them one will be shipped
                 case "1":
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("A new credit card will be sent to this account's address");
+                    Console.WriteLine($"A new credit card will be sent to this account's address at {Address}");
                     Console.ResetColor();
                     Thread.Sleep(1500);
                     exit = true;
@@ -178,7 +177,7 @@ public class BusinessAccount : Account, IOverdraftAccount
                 //same as above, but for a debit card
                 case "2":
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("A new debit card will be sent to this account's address");
+                    Console.WriteLine($"A new debit card will be sent to this account's address at {Address}");
                     Console.ResetColor();
                     Thread.Sleep(1500);
                     exit = true;
@@ -202,7 +201,7 @@ public class BusinessAccount : Account, IOverdraftAccount
     protected void RequestChequeBook()
     {
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("A new cheque book will be sent to this account's address");
+        Console.WriteLine($"A new cheque book will be sent to this account's address at {Address}");
         Console.ResetColor();
         Thread.Sleep(2500);
     }

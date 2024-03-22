@@ -1,8 +1,5 @@
-﻿
-using AcmeBank.BankAccounts;
+﻿using AcmeBank.BankAccounts;
 using BankPayments.BankAccounts.DerivedAccounts;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 
 namespace AcmeBank
 {
@@ -22,84 +19,77 @@ namespace AcmeBank
 
             List< Account > accounts = new List<Account>();
 
-            // Adding ISAAccount, BusinessAccount, and PersonalAccount objects to the list
-            accounts.Add(new ISAAccount("12345678", "111111", 2000.00m, "1-Main St-ABC123"));
-            accounts.Add(new BusinessAccount("23456789", "222222", 2500.00m, "2-High St-DEF456"));
-            accounts.Add(new PersonalAccount("34567890", "333333", 3000.00m, "3-Elm St-GHI789"));
-            accounts.Add(new ISAAccount("45678901", "444444", 1500.00m, "4-Oak St-JKL012"));
-            accounts.Add(new BusinessAccount("56789012", "555555", 1800.00m, "5-Pine St-MNO345"));
-            accounts.Add(new PersonalAccount("67890123", "666666", 2200.00m, "6-Maple St-PQR678"));
-            accounts.Add(new ISAAccount("78901234", "777777", 1700.00m, "7-Cedar St-STU901"));
-            accounts.Add(new BusinessAccount("89012345", "888888", 1900.00m, "8-Birch St-VWX234"));
-            accounts.Add(new PersonalAccount("90123456", "999999", 2100.00m, "9-Willow St-YZAB567"));
-            accounts.Add(new ISAAccount("11112222", "101010", 2700.00m, "10-Market St-CDE890"));
-            accounts.Add(new BusinessAccount("22223333", "202020", 3000.00m, "11-Meadow St-FGH123"));
-            accounts.Add(new PersonalAccount("33334444", "303030", 3200.00m, "12-Grove St-IJK456"));
-            accounts.Add(new ISAAccount("44445555", "404040", 1900.00m, "13-Orchard St-LMN789"));
-            accounts.Add(new BusinessAccount("55556666", "505050", 2200.00m, "14-Park St-OPQ012"));
-            accounts.Add(new PersonalAccount("66667777", "606060", 2600.00m, "15-Beach St-RST345"));
-            accounts.Add(new ISAAccount("77778888", "707070", 1800.00m, "16-River St-UVW678"));
-            accounts.Add(new BusinessAccount("88889999", "808080", 2100.00m, "17-Sunset St-XYZ901"));
-            accounts.Add(new PersonalAccount("99990000", "909090", 2300.00m, "18-Sunrise St-ABC234"));
-            accounts.Add(new ISAAccount("12344321", "111122", 2400.00m, "19-Hill St-DEF567"));
-            accounts.Add(new BusinessAccount("23455432", "222233", 2600.00m, "20-Valley St-GHI890"));
-
-            // Iterate through the list
-            foreach (var i in accounts)
-            {
-                AccountUtilities.SaveAccountDetails(i);
-            }
-
             //Declare object which will display the customer validation screen
             CustomerValidation oCustomerValidation;
+            //Declare object which will hold the customer's attributes
+            Customer? oCustomer;
 
-            //This while loop will run indefinitely until the user press 'x' to quit - Look at the switch case statement
-            while (true)
-            {
-                //Display main menu
-                Console.Write("""
-                            --- Main Menu ---
-                            1. View a Customer Account
-                            2. Create a Customer Account
-                            3. Remove a Customer Account
-                            *. Log Out
-                            x. Log Out & Quit
+        //This while loop will run indefinitely until the user press 'x' to quit - Look at the switch case statement
+        while (true)
+        {
+            //Display main menu
+            Console.Write("""
+                        --- Main Menu ---
+                        1. View a Customer Account
+                        2. Create a Customer Account
+                        3. Remove a Customer Account
+                        *. Log Out
+                        x. Log Out & Quit
 
-                            Enter an option: 
-                            """);
+                        Enter an option: 
+                        """);
 
-                //Prompt user input
-                string? sUserInput = Console.ReadLine();
+            //Prompt user input
+            string? sUserInput = InputUtilities.GetInputWithinTimeLimit();
 
                 switch (sUserInput)
                 {
                     case "1":
-                        //Retrieve customer's details by creating a new CustomerValidation object
+                        //Create a new CustomerValidation object
                         oCustomerValidation = new CustomerValidation();
-
-                        //loads customer and then presents options
-                        Account account = AccountUtilities.LoadAccountDetails("11112222");
-                        account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
+                        //Retrieve customer's details using the object
+                        oCustomer = oCustomerValidation.ValidateCustomer(clCustomers);
+                        //If customer is not null, invoke function
+                        if (oCustomer != null)
+                        {
+                            displayCorrectDetails(oCustomer);
+                        }
+                        else //Customer is null
+                        {
+                            //Clear the console
+                            Console.Clear();
+                            //Display message
+                            Console.WriteLine("Customer Not Found\n");
+                        }
                         break;
                     case "2":
                         //Clear the console
                         Console.Clear();
-                        //Invoke function to create a new customer account
-                        CreateCustomer();
+                        //Invoke function in the Customer Utilities class to create a new customer account
+                        Customer oNewCustomer = CustomerUtilities.CreateCustomer();
+                        //Add customer object to the list
+                        clCustomers.Add(oNewCustomer);
+                        //Invoke function in the Customer Utilities class to add the new customer account to the csv file
+                        CustomerUtilities.AddCustomerDetails(oNewCustomer);
                         break;
                     case "3":
                         //Retrieve customer's details by creating a new CustomerValidation object
                         oCustomerValidation = new CustomerValidation();
-                        //Invoke function in the Customer class to remove the customer account
+                        //Retrieve customer's details using the object
+                        oCustomer = oCustomerValidation.ValidateCustomer(clCustomers);
+                        //Remove the customer object from the list
+                        clCustomers.Remove(oCustomer);
+                        //Invoke function in the Customer Utilities class to remove the customer account from the csv file
+                        CustomerUtilities.RemoveCustomerDetails(oCustomer);
                         break;
                     case "*":
-                        //Logs teller out
+                        //Log teller out
                         oTeller.logout();
                         //Pause the application for 1 second
                         Thread.Sleep(1000);
                         //Clear the console
                         Console.Clear();
-                        //Promptes the teller to log back in
+                        //Prompt the teller to log back in
                         oTeller.login();
                         break;
                     case "x":
@@ -122,18 +112,184 @@ namespace AcmeBank
                         break;
                 }
             }
+        }
+      
+      /*public static Customer CreateCustomer()
+        {
+            Console.WriteLine("""
+                Hello and welcome to a new and Exciting Journey with us.
+                I will start by asking for your name.
 
-            /*MOVED THIS PART OF THE CODE TO THE SWITCH CASE STATEMENT ABOVE*/
-            /*//loads customer and then presents options
-            Account account = AccountUtilities.LoadAccountDetails("11112222");
+                """);
+            string firstName = InputUtilities.StringInputHandling("What is your first name", true);
+            string lastName = InputUtilities.StringInputHandling("what is your last name", true);
+            string otherName = InputUtilities.StringInputHandling("what is your middle name/s", true, true);            
+        }*/
+
+        /*This method stores the data from the Customers.csv file and stores it directly into the string list. The string list is returned.*/
+        private static List<string> populateStringList()
+        {
+            //Populate customer list with data from the Customers.csv file
+            List<string> slCustomers = new List<string>();
+            //Initialise local variable that contains the name of the csv file
+            string sFileName = "Customers.csv"; //Note the csv file is in bin\debug\net8.0
+
+            try
+            {
+                //Open the file using a stream reader
+                using (StreamReader oReader = File.OpenText(sFileName))
+                {
+                    //Initialise a string that will store the content from the file
+                    string sFileInput = "";
+                    //Read the whole file
+                    while (!oReader.EndOfStream)
+                    {
+                        //Store a line into a string
+                        sFileInput = oReader.ReadLine();
+                        //Append the string to the list
+                        slCustomers.Add(sFileInput);
+                    }
+                }
+            }
+            //Catch exception if file has not been found
+            catch (Exception oException)
+            {
+                //Print message
+                Console.WriteLine($"File '{sFileName}' not found");
+            }
+
+            //Return string list
+            return slCustomers;
+        }
+        
+        /*This method takes the data from the string list, splits the string into a string array and assigns values to the customer's attributes*/
+        private static List<Customer> populateCustomerList(List<string> slCustomers)
+        {
+            //Populate customer list with data from the string list
+            List<Customer> clCustomers = new List<Customer>();
+
+            //Iterate through each record
+            foreach (string sCustomerDetails in slCustomers)
+            {
+                //Split the record string by commas
+                string[] saCustomerDetails = sCustomerDetails.Split(',');
+                //Store the date of birth in the correct format
+                DateOnly doDob = DateOnly.Parse(saCustomerDetails[3]);
+                //Store the account creation date in the correct format
+                DateOnly doCreationDate = DateOnly.Parse(saCustomerDetails[5]);
+
+                //Initialise local variable that will store the account numbers associated with the customer account
+                List<string> slAccountNumbers = new List<string>();
+
+                //If the length is greater than or equal to 9, that means there must be at least 1 account number
+                if (saCustomerDetails.Length >= 9)
+                {
+                    //Iterate through each account number
+                    for (int iCount = 8; iCount < saCustomerDetails.Length; iCount++)
+                    {
+                        //Add each account number to the string list
+                        slAccountNumbers.Add(saCustomerDetails[iCount]);
+                    }
+                }
+
+                //Assign all customer's attributes to the Customer object and add the customer object to the list
+                clCustomers.Add(new Customer(saCustomerDetails[0].ToString(),   //First Name
+                                             saCustomerDetails[1].ToString(),   //Last Name
+                                             saCustomerDetails[2].ToString(),   //Other Name
+                                             doDob,                             //Date Of Birth
+                                             saCustomerDetails[4].ToString(),   //Postcode
+                                             saCustomerDetails[6].ToString(),   //Security Question
+                                             saCustomerDetails[7].ToString(),   //Security Answer
+                                             doCreationDate,                    //Account Creation Date
+                                             slAccountNumbers));                //Account Numbers
+            }
+            //Return customer list
+            return clCustomers;
+        }
+
+        /*This method displays the correct customer account details based on the associated account numbers*/
+        private static void displayCorrectDetails(Customer oCustomer)
+        {
+            //If the customer has 1 account number, store the account details into a variable
+            if (oCustomer.ListOfAccounts.Count == 1)
+            {
+                Account oAccount = AccountUtilities.LoadAccountDetails(oCustomer.ListOfAccounts[0], oCustomer);
+                oAccount.AccountOptionsLoop();
+            }
+            //Else if the customer has multiple account numbers
+            else if (oCustomer.ListOfAccounts.Count > 1)
+            {
+                string? sAccountNumber = "";
+                bool bInputValid = false;
+                string sOutput = "The customer has multiple account numbers:\n";
+                //Append all account numbers to the output string
+                foreach (string sAccountNum in oCustomer.ListOfAccounts) sOutput += $"{sAccountNum}\n";
+                do
+                {
+                    //Display message
+                    Console.Write($"{sOutput}\nPlease select one account number: ");
+                    //Prompt user to select an account number
+                    sAccountNumber = InputUtilities.GetInputWithinTimeLimit();
+
+                    //If the user input is not null and exclusively numeric
+                    if (!string.IsNullOrEmpty(sAccountNumber) && isNumeric(sAccountNumber))
+                    {
+                        //Go through each account number
+                        foreach (string sAccountNum in oCustomer.ListOfAccounts)
+                        {
+                            //Check if user input matches with any of the account numbers, set boolean to true and break out of the foreach loop
+                            if (sAccountNumber.CompareTo(sAccountNum) == 0)
+                            {
+                                bInputValid = true;
+                                break;
+                            }
+                        }
+                        //If the user input is invalid, clear the console and display the message
+                        if (!bInputValid)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Account number has not been chosen. Please try again.\n");
+                        }
+                    }
+                    //If the user input is invalid, clear the console and display the message
+                    else
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Invalid Input. Please try again.\n");
+                    }
+                } while (!bInputValid); //The loop will keep executing until the input is valid
+
+                Account oAccount = AccountUtilities.LoadAccountDetails(sAccountNumber, oCustomer);
+                oAccount.AccountOptionsLoop();
+            }
+            /*Account account = AccountUtilities.LoadAccountDetails("67890123");
             account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options*/
         }
 
-            //DateOnly dob = new DateOnly(2001, 4, 17);
-            //Customer kawsar = CustomerUtilities.LoadCustomerDetails("Kawsar", "Hussain", "", dob, "E15 5DP");
+        public static bool isNumeric(string sInput)
+        {
+            //Iterate through each charcater and if a non-digit character is found, return false
+            foreach (char c in sInput) if (!char.IsDigit(c)) return false;
+            //Return true if all characters are unique
+            return true;
+        }
 
-            //CustomerUtilities.RemoveCustomerDetails(kawsar);
-        }        
+        /*public static Customer CreateCustomer()
+          {
+              Console.WriteLine("""
+                  Hello and welcome to a new and Exciting Journey with us.
+                  I will start by asking for your name.
 
+                  """);
+              string firstName = StringInputHandling("What is your first name", true);
+              string lastName = StringInputHandling("what is your last name", true);
+              string otherName = StringInputHandling("what is your middle name/s", true, true);                             
+
+          }*/
+
+        //DateOnly dob = new DateOnly(2001, 4, 17);
+        //Customer kawsar = CustomerUtilities.LoadCustomerDetails("Kawsar", "Hussain", "", dob, "E15 5DP");
+
+        //CustomerUtilities.RemoveCustomerDetails(kawsar);
     }
 }

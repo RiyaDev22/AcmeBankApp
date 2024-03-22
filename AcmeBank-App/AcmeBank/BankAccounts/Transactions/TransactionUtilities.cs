@@ -39,24 +39,27 @@ internal class TransactionUtilities
                 """);
 
             // Display any error messages
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(invalidPrompt.ToString());
-            Console.ResetColor();
-            invalidPrompt.Clear();
+            if(invalidPrompt.ToString() != "")
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(invalidPrompt.ToString());
+                Console.ResetColor();
+                invalidPrompt.Clear();
+            }
 
             // Ask user to input sort code
             Console.Write("""
                 Please enter Sort Code. e.g (123456)
                 Sort Code: 
                 """);
-            sortCode = Console.ReadLine();
+            sortCode = InputUtilities.GetInputWithinTimeLimit();
 
             // Ask user to input account number
             Console.Write("""
                 Please enter Account Number. e.g (12345678)
                 Account Number: 
                 """);
-            accountNumber = Console.ReadLine();
+            accountNumber = InputUtilities.GetInputWithinTimeLimit();
 
             // Check if both sort code and account number are valid
             if (invalidAccountNumbers.Contains(accountNumber))

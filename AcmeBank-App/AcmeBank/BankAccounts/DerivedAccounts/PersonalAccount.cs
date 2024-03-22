@@ -1,5 +1,8 @@
-﻿using AcmeBank.BankAccounts;
+﻿using AcmeBank;
+using AcmeBank.BankAccounts;
 using AcmeBank.BankAccounts.AccountInterfaces;
+using AcmeBank.BankAccounts.RegularPayments;
+using AcmeBank.BankAccounts.Transactions;
 using System.Text;
 
 namespace BankPayments.BankAccounts.DerivedAccounts;
@@ -13,12 +16,12 @@ public class PersonalAccount : Account, IOverdraftAccount
 
     #region Constructors
     // Account setup
-    public PersonalAccount(string accountNumber, string sortCode, decimal balance, string address) : base(accountNumber, sortCode, balance, AccountType.Personal, address)
+    public PersonalAccount(string accountNumber, string sortCode, decimal balance, string address, Customer customer) : base(accountNumber, sortCode, balance, AccountType.Personal, address, customer)
     {
         _overdraftRemaining = _overdraftLimit;
     }
     // Loading from file
-    public PersonalAccount(string accountNumber, string sortCode, decimal balance, string address, decimal overdraftRemaining) : base(accountNumber, sortCode, balance, AccountType.Personal, address)
+    public PersonalAccount(string accountNumber, string sortCode, decimal balance, string address, decimal overdraftRemaining, Customer customer) : base(accountNumber, sortCode, balance, AccountType.Personal, address, customer)
     {
         _overdraftRemaining = overdraftRemaining; 
     }
@@ -51,9 +54,10 @@ public class PersonalAccount : Account, IOverdraftAccount
             2. Withdraw
             3. Payment
             4. Transfer
-            5. Manage Standing Orders/Direct Debits
-            6. Request Debit Card
-            7. Manage Overdraft
+            5. Statement
+            6. Manage Standing Orders/Direct Debits
+            7. Request Debit Card
+            8. Manage Overdraft
             """);
     }
 
@@ -76,12 +80,16 @@ public class PersonalAccount : Account, IOverdraftAccount
                 Transfer();
                 break;
             case "5":
-                ManageStandingOrders();
+                Statements.StatementOptions(AccountNumber, CustomerReference);
                 break;
             case "6":
-                RequestDebitCard();
+                // Standing Orders & Direct Debits
+                RegularPaymentUtilities.RegularPaymentOptions(this, CustomerReference);
                 break;
             case "7":
+                RequestDebitCard();
+                break;
+            case "8":
                 ManageOverdraft();
                 break;
             case "x":
@@ -122,29 +130,19 @@ public class PersonalAccount : Account, IOverdraftAccount
             Overdraft limit: {OverdraftLimit:C2}
             Overdraft remaining: {OverdraftRemaining:C2}
             -----------------------
-
             """);
     }
-
+    
     // Request a new debit card
     // This method will simply inform the user that a new debit card will be sent to the account's address
     protected void RequestDebitCard()
     {
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("A new debit card will be sent to this account's address");
+        Console.WriteLine($"A new debit card will be sent to this account's address at {Address}");
         Console.ResetColor();
         Thread.Sleep(1500);
     }
-
-    // Manage the account's standing orders
-    protected void ManageStandingOrders()
-    {
-        Console.ForegroundColor = ConsoleColor.Magenta;
-        Console.WriteLine("This feature is not yet implemented");
-        Console.ResetColor();
-        Thread.Sleep(1500);
-    }
-
+    
     // Manage the account's overdraft
     protected void ManageOverdraft()
     {
@@ -153,6 +151,7 @@ public class PersonalAccount : Account, IOverdraftAccount
         Console.ResetColor();
         Thread.Sleep(1500);
     }
+    
     #endregion
 
 }
