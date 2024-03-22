@@ -1,5 +1,4 @@
 ﻿using AcmeBank.BankAccounts;
-using BankPayments.BankAccounts.DerivedAccounts;
 
 namespace AcmeBank
 {
@@ -7,12 +6,6 @@ namespace AcmeBank
     {
         static void Main(string[] args)
         {
-
-            //DateOnly dob = DateOnly.Parse("17/04/2001");
-            //Customer kawsar = CustomerUtilities.LoadCustomerDetails("Kawsar", "Hussain", "", dob, "E15 5DP");
-            //Account account = AccountUtilities.LoadAccountDetails(kawsar.ListOfAccounts[0], kawsar);
-            //account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
-
             //Create a new Teller object which displays the login screen once the application starts
             Teller oTeller = new Teller();
             //Initialise a string list which will contain customer's details
@@ -49,7 +42,7 @@ namespace AcmeBank
                         //Create a new CustomerValidation object
                         oCustomerValidation = new CustomerValidation();
                         //Retrieve customer's details using the object
-                        oCustomer = oCustomerValidation.ValidateCustomer(clCustomers);
+                        oCustomer = oCustomerValidation.validateCustomer(clCustomers);
                         //If customer is not null, invoke function
                         if (oCustomer != null)
                         {
@@ -77,7 +70,7 @@ namespace AcmeBank
                         //Retrieve customer's details by creating a new CustomerValidation object
                         oCustomerValidation = new CustomerValidation();
                         //Retrieve customer's details using the object
-                        oCustomer = oCustomerValidation.ValidateCustomer(clCustomers);
+                        oCustomer = oCustomerValidation.validateCustomer(clCustomers);
                         //If customer is not null, invoke function
                         if (oCustomer != null)
                         {
@@ -125,18 +118,6 @@ namespace AcmeBank
                 }
             }
         }
-      
-      /*public static Customer CreateCustomer()
-        {
-            Console.WriteLine("""
-                Hello and welcome to a new and Exciting Journey with us.
-                I will start by asking for your name.
-
-                """);
-            string firstName = InputUtilities.StringInputHandling("What is your first name", true);
-            string lastName = InputUtilities.StringInputHandling("what is your last name", true);
-            string otherName = InputUtilities.StringInputHandling("what is your middle name/s", true, true);            
-        }*/
 
         /*This method stores the data from the Customers.csv file and stores it directly into the string list. The string list is returned.*/
         private static List<string> populateStringList()
@@ -289,8 +270,6 @@ namespace AcmeBank
                 //Clear console
                 Console.Clear();
             }
-            /*Account account = AccountUtilities.LoadAccountDetails("67890123");
-            account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options*/
         }
 
         public static bool checkIfNumeric(string sInput)
@@ -300,23 +279,5 @@ namespace AcmeBank
             //Return true if all characters are unique
             return true;
         }
-
-        /*public static Customer CreateCustomer()
-          {
-              Console.WriteLine("""
-                  Hello and welcome to a new and Exciting Journey with us.
-                  I will start by asking for your name.
-
-                  """);
-              string firstName = StringInputHandling("What is your first name", true);
-              string lastName = StringInputHandling("what is your last name", true);
-              string otherName = StringInputHandling("what is your middle name/s", true, true);                             
-
-          }*/
-
-        //DateOnly dob = new DateOnly(2001, 4, 17);
-        //Customer kawsar = CustomerUtilities.LoadCustomerDetails("Kawsar", "Hussain", "", dob, "E15 5DP");
-
-        //CustomerUtilities.RemoveCustomerDetails(kawsar);
     }
 }
