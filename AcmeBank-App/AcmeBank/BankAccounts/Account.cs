@@ -59,9 +59,10 @@ public abstract class Account
                 """);
     }
 
+    // Takes an input from the user
     public virtual void AccountOptionsLoop()
     {
-        StringBuilder invalidPrompt = new StringBuilder();
+        StringBuilder invalidPrompt = new StringBuilder(); // StringBuilder to store error messages
 
         bool exit = false; // Initialize a flag to control the loop
         while (!exit) // Loop until the user chooses to exit
@@ -81,27 +82,29 @@ public abstract class Account
             Console.Write("Enter an option: ");
             string optionInput = InputUtilities.GetInputWithinTimeLimit();
 
-            exit = HandleOption(optionInput, ref invalidPrompt);
+            exit = HandleOption(optionInput, ref invalidPrompt); // Triggers a method based on the selected option
         }
     }
 
+    // Performs an action depending on the input given
     protected virtual bool HandleOption(string option, ref StringBuilder invalidPrompt)
     {
         switch (option.ToLower()) // Process the user's choice
         {
             case "1":
-                Deposit();
+                Deposit(); // Deposit funds to this account
                 break;
             case "2":
-                Withdraw();
+                Withdraw(); // Withdraw funds from this account
                 break;
             case "3":
-                Payment();
+                Payment(); // Make a payment from this account to another
                 break;
             case "4":
-                Transfer();
+                Transfer(); // Transfer funds accross owned accounts
                 break;
             case "5":
+                // Call method to display account statements given a specific month and year
                 Statements.StatementOptions(AccountNumber, CustomerReference);
                 break;
             case "x":
@@ -113,9 +116,10 @@ public abstract class Account
                 invalidPrompt.Append("-- !!! Invalid option !!! --");
                 break;
         }
-        return false; //does not exit the loop
+        return false; // Does not exit the loop
     }
 
+    // Display account details including account number, sort code, balance, and account type
     public virtual void DisplayAccountDetails()
     {
         Console.WriteLine($"""
@@ -128,6 +132,9 @@ public abstract class Account
             """);
     }
 
+    // Deposit method allows the user to deposit funds into the account.
+    // The user is prompted to enter the deposit amount, and the amount is validated.
+    // If the amount is valid, it is added to the account balance.
     protected virtual void Deposit()
     {
         // Initialize variables to store user input and error messages
@@ -170,12 +177,13 @@ public abstract class Account
             Console.ResetColor();
             helpPrompt.Clear();
 
+            // Set cursor to line amount was asked at and read in the users input
             Console.SetCursorPosition(currentLeft, currentTop);
             input = InputUtilities.GetInputWithinTimeLimit();
 
-            if (input.ToLower() == "x")
+            if (input.ToLower() == "x") // Exit back to account options
                 exit = true;
-            else if (input.ToLower() == "?")
+            else if (input.ToLower() == "?") // Display help information for deposit
             {
                 helpPrompt.Append("""
 
@@ -194,6 +202,9 @@ public abstract class Account
         AddToBalance(amount, TransactionType.Deposit); // Add the validated deposit amount to the account balance
     }
 
+    // Withdraw method allows the user to withdraw funds from the account.
+    // The user is prompted to enter the withdrawal amount, and the amount is validated.
+    // If the amount is valid and sufficient funds are available, it is deducted from the account balance.
     protected void Withdraw()
     {
         // Check if there are sufficient funds in the account before proceeding with the withdrawal
@@ -239,13 +250,13 @@ public abstract class Account
             Console.ResetColor();
             helpPrompt.Clear();
 
+            // Set cursor to line amount was asked at and read in the users input
             Console.SetCursorPosition(currentLeft, currentTop);
             input = InputUtilities.GetInputWithinTimeLimit();
 
-
-            if (input.ToLower() == "x")
+            if (input.ToLower() == "x") // Exit back to account options
                 exit = true;
-            else if (input.ToLower() == "?")
+            else if (input.ToLower() == "?") // Display help information for deposit
                 helpPrompt.Append("""
 
 
@@ -266,6 +277,9 @@ public abstract class Account
         DeductFromBalance(amount, TransactionType.Withdraw); // Deduct the validated withdrawal amount from the account balance
     }
 
+    // Payment method allows the user to make a payment from the account to another account.
+    // The user is prompted to enter the payment amount, and the amount is validated.
+    // If the amount is valid and sufficient funds are available, the payment is processed.
     protected void Payment()
     {
         // Check if there are sufficient funds in the account before proceeding with the payment
@@ -374,20 +388,22 @@ public abstract class Account
         
     }
 
+    // Transfer method allows the user to transfer funds from this account to another of the customers account.
     protected void Transfer()
     {
-        //get customer accounts
+        // Get customer accounts
         List<string> accountNumbers = CustomerReference.ListOfAccounts;
-        //list accounts
+        // Exclude the current account from the list of accounts to transfer to
         accountNumbers.Remove(AccountNumber);
 
-        List<Account> accountObjects = new List<Account>();
-        StringBuilder invalidOptionPrompt = new StringBuilder();
+        // Initialize variables
+        List<Account> accountObjects = new List<Account>(); // List to store Account objects corresponding to account numbers
+        StringBuilder invalidOptionPrompt = new StringBuilder(); // String builder to store error messages
 
         bool exit = false;
         while (!exit)
         {
-            //ask for option
+            // Prompt user for account selection optiob
             Console.Clear();
             Console.WriteLine("""
             --- Transfer: Account Selection ---
@@ -395,6 +411,7 @@ public abstract class Account
             <- Enter 'x' to exit. 
             """);
 
+            // Display any previous error messages
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(invalidOptionPrompt);
             invalidOptionPrompt.Clear();
@@ -405,10 +422,12 @@ public abstract class Account
             int currentLeft = Console.CursorLeft;
             int currentTop = Console.CursorTop;
 
+            // Display the list of available accounts for transfer
             Console.WriteLine("\n\n====== Account(s) =====");
             int count = 1;
             foreach (string accountNumber in accountNumbers)
             {
+                // Load and display account details for each account number
                 Account accountObject = AccountUtilities.LoadAccountDetails(accountNumber, CustomerReference);
                 accountObjects.Add(accountObject);
 
@@ -426,33 +445,39 @@ public abstract class Account
 
             // Then provide the option to send statement or exit
             string? input = InputUtilities.GetInputWithinTimeLimit();
+
             int id;
             bool validID = int.TryParse(input, out id);
             if (input.ToLower() == "x")
             {
-                exit = true;
+                exit = true; // Exit the loop if the user chooses to exit
             } 
             else if (validID && id > 0 && id <= accountNumbers.Count)
             {
-                TransferAmount(accountNumbers[id-1]);
+                TransferAmount(accountNumbers[id-1]); // Transfer amount if the user selects an account by ID
             }
             else if(accountNumbers.Contains(input))
             {
-                TransferAmount(input);
+                TransferAmount(input); // Transfer amount if the user selects an account by account number
             }
             else
             {
-                invalidOptionPrompt.Append("!!! Invalid ID !!!");
+                invalidOptionPrompt.Append("!!! Invalid ID !!!"); // Display error message for invalid selection
             }
         }
     }
 
+    // TransferAmount method facilitates the transfer of funds from this account to another account.
+    // It prompts the user to enter the transfer amount and validates it.
+    // If the amount is valid, it deducts the amount from this account and adds it to the recipient account.
     private void TransferAmount(string accountNumber)
     {
+        // Load the recipient account details based on the provided account number
         Account TransferToAccount = AccountUtilities.LoadAccountDetails($"{accountNumber}", CustomerReference);
-        decimal amount =0;
 
-        StringBuilder invalidPrompt = new StringBuilder();
+        decimal amount =0; // Initialize the transfer amount
+
+        StringBuilder invalidPrompt = new StringBuilder(); // String builder to store error messages
         string? input;
         do
         {
@@ -490,9 +515,10 @@ public abstract class Account
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("Transfer successful!");
         Console.ResetColor();
-        Thread.Sleep(1000);
+        Thread.Sleep(1000); // Pause briefly to display the success message
     }
 
+    // Deducts specified amount from balance and logs transaction.
     protected void DeductFromBalance(decimal amount, TransactionType transactionType)
     {
         // Deduct funds from the account balance
@@ -506,6 +532,7 @@ public abstract class Account
         AccountUtilities.SaveTransaction(withdraw, AccountNumber);
     }
 
+    // Adds specified amount to balance and logs transaction.
     protected void AddToBalance(decimal amount, TransactionType transactionType)
     {
         // If the account implements overdraft functionality, update the remaining overdraft
@@ -523,6 +550,7 @@ public abstract class Account
         AccountUtilities.SaveTransaction(deposit, AccountNumber);
     }
 
+    // Checks if the account has sufficient funds for the requested transaction.
     private bool CheckSufficientFunds()
     {
         // Check if the account has sufficient funds for the requested transaction
@@ -540,6 +568,7 @@ public abstract class Account
         return true;
     }
 
+    // Validates withdrawal input.
     protected bool ValidateWithdrawInput(ref decimal amount, string? input, ref StringBuilder invalidPrompt)
     {
         if (input == "x" || input == "?")
@@ -569,6 +598,7 @@ public abstract class Account
         return false;
     }
 
+    // Validates deposit input.
     protected bool ValidateDepositInput(ref decimal amount, string? input, ref StringBuilder invalidPrompt)
     {
         if (input == "x" || input == "?")

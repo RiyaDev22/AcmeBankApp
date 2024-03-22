@@ -1,6 +1,8 @@
 ﻿using AcmeBank;
 using AcmeBank.BankAccounts;
 using AcmeBank.BankAccounts.AccountInterfaces;
+using AcmeBank.BankAccounts.RegularPayments;
+using AcmeBank.BankAccounts.Transactions;
 using System.Text;
 
 namespace BankPayments.BankAccounts.DerivedAccounts;
@@ -44,6 +46,7 @@ public class BusinessAccount : Account, IOverdraftAccount
 
     #region Methods
 
+    // Display account options
     protected override void DisplayAccountOptions()
     {
         Console.WriteLine("""
@@ -53,16 +56,19 @@ public class BusinessAccount : Account, IOverdraftAccount
             2. Withdraw
             3. Payment
             4. Transfer
-            5. Request Credit/Debit Card
-            6. Request Cheque Book
-            7. Manage Loans
-            8. Manage Overdraft
+            5. Statement
+            6. Manage Standing Orders/Direct Debits
+            7. Request Credit/Debit Card
+            8. Request Cheque Book
+            9. Manage Loans
+            10. Manage Overdraft
 
             x. Exit
             -----------------------
             """);
     }
 
+    // Handle account options
     protected override bool HandleOption(string option, ref StringBuilder invalidPrompt)
     {
         // Process the user's input
@@ -81,15 +87,22 @@ public class BusinessAccount : Account, IOverdraftAccount
                 Transfer();
                 break;
             case "5":
-                RequestCard();
+                Statements.StatementOptions(AccountNumber, CustomerReference);
                 break;
             case "6":
-                RequestChequeBook();
+                // Standing Orders & Direct Debits
+                RegularPaymentUtilities.RegularPaymentOptions(this, CustomerReference);
                 break;
             case "7":
-                ManageLoans();
+                RequestCard();
                 break;
             case "8":
+                RequestChequeBook();
+                break;
+            case "9":
+                ManageLoans();
+                break;
+            case "10":
                 ManageOverdraft();
                 break;
             // exit the loop if the user chooses to exit
@@ -104,6 +117,7 @@ public class BusinessAccount : Account, IOverdraftAccount
         return false;
     }
 
+    // Deduct amount from the overdraft remaining
     public bool UpdateRemainingOverdraft(decimal amount)
     {
         if (Balance > 0) // If the balance is positive, deduct it from the amount to be withdrawn from overdraft
@@ -117,6 +131,7 @@ public class BusinessAccount : Account, IOverdraftAccount
         return true;
     }
 
+    // Displays account information and additonally the overdraft limit
     public override void DisplayAccountDetails()
     {
         // Display account details as well as overdraft
@@ -133,6 +148,8 @@ public class BusinessAccount : Account, IOverdraftAccount
             """);
     }
 
+    // Request a new debit card or credut card
+    // This method will simply inform the user that a new debit card/credit card will be sent to the account's address
     protected void RequestCard()
     {
         //we need a submenu for handling the request of a credit or debit card, since the customer could request either
