@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace AccountCreation.AccountCreation;
+namespace AcmeBank;
 public class AccountCreation
 {
     // DisplayMenu Mehtod

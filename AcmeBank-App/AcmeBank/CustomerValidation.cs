@@ -24,19 +24,19 @@ namespace AcmeBank
                             """);
 
             //Prompt teller to enter customer's first name
-            string? sFirstName = Console.ReadLine();
+            string? sFirstName = InputUtilities.GetInputWithinTimeLimit();
             //Display message
             Console.Write("Last Name: ");
             //Prompt teller to enter customer's last name
-            string? sLastName = Console.ReadLine();
+            string? sLastName = InputUtilities.GetInputWithinTimeLimit();
             //Display message
             Console.Write("Postcode: ");
             //Prompt teller to enter customer's postcode
-            string? sPostcode = Console.ReadLine();
+            string? sPostcode = InputUtilities.GetInputWithinTimeLimit();
             //Display message
             Console.Write("Date Of Birth (DD/MM/YYYY): ");
             //Prompt teller to enter customer's date of birth
-            string? sDob = Console.ReadLine();
+            string? sDob = InputUtilities.GetInputWithinTimeLimit();
 
             //Check if name, postcode, and date of birth is valid
             if(DateOnly.TryParse(sDob, out DateOnly doDob))
@@ -53,7 +53,7 @@ namespace AcmeBank
                         //Display chosen security question
                         Console.Write($"\nPlease answer this security question\n{oCustomer.SecurityQuestion}: ");
                         //Prompt teller to enter customer's security answer
-                        string? sAnswerInput = Console.ReadLine();
+                        string? sAnswerInput = InputUtilities.GetInputWithinTimeLimit();
                         //If the answer is correct
                         if (oCustomer.SecurityAnswer.CompareTo(sAnswerInput) == 0)
                         {

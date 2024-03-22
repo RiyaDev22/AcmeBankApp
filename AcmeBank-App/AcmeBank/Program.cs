@@ -232,7 +232,7 @@ namespace AcmeBank
                     //Display message
                     Console.Write($"{sOutput}\nPlease select one account number: ");
                     //Prompt user to select an account number
-                    sAccountNumber = Console.ReadLine();
+                    sAccountNumber = InputUtilities.GetInputWithinTimeLimit();
 
                     //If the user input is not null and exclusively numeric
                     if (!string.IsNullOrEmpty(sAccountNumber) && isNumeric(sAccountNumber))
