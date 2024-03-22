@@ -201,6 +201,7 @@ internal class CustomerUtilities
                     foreach (var i in customers)
                     {
                         string[] customerSplit = i.Split(',');
+                        if((customer.OtherName) == "") customer.OtherName = "EMPTY";
                         if (!(string.Equals(customerSplit[0], customer.FirstName, StringComparison.OrdinalIgnoreCase) &&
                             string.Equals(customerSplit[1], customer.LastName, StringComparison.OrdinalIgnoreCase) &&
                             string.Equals(customerSplit[2], customer.OtherName, StringComparison.OrdinalIgnoreCase) &&
