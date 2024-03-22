@@ -73,6 +73,8 @@ Acme Bank has enlisted our team to create a C# application facilitating tellers 
     </a>
 </div>
 
+## Prerequisites for running the application
+In the AcmeBank directory, there are two things that need to be copied into the debug folder. Those are the **Accounts** folder and the **Customers.csv** file. Once that has been achieved, you can run the program.
 
 ## How the Application works - Logging in
 - To log into the system, you have to give your teller details. Both the username and password are '**admin**'
