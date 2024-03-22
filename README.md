@@ -77,11 +77,11 @@ Acme Bank has enlisted our team to create a C# application facilitating tellers 
 ## How the Application works - Logging in
 - To log into the system, you have to give your teller details. Both the username and password are '**admin**'
 - You are then presented with a main menu which allows you to do the following
-    1. 1 - View a Customer account
-    2. 2 - Create a Customer account
-    3. 3 - Remove a Customer account
-    4. star - Log out
-    5. X - Log out & Quit
+    1. View a Customer account
+    2. Create a Customer account
+    3. Remove a Customer account
+    4. Log out
+    5. Log out & Quit
 
 ### View a Customer account
 - Input in the your customer details
@@ -141,12 +141,37 @@ Acme Bank has enlisted our team to create a C# application facilitating tellers 
         5. Statement
         6. Exit
     - Business
-          1. Deposit
-          2. Withdraw
-          3. Payment
-          4. Transfer
-          5. Request Credit/Debit Card
-          6. Request Cheque Book
-          7. Manage Loans
-          8. Manage Overdraft
-          9. Exit
+        1. Deposit
+        2. Withdraw
+        3. Payment
+        4. Transfer
+        5. Request Credit/Debit Card
+        6. Request Cheque Book
+        7. Manage Loans
+        8. Manage Overdraft
+        9. Exit
+
+
+### Deposit
+The teller inputs a value which gets deposited into the account. It checks to see if the amount value inputted is valid. If so, the money gets added to the account.
+
+### Withdraw
+The teller inputs a value which gets withdrawn from the account. The value is checked to see if the transaction can be achieved. For different account types, it is different. For the personal and business accounts, it checks to see if the amount withdrawn will exceed the overdraft limit. For the ISA account, it updates the deposit limit attached to the account.
+
+### Payment
+It first checks to see if the customer can pay another account. Then it tells the teller inputs an account number to which the customer wants to put it into, excluding the account which is doing the payment and excluding ISA accounts. Once a calid account number is inputted, the teller is then prompted to put an amount to pay to the inputted account. Once the value inputted has been validated, the money is withdrawn from the customer account and deposited to the payee account.
+
+### Transfer
+TODO
+
+### Manage Standing Order / Direct debits
+This is a method exclusive to a personal account type. Still in **TODO**
+
+### Statement
+Method which displays the statement of the account to the teller
+
+### Request Credit/Debit Card
+A method to say that a card would be delivered to the account address. A personal account can only request for a debit card but a business account can request for both credit and debit
+
+### Manage Overdraft
+For the business account, the teller is told to direct the customer to the business overdraft division.
