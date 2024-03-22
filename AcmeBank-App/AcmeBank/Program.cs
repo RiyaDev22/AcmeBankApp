@@ -27,23 +27,23 @@ namespace AcmeBank
             //Declare object which will hold the customer's attributes
             Customer? oCustomer;
 
-            //This while loop will run indefinitely until the user press 'x' to quit - Look at the switch case statement
-            while (true)
-            {
-                //Display main menu
-                Console.Write("""
-                            --- Main Menu ---
-                            1. View a Customer Account
-                            2. Create a Customer Account
-                            3. Remove a Customer Account
-                            *. Log Out
-                            x. Log Out & Quit
+        //This while loop will run indefinitely until the user press 'x' to quit - Look at the switch case statement
+        while (true)
+        {
+            //Display main menu
+            Console.Write("""
+                        --- Main Menu ---
+                        1. View a Customer Account
+                        2. Create a Customer Account
+                        3. Remove a Customer Account
+                        *. Log Out
+                        x. Log Out & Quit
 
-                            Enter an option: 
-                            """);
+                        Enter an option: 
+                        """);
 
-                //Prompt user input
-                string? sUserInput = Console.ReadLine();
+            //Prompt user input
+            string? sUserInput = InputUtilities.GetInputWithinTimeLimit();
 
                 switch (sUserInput)
                 {
@@ -232,7 +232,7 @@ namespace AcmeBank
                     //Display message
                     Console.Write($"{sOutput}\nPlease select one account number: ");
                     //Prompt user to select an account number
-                    sAccountNumber = Console.ReadLine();
+                    sAccountNumber = InputUtilities.GetInputWithinTimeLimit();
 
                     //If the user input is not null and exclusively numeric
                     if (!string.IsNullOrEmpty(sAccountNumber) && isNumeric(sAccountNumber))

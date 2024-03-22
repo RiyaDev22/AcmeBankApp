@@ -60,7 +60,7 @@ internal class Statements
 
             // Takes an input from the user
             Console.Write("Enter: ");
-            input = Console.ReadLine();
+            input = InputUtilities.GetInputWithinTimeLimit();
 
 
         } while (!DateOnly.TryParse(input, out date));//Validate input
@@ -114,7 +114,7 @@ internal class Statements
         Console.SetCursorPosition(currentLeft, currentTop);
 
         // Then provide the option to send statement or exit
-        string? input = Console.ReadLine();
+        string? input = InputUtilities.GetInputWithinTimeLimit();
         if (input.ToLower() == "y")
         {
             Account account = AccountUtilities.LoadAccountDetails(accountNumber,_currentCustomer);
