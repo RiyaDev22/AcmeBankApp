@@ -8,8 +8,9 @@ namespace AcmeBank.BankAccounts;
 
 internal class AccountUtilities
 {
-    private static string directory = $@"{AppDomain.CurrentDomain.BaseDirectory}\Accounts\";
+    private static string directory = $@"{AppDomain.CurrentDomain.BaseDirectory}\Accounts\"; //Base directory used as a path to the accounts folder
 
+    // Saves all the attributes needed form the account object overwriting the details file if it already exists
     internal static void SaveAccountDetails(Account accountToSave)
     {
         string fileDirectory = $@"{directory}\{accountToSave.AccountNumber}"; // Construct the file directory path
@@ -66,13 +67,9 @@ internal class AccountUtilities
         // Write the CSV content to the file
         File.WriteAllText(path, sb.ToString());
 
-        //Console.ForegroundColor = ConsoleColor.Green;
-        //Console.WriteLine("Account successfully saved!");
-        //Console.ResetColor();
-
-        //Thread.Sleep(1000);
     }
 
+    // Loads account details from a file based on the provided account number.
     internal static Account LoadAccountDetails(string accountNumberToLoad, Customer customer)
     {
         // Construct the file directory path
@@ -92,21 +89,26 @@ internal class AccountUtilities
                 string sortCode = accountSplit[1];
                 decimal balance = decimal.Parse(accountSplit[2]);
                 string address = accountSplit[4];
+                // Based on account type, instantiate the appropriate account object
                 switch (accountSplit[3])
                 {
                     case "Personal":
+                        // If account type is Personal, parse remaining overdraft and create PersonalAccount
                         decimal remainingOverdraftPA = decimal.Parse(accountSplit[5]);
                         account = new PersonalAccount(accountNumber, sortCode, balance, address, remainingOverdraftPA, customer);
                         break;
                     case "ISA":
+                        // If account type is ISA, parse remaining deposit limit and create ISAAccount
                         decimal remainingDepositLimit = decimal.Parse(accountSplit[5]);
                         account = new ISAAccount(accountNumber, sortCode, balance, address,remainingDepositLimit, customer);
                         break ;
                     case "Business":
+                        // If account type is Business, parse remaining overdraft and create BusinessAccount
                         decimal remainingOverdraftBA = decimal.Parse(accountSplit[5]);
                         account = new BusinessAccount(accountNumber, sortCode, balance, address, remainingOverdraftBA, customer);
                         break;
                     default:
+                        // If account type is unrecognized, return null
                         return null;
                 }
             }
@@ -134,9 +136,10 @@ internal class AccountUtilities
             Console.ResetColor();
         }
 
-        return account;
+        return account; // Return the loaded account object
     }
 
+    // Adds the transaction details to the transactions csv file for the account
     internal static void SaveTransaction(Transaction transaction, string accountNumber)
     {
         // Construct the file directory path

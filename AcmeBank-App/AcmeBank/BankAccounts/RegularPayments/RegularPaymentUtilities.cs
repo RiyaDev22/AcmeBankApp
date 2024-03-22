@@ -12,14 +12,16 @@ namespace AcmeBank.BankAccounts.RegularPayments
         private static Account _currentAccount { get; set; }
         private static Customer _currentCustomer { get; set; }
         private static string directory = $@"{AppDomain.CurrentDomain.BaseDirectory}\Accounts\";
+
+        // Method to display regular payment options and handle user input
         internal static void RegularPaymentOptions(Account account, Customer customer)
         {
             _currentAccount = account;
             _currentCustomer = customer;
+
             //Display a menu asking either standing orders or direct debits.
             StringBuilder invalidPrompt = new StringBuilder();
-
-            bool exit = false; // Initialize a flag to control the loop
+            bool exit = false; // Initialise a flag to control the loop
             while (!exit) // Loop until the user chooses to exit
             {
                 // Display account details and options
@@ -47,6 +49,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
             }
         }
 
+        // Method to handle user's regular payment option choice
         private static bool HandleRPOption(string? optionInput, ref StringBuilder invalidPrompt)
         {
             switch (optionInput.ToLower()) // Process the user's choice
@@ -69,12 +72,13 @@ namespace AcmeBank.BankAccounts.RegularPayments
             return false; //does not exit the loop
         }
 
+        // Displays for standing order options and obtains an input
         private static void StandingOrderOptions()
         {
-            //Display a menu asking either standing orders or direct debits.
+            // Display a menu for standing order options
             StringBuilder invalidPrompt = new StringBuilder();
 
-            bool exit = false; // Initialize a flag to control the loop
+            bool exit = false; // Initialise a flag to control the loop
             while (!exit) // Loop until the user chooses to exit
             {
                 // Display account details and options
@@ -98,19 +102,21 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 Console.Write("Enter an option: ");
                 string optionInput = InputUtilities.GetInputWithinTimeLimit();
 
+                // Handle the user's choice
                 exit = HandleSOOption(optionInput, ref invalidPrompt);
             }
         }
 
+        // Handles the user's choice for standing order options.
         private static bool HandleSOOption(string? optionInput, ref StringBuilder invalidPrompt)
         {
             switch (optionInput.ToLower()) // Process the user's choice
             {
                 case "1":
-                    SetupSO();
+                    SetupSO(); // Setup a standing order
                     break;
                 case "2":
-                    ManageSOs(ref invalidPrompt);
+                    ManageSOs(ref invalidPrompt); // Manage standing orders
                     break;
                 case "x":
                     // Exit the loop if the user chooses to exit
@@ -124,9 +130,10 @@ namespace AcmeBank.BankAccounts.RegularPayments
             return false; //does not exit the loop
         }
 
+        // Manages the setup of a standing order transaction.
         private static void SetupSO()
         {
-            // Initialize variables for payee account details, payment amount, and error messages
+            // Initialise variables for payee account details, payment amount, and error messages
             Account payeeAccount = null;
             string? input;
 
@@ -158,12 +165,13 @@ namespace AcmeBank.BankAccounts.RegularPayments
 
             } while (payeeAccount == null);
 
-
+            // Initialise variables 
             bool amountValid = false;
             decimal amount = 0;
             string? amountInput;
             StringBuilder amountInvalidPrompt = new StringBuilder();
-            while (!amountValid)
+
+            while (!amountValid) // Continue to ask for an input while the amount provide is not a valid input
             {
                 // Display account details and payment header including account from and to
                 Console.Clear();
@@ -183,29 +191,34 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 amountInvalidPrompt.Clear();
                 Console.ResetColor();
 
+                //Ask the use to provide an amount
                 Console.Write("Amount: ");
                 amountInput = InputUtilities.GetInputWithinTimeLimit();
 
+                // Checks for balid inputs and provides prompts for invalid inputs
                 if (amountInput.ToLower() == "x")
-                    return;
+                    return; // Exits the setup
                 else if (!decimal.TryParse(amountInput, out amount))
                     amountInvalidPrompt.Append("!!! Must be a number !!!");
                 else if (amount <= 0)
                     amountInvalidPrompt.Append("!!! Must be greater than 0 !!!");
                 else
-                    amountValid = true;
+                    amountValid = true; // The amount is valid we can exit the loop
             }
 
+            // Initialise variables for the start date selection
+            DateTime startDate = new DateTime(); 
+            Regex dateRegex = new Regex(@"^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-\d{4}$"); // Regex to validate the format of the start date
 
-            //Ask how frequently we need to make the payment and its start date.
-            DateTime startDate = new DateTime();
-            Regex dateRegex = new Regex(@"^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-\d{4}$");
-
+            // Initialise variables for user input, error prompts, and date validity check
             string? startDateInput;
             StringBuilder startDateInvalidPrompt = new StringBuilder();
             bool dateValid = false;
+
+            // Loop until a valid start date is entered
             while (!dateValid)
             {
+                // Display header and instructions for selecting the start date
                 Console.Clear();
                 Console.WriteLine($"""
                 --- Standing Orders ---
@@ -218,15 +231,18 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 <- Enter x to exit.
                 """);
 
+                // Display any previous error messages
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(startDateInvalidPrompt);
                 startDateInvalidPrompt.Clear();
                 Console.ResetColor();
 
+                // Prompt for user input for the start date
                 Console.Write("Date: ");
                 startDateInput = InputUtilities.GetInputWithinTimeLimit();
 
-                bool checkDate = DateTime.TryParse(startDateInput, out startDate);
+                // Try parsing the input as a date and validate against the regex pattern
+                bool checkDate = DateTime.TryParse(startDateInput, out startDate); 
                 if (startDateInput.ToLower() == "x")
                     return;
                 if (!(dateRegex.IsMatch(startDateInput) && checkDate))
@@ -238,7 +254,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
             }
 
 
-            //ask to confirm and then save to file
+            // Ask the user to confirm the standing order details before saving to file
             Console.Clear();
             Console.Write($"""
                 --- Standing Orders ---
@@ -253,12 +269,15 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 Your choice: 
                 """);
 
+            // Get user input to confirm or cancel the standing order
             string? confirmInput = InputUtilities.GetInputWithinTimeLimit();
-            if (confirmInput.ToLower() == "y")
+
+            if (confirmInput.ToLower() == "y") // If confirmed, save the standing order to file
             {
                 // Save to a file
                 RegularPayment standingOrder = new RegularPayment(payeeAccount.AccountNumber, amount, startDate);
                 SaveSO(_currentAccount.AccountNumber, standingOrder);
+
                 // Display saved prompt
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write("STANDING ORDER SAVED");
@@ -266,13 +285,15 @@ namespace AcmeBank.BankAccounts.RegularPayments
             }
             else
             {
+                // Display cancellation message
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write("STANDING ORDER CANCELLED");
                 Console.ResetColor();
             }
-            Thread.Sleep(1000); // Pause for 1 second
+            Thread.Sleep(1000); // Pause for 1 second before continuing
         }
 
+        // Save the standing order to a CSV file
         private static void SaveSO(string thisAccountNumber, RegularPayment standingOrder)
         {
             // Construct the file directory path
@@ -282,7 +303,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
             if (!Directory.Exists(fileDirectory))
             {
                 Directory.CreateDirectory(fileDirectory);
-                using (File.Create($@"{fileDirectory}\StandingOrders.csv")) ;
+                using (File.Create($@"{fileDirectory}\StandingOrders.csv")) ; // Create the StandingOrders.csv file
             }
 
             // Construct the file path
@@ -296,7 +317,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
             File.AppendAllText(path, sb.ToString());
         }
 
-
+        // Load standing orders from a CSV file
         private static List<RegularPayment> LoadSOs(string accountNumberToLoad)
         {
             // Construct the file directory path
@@ -313,10 +334,13 @@ namespace AcmeBank.BankAccounts.RegularPayments
                     string[] payments = File.ReadAllLines(path);
                     foreach (string regularPayment in payments)
                     {
+                        // Split the CSV line into its components
                         string[] regularPaymentSplit = regularPayment.Split(',');
                         string payeeAccountNumber = regularPaymentSplit[0];
                         decimal amount = decimal.Parse(regularPaymentSplit[1]);
                         DateTime date = DateTime.Parse(regularPaymentSplit[2]);
+
+                        // Create a RegularPayment object and add it to the list
                         regularPayments.Add(new RegularPayment(payeeAccountNumber, amount, date));
                     }
                     return regularPayments;
@@ -348,6 +372,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
             return regularPayments;
         }
 
+        // Manage standing orders
         private static void ManageSOs(ref StringBuilder invalidMenuPrompt)
         {
             StringBuilder standingOrderPrompt = new StringBuilder();
@@ -358,9 +383,10 @@ namespace AcmeBank.BankAccounts.RegularPayments
             {
                 Console.Clear();
 
+                // Load standing orders for the current account
                 List<RegularPayment> standingOrders = LoadSOs(_currentAccount.AccountNumber);
 
-                if (standingOrders.Count <= 0)
+                if (standingOrders.Count <= 0) // If no standing orders found, display error and return
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     invalidMenuPrompt.Append("!!! Customer has no standing orders !!!");
@@ -368,7 +394,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
                     return;
                 }
 
-
+                // Display standing orders with index numbers
                 int count = 1;
                 standingOrderPrompt.Clear();
                 foreach (RegularPayment regularPayment in standingOrders)
@@ -377,7 +403,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
                     count++;
                 }
 
-                
+                // Display prompt for entering an ID and also exiting
                 Console.Write("""
                     --- Manage Standing Orders  ---
                     ## Enter the id of the any order you would like to cancel e.g '1'.
@@ -390,7 +416,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 int currentLeft = Console.CursorLeft;
                 int currentTop = Console.CursorTop;
 
-                if (invalidOptionPrompt.ToString() != "")
+                if (invalidOptionPrompt.ToString() != "") // Display invalid option prompt if exists
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine($"\n{invalidOptionPrompt}");
@@ -398,6 +424,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
                     Console.ResetColor();
                 }
 
+                // Display standing orders with index numbers
                 Console.WriteLine($"""
 
                         
@@ -410,29 +437,31 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 // Move the cursor position to the line where user input is expected
                 Console.SetCursorPosition(currentLeft, currentTop);
 
-                // Then provide the option to send statement or exit
+                // Take user input for order cancellation
                 string? input = InputUtilities.GetInputWithinTimeLimit();
                 int id;
                 bool validID = int.TryParse(input, out id);
                 if (input.ToLower() == "x")
                 {
-                    exit = true;
+                    exit = true; // Exit if user chooses to exit
                 } 
                 else if (validID && id > 0 && id <= standingOrders.Count)
                 {
-                    standingOrders.RemoveAt(id-1);
+                    standingOrders.RemoveAt(id-1); // Remove the selected order
                     // Save remaining
                     UpdateSOs(standingOrders);
                     if(standingOrders.Count <= 0) { exit = true; }
                 } 
                 else
                 {
+                    // Display error message for invalid ID
                     invalidOptionPrompt.AppendLine("!!! Invalid ID !!!");
                 }
             }
 
         }
 
+        // Update the list of standing orders in the file system.
         private static void UpdateSOs(List<RegularPayment> standingOrders)
         {
             string fileDirectory = $@"{directory}\{_currentAccount.AccountNumber}"; // Construct the file directory path
@@ -457,27 +486,32 @@ namespace AcmeBank.BankAccounts.RegularPayments
             File.WriteAllText(path, sb.ToString());
         }
 
+        // Manages the direct debit options for a customer's account.
         private static void ManageDDs(ref StringBuilder invalidMenuPrompt)
         {
+            // Initialize StringBuilders to hold direct debit prompts and invalid option prompts
             StringBuilder directDebitPrompt = new StringBuilder();
             StringBuilder invalidOptionPrompt = new StringBuilder();
 
-            bool exit = false;
+            bool exit = false; // Initialize a flag to control the loop
             while (!exit)
             {
                 Console.Clear();
 
+                // Load the list of direct debits for the current account
                 List<RegularPayment> directDebits = LoadDDs(_currentAccount.AccountNumber);
 
+                // Check if there are any direct debits associated with the account
                 if (directDebits.Count <= 0)
                 {
+                    // Display an error message if there are no direct debits
                     Console.ForegroundColor = ConsoleColor.Red;
                     invalidMenuPrompt.Append("!!! Customer has no direct debits !!!");
                     Console.ResetColor();
                     return;
                 }
 
-
+                // Display direct debit details
                 int count = 1;
                 directDebitPrompt.Clear();
                 foreach (RegularPayment regularPayment in directDebits)
@@ -486,7 +520,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
                     count++;
                 }
 
-
+                // Display the menu for managing direct debits
                 Console.Write("""
                     --- Manage Direct Debits  ---
                     Enter the id of the any order you would like to cancel e.g '1'.
@@ -499,6 +533,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 int currentLeft = Console.CursorLeft;
                 int currentTop = Console.CursorTop;
 
+                // Display invalid option prompt if exists
                 if (invalidOptionPrompt.ToString() != "")
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -507,6 +542,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
                     Console.ResetColor();
                 }
 
+                // Display direct debit details with IDs
                 Console.WriteLine($"""
 
                         
@@ -523,22 +559,26 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 string? input = InputUtilities.GetInputWithinTimeLimit();
                 int id;
                 bool validID = int.TryParse(input, out id);
+
                 if (input.ToLower() == "x")
                 {
-                    exit = true;
-                } else if (validID && id > 0 && id <= directDebits.Count)
+                    exit = true; // Exit the loop if the user chooses to exit
+                } 
+                else if (validID && id > 0 && id <= directDebits.Count)
                 {
-                    directDebits.RemoveAt(id - 1);
-                    // Save remaining
-                    UpdateDDs(directDebits);
+                    directDebits.RemoveAt(id - 1); // Remove the selected direct debit
+                    UpdateDDs(directDebits); // Save remaining direct debits
                     if (directDebits.Count <= 0) { exit = true; }
-                } else
+                } 
+                else
                 {
+                    // Display an error message for invalid ID input
                     invalidOptionPrompt.AppendLine("!!! Invalid ID !!!");
                 }
             }
         }
 
+        // Updates the list of direct debits in the file system.
         private static void UpdateDDs(List<RegularPayment> directDebits)
         {
             string fileDirectory = $@"{directory}\{_currentAccount.AccountNumber}"; // Construct the file directory path
@@ -563,12 +603,14 @@ namespace AcmeBank.BankAccounts.RegularPayments
             File.WriteAllText(path, sb.ToString());
         }
 
+        // Loads the list of direct debits from the file system.
         private static List<RegularPayment> LoadDDs(string accountNumberToLoad)
         {
             // Construct the file directory path
             string fileDirectory = $@"{directory}\{accountNumberToLoad}";
             string path = $@"{fileDirectory}\DirectDebits.csv";
 
+            // Creates a list to store the regular payments read from the file
             List<RegularPayment> regularPayments = new List<RegularPayment>();
 
             try
@@ -579,10 +621,13 @@ namespace AcmeBank.BankAccounts.RegularPayments
                     string[] payments = File.ReadAllLines(path);
                     foreach (string regularPayment in payments)
                     {
+                        // Split each line to extract payment details
                         string[] regularPaymentSplit = regularPayment.Split(',');
                         string payeeAccountNumber = regularPaymentSplit[0];
                         decimal amount = decimal.Parse(regularPaymentSplit[1]);
                         DateTime date = DateTime.Parse(regularPaymentSplit[2]);
+
+                        // Create RegularPayment object and add to the list
                         regularPayments.Add(new RegularPayment(payeeAccountNumber, amount, date));
                     }
                     return regularPayments;
