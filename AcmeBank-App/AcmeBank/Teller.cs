@@ -52,7 +52,7 @@
             //Print initial login screen
             Console.Write("""
                                 --- Teller Login ---
-                                x. Quit
+                                [x] Quit
 
                                 Username: 
                                 """);
@@ -87,7 +87,7 @@
                         //Print the message
                         Console.Write($"""
                                         --- Teller Login ---
-                                        *. Go Back
+                                        [*] Go Back
 
                                         Username: {sUsername}
                                         Password: 
@@ -106,7 +106,7 @@
                                 //Print initial login screen
                                 Console.Write("""
                                                 --- Teller Login ---
-                                                x. Quit
+                                                [x] Quit
 
                                                 Username: 
                                                 """);
@@ -121,8 +121,8 @@
                                 Console.Clear();
                                 //Print message
                                 Console.Write($"Welcome {sUsername}!");
-                                //Pause the app for 2 seconds for the above message to be displayed
-                                Thread.Sleep(2000);
+                                //Pause the app for 1.5 seconds for the above message to be displayed
+                                Thread.Sleep(1500);
                                 //Clear the console
                                 Console.Clear();
                             }

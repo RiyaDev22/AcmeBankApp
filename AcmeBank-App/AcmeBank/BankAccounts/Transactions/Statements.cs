@@ -11,12 +11,15 @@ internal class Statements
 
         DateOnly date = DateOnly.MinValue;
         StringBuilder dateStatement = new StringBuilder();
-
         StringBuilder invalidPrompt = new StringBuilder();
+
+        bool exit = false;
+
         bool validInput = false;
         while (!validInput)
         {
-            date = RetrieveDateYear(invalidPrompt);
+            date = RetrieveDateYear(invalidPrompt, ref exit);
+            if (exit) { return; };
             invalidPrompt.Clear();
 
             dateStatement = GetDateTransactions(accountNumber, date);
@@ -31,7 +34,7 @@ internal class Statements
         DisplayAndRequestStatement(dateStatement, date, accountNumber);
     }
 
-    static DateOnly RetrieveDateYear(StringBuilder invalidPrompt)
+    static DateOnly RetrieveDateYear(StringBuilder invalidPrompt, ref bool exit)
     {
         //Ask for a month and year
         DateOnly date;
@@ -43,14 +46,10 @@ internal class Statements
             Console.Clear();
             Console.WriteLine("""
             -- Statement options --
-            Enter a month and year
-            in the format (MM-YYYY)
+            ## Enter a month and year.
+            ## in the format (MM-YYYY).
+            <- Enter x to exit.
             """);
-
-            if (initialPass)
-                initialPass = false;
-            else
-                invalidPrompt.Append("!!! Invalid Input must be in the form (MM-YYYY) !!!");
 
             // Provides a prompt for invalid inputs
             Console.ForegroundColor = ConsoleColor.Red;
@@ -59,11 +58,16 @@ internal class Statements
             Console.ResetColor();
 
             // Takes an input from the user
-            Console.Write("Enter: ");
+            Console.Write("Month-Year: ");
             input = InputUtilities.GetInputWithinTimeLimit();
 
+            if (input.ToLower() == "x")
+                exit = true;
+            else
+                invalidPrompt.Append("!!! Invalid Input must be in the form (MM-YYYY) !!!");
 
-        } while (!DateOnly.TryParse(input, out date));//Validate input
+
+        } while (!DateOnly.TryParse(input, out date) && !exit);//Validate input
 
         return date;
     }
@@ -90,8 +94,9 @@ internal class Statements
         Console.Clear();
         Console.Write("""
             -- Statement options --
-            Would you like to send the statement to the customer?
-            Enter 'y' for yes or any other key to exit.
+            ## Would you like to send the statement to the customer?.
+            ## Enter 'y' for yes.
+            <- Enter any other key to exit.
             
             Your choice: 
             """);
