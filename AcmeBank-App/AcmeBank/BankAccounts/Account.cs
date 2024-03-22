@@ -12,16 +12,18 @@ public abstract class Account
     private decimal _balance;
     private AccountType _type;
     private string _address;
+    private Customer _customerReference;
     #endregion
 
     #region Constructors
-    public Account(string accountNumber, string sortCode, decimal balance, AccountType accountType, string address)
+    public Account(string accountNumber, string sortCode, decimal balance, AccountType accountType, string address, Customer customer)
     {
         _accountNumber = accountNumber;
         _sortCode = sortCode;
         _balance = balance;
         _type = accountType;
         _address = address;
+        _customerReference = customer;
     }
     #endregion
 
@@ -36,6 +38,12 @@ public abstract class Account
     public AccountType Type { get { return _type; } }
 
     public string Address { get { return _address; } }
+
+    public Customer CustomerReference
+    { 
+        get { return _customerReference; }
+        set { _customerReference = value; }
+    }
     #endregion
 
     #region Methods
@@ -97,7 +105,7 @@ public abstract class Account
                 Transfer();
                 break;
             case "5":
-                Statements.StatementOptions(AccountNumber);
+                Statements.StatementOptions(AccountNumber, CustomerReference);
                 break;
             case "x":
                 // Exit the loop if the user chooses to exit
@@ -120,7 +128,6 @@ public abstract class Account
             Balance: {Balance:C}
             Type: {Type} Account
             -----------------------
-
             """);
     }
 
@@ -212,7 +219,7 @@ public abstract class Account
         {
             // Get payee details (sort code and account number)
             TransactionUtilities.GetPayeeDetails(out string sortCode, out string accountNumber,invalidAccountNumbers);
-            payeeAccount = AccountUtilities.LoadAccountDetails($"{accountNumber}"); // Load payee account details based on the provided account number
+            payeeAccount = AccountUtilities.LoadAccountDetails($"{accountNumber}", CustomerReference); // Load payee account details based on the provided account number
 
             // Checks if the payee is a savings account if so we provide an error prompt and return preventing the payment
             if (payeeAccount.Type == AccountType.ISA)
@@ -285,13 +292,121 @@ public abstract class Account
     protected void Transfer()
     {
         //get customer accounts
-
+        List<string> accountNumbers = CustomerReference.ListOfAccounts;
         //list accounts
+        accountNumbers.Remove(AccountNumber);
 
-        //ask for option
+        List<Account> accountObjects = new List<Account>();
+        StringBuilder invalidOptionPrompt = new StringBuilder();
 
-        //ask for amount#
+        bool exit = false;
+        while (!exit)
+        {
+            //ask for option
+            Console.Clear();
+            Console.Write("""
+            --- Transfer: Account Selection ---
+            Please enter the ID or account number to select
+            Enter 'x' to exit.
+            
+            Enter: 
+            """);
 
+            // Save the current cursor position
+            int currentLeft = Console.CursorLeft;
+            int currentTop = Console.CursorTop;
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"\n{invalidOptionPrompt}");
+            invalidOptionPrompt.Clear();
+            Console.ResetColor();
+
+            Console.WriteLine("=======================");
+            int count = 1;
+            foreach (string accountNumber in accountNumbers)
+            {
+                Account accountObject = AccountUtilities.LoadAccountDetails(accountNumber, CustomerReference);
+                accountObjects.Add(accountObject);
+
+                Console.WriteLine($"""
+                
+                -------- ID: {count,2} ------- 
+                """);
+                accountObject.DisplayAccountDetails();
+                count++;
+            }
+            Console.WriteLine("\n=======================");
+
+            // Move the cursor position to the line where user input is expected
+            Console.SetCursorPosition(currentLeft, currentTop);
+
+            // Then provide the option to send statement or exit
+            string? input = Console.ReadLine();
+            int id;
+            bool validID = int.TryParse(input, out id);
+            if (input.ToLower() == "x")
+            {
+                exit = true;
+            } 
+            else if (validID && id > 0 && id <= accountNumbers.Count)
+            {
+                TransferAmount(accountNumbers[id-1]);
+            }
+            else if(accountNumbers.Contains(input))
+            {
+                TransferAmount(input);
+            }
+            else
+            {
+                invalidOptionPrompt.AppendLine("!!! Invalid ID !!!");
+            }
+        }
+    }
+
+    private void TransferAmount(string accountNumber)
+    {
+        Account TransferToAccount = AccountUtilities.LoadAccountDetails($"{accountNumber}", CustomerReference);
+        decimal amount =0;
+
+        StringBuilder invalidPrompt = new StringBuilder();
+        string? input;
+        do
+        {
+            // Display account details and payment header including account from and to
+            Console.Clear();
+            DisplayAccountDetails();
+            Console.WriteLine($"""
+
+                ------- Transfer ------
+                From: {this.AccountNumber}
+                To: {TransferToAccount.AccountNumber}
+                -----------------------
+                """);
+
+            // Display any previous error messages
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(invalidPrompt.ToString());
+            Console.ResetColor();
+            invalidPrompt.Clear();
+
+            // Ask for input
+            Console.Write("Enter an amount: ");
+            input = Console.ReadLine();
+
+        } while (!ValidateWithdrawInput(ref amount, input, ref invalidPrompt) || !TransferToAccount.ValidateDepositInput(ref amount, input, ref invalidPrompt));
+
+        // Deduct the payment amount from the sender's account
+        this.DeductFromBalance(amount, TransactionType.Transfer);
+
+        Console.WriteLine();
+        // Add the payment amount to the payee's account
+        TransferToAccount.AddToBalance(amount, TransactionType.Transfer);
+
+        // Display payment success message
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("Transfer successful!");
+        Console.ResetColor();
+        Thread.Sleep(1000);
     }
 
     protected void DeductFromBalance(decimal amount, TransactionType transactionType)
