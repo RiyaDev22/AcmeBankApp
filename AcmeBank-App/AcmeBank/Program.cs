@@ -8,18 +8,16 @@ namespace AcmeBank
         static void Main(string[] args)
         {
             //Create a new Teller object which displays the login screen once the application starts
-            Teller oTeller = new Teller();
-
+            //Teller oTeller = new Teller();
 
             //Customer newCustomer = CustomerUtilities.CreateCustomer();
-
-            /*DateOnly dob = DateOnly.Parse("17/04/2001");
-            Customer kawsar = CustomerUtilities.LoadCustomerDetails("Kawsar", "Hussain", "", dob, "E15 5DP");
+          
+            DateOnly dob = DateOnly.Parse("17/04/2001");
+            Customer kawsar = CustomerUtilities.LoadCustomerDetails("Kawsar","Hussain","", dob, "E15 5DP");
             Account account = AccountUtilities.LoadAccountDetails(kawsar.ListOfAccounts[0], kawsar);
-            account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options*/
-
-
-            //Initialise a string list which will contain customer's details
+            account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options
+          
+          //Initialise a string list which will contain customer's details
             List<string> slCustomers = populateStringList();
             //Initialise a customer list which will contain customer's details from the string list
             List<Customer> clCustomers = populateCustomerList(slCustomers);    
@@ -87,17 +85,17 @@ namespace AcmeBank
                         break;
                     case "*":
                         //Log teller out
-                        oTeller.logout();
+                        //oTeller.logout();
                         //Pause the application for 1 second
                         Thread.Sleep(1000);
                         //Clear the console
                         Console.Clear();
                         //Prompt the teller to log back in
-                        oTeller.login();
+                        //oTeller.login();
                         break;
                     case "x":
                         //Logs teller out
-                        oTeller.logout();
+                        //oTeller.logout();
                         //Pause the application for 1 second
                         Thread.Sleep(1000);
                         //Print message
@@ -115,6 +113,18 @@ namespace AcmeBank
                         break;
                 }
             }
+        }
+      
+      public static Customer CreateCustomer()
+        {
+            Console.WriteLine("""
+                Hello and welcome to a new and Exciting Journey with us.
+                I will start by asking for your name.
+
+                """);
+            string firstName = InputUtilities.StringInputHandling("What is your first name", true);
+            string lastName = InputUtilities.StringInputHandling("what is your last name", true);
+            string otherName = InputUtilities.StringInputHandling("what is your middle name/s", true, true);            
         }
 
         private static List<string> populateStringList()
@@ -191,7 +201,6 @@ namespace AcmeBank
                                              saCustomerDetails[7].ToString(),   //Security Answer
                                              doCreationDate,                    //Account Creation Date
                                              slAccountNumbers));                //Account Numbers
-
             }
             //Return customer list
             return clCustomers;
