@@ -231,6 +231,8 @@ namespace AcmeBank
                 Account oAccount = AccountUtilities.LoadAccountDetails(oCustomer.ListOfAccounts[0], oCustomer);
                 //Display account options based on the account number and customer
                 oAccount.AccountOptionsLoop();
+                //Clear console
+                Console.Clear();
             }
             //Else if the customer has multiple account numbers
             else if (oCustomer.ListOfAccounts.Count > 1)
@@ -286,6 +288,8 @@ namespace AcmeBank
                 Account oAccount = AccountUtilities.LoadAccountDetails(sAccountNumber, oCustomer);
                 //Display account options based on the account number and customer
                 oAccount.AccountOptionsLoop();
+                //Clear console
+                Console.Clear();
             }
             /*Account account = AccountUtilities.LoadAccountDetails("67890123");
             account.AccountOptionsLoop(); // this is a place holder for now and just holds the basic shared options*/

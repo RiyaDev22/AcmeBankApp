@@ -108,8 +108,6 @@ public abstract class Account
                 Statements.StatementOptions(AccountNumber, CustomerReference);
                 break;
             case "x":
-                //Clear console
-                Console.Clear();
                 // Exit the loop if the user chooses to exit
                 return true;
             default:
