@@ -99,7 +99,7 @@
             Console.WriteLine(sMenu);
 
             //Store the menu title and the current menu into the global variable
-            _sMenu = _sMenuTitle + sMenu;
+            _sMenu = _sMenuTitle + "\n" + sMenu;
         }
 
         /*This function prompts the teller to input data and checks if the input meets the basic requirements. This is specifically for the Customer Validation class*/
