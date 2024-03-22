@@ -39,11 +39,7 @@ public abstract class Account
 
     public string Address { get { return _address; } }
 
-    public Customer CustomerReference
-    { 
-        get { return _customerReference; }
-        set { _customerReference = value; }
-    }
+    public Customer CustomerReference { get { return _customerReference; } }
     #endregion
 
     #region Methods
@@ -51,6 +47,7 @@ public abstract class Account
     protected virtual void DisplayAccountOptions()
     {
         Console.WriteLine("""
+
                 --- Account options ---
                 1. Deposit
                 2. Withdraw
@@ -139,7 +136,9 @@ public abstract class Account
         string? input;
         decimal amount = 0;
         StringBuilder invalidPrompt = new StringBuilder();
+        StringBuilder helpPrompt = new StringBuilder();
 
+        bool exit = false;
         // Loop until a valid deposit amount is entered
         do
         {
@@ -147,7 +146,11 @@ public abstract class Account
             Console.Clear();
             DisplayAccountDetails();
             Console.WriteLine("""
+
                 ------- Deposit -------
+                ## Provide an amount to deposit into the account.
+                ?? Enter '?' for help.
+                <- Enter 'x' to exit.
                 """);
 
             // Display any previous error messages
@@ -157,10 +160,38 @@ public abstract class Account
             invalidPrompt.Clear();
 
             // Ask for input
-            Console.Write("Enter an amount: ");
+            Console.Write("Amount: ");
+
+            // Save the current cursor position
+            int currentLeft = Console.CursorLeft;
+            int currentTop = Console.CursorTop;
+
+            // Display help information
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine(helpPrompt.ToString());
+            Console.ResetColor();
+            helpPrompt.Clear();
+
+            Console.SetCursorPosition(currentLeft, currentTop);
             input = InputUtilities.GetInputWithinTimeLimit();
 
-        }while(!ValidateDepositInput(ref amount, input, ref invalidPrompt)); // Repeat loop until the deposit amount is valid
+            if (input.ToLower() == "x")
+                exit = true;
+            else if (input.ToLower() == "?")
+            {
+                helpPrompt.Append("""
+
+
+                    -------- Help ---------
+                    For a depoist the input:
+                    + Must be a number
+                    + Must be greater than 0
+                    + (ISA Specific) must be less than the yearly deposit limit
+                    -----------------------
+                    """);
+            }
+
+        } while(!ValidateDepositInput(ref amount, input, ref invalidPrompt) && !exit); // Repeat loop until the deposit amount is valid
 
         AddToBalance(amount, TransactionType.Deposit); // Add the validated deposit amount to the account balance
     }
@@ -174,7 +205,9 @@ public abstract class Account
         string? input;
         decimal amount = 0;
         StringBuilder invalidPrompt = new StringBuilder();
+        StringBuilder helpPrompt = new StringBuilder();
 
+        bool exit = false;
         // Loop until a valid withdrawal amount is entered
         do
         {
@@ -182,7 +215,11 @@ public abstract class Account
             Console.Clear();
             DisplayAccountDetails();
             Console.WriteLine("""
+
                 ------- Withdraw ------
+                ## Provide an amount to withdraw from the account.
+                ?? Enter '?' for help.
+                <- Enter 'x' to exit.
                 """);
 
             // Display any previous error messages
@@ -192,10 +229,37 @@ public abstract class Account
             invalidPrompt.Clear();
 
             // Ask for input
-            Console.Write("Enter an amount: ");
+            Console.Write("Amount: ");
+
+            // Save the current cursor position
+            int currentLeft = Console.CursorLeft;
+            int currentTop = Console.CursorTop;
+
+            // Display help information
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine(helpPrompt.ToString());
+            Console.ResetColor();
+            helpPrompt.Clear();
+
+            Console.SetCursorPosition(currentLeft, currentTop);
             input = InputUtilities.GetInputWithinTimeLimit();
 
-        } while (!ValidateWithdrawInput(ref amount, input, ref invalidPrompt)); // Repeat loop until the withdrawal amount is valid
+
+            if (input.ToLower() == "x")
+                exit = true;
+            else if (input.ToLower() == "?")
+                helpPrompt.Append("""
+
+
+                    -------- Help ---------
+                    For a withdrawal the input:
+                    + Must be a number
+                    + Must be greater than 0
+                    + Account must have sufficient funds including overdraft in some cases
+                    -----------------------
+                    """);
+
+        } while (!ValidateWithdrawInput(ref amount, input, ref invalidPrompt) && !exit); // Repeat loop until the withdrawal amount is valid
 
         // If the account implements deposit limit functionality, update the deposit limit
         if (this is IDepositLimitedAccount depositLimitedAccount)
@@ -216,11 +280,16 @@ public abstract class Account
         StringBuilder invalidPrompt = new StringBuilder();
         List<string> invalidAccountNumbers = new List<string>() { AccountNumber }; // This is a list of a accounts we cannot pay into e.g the customers own accounts.
 
+        bool exit = false;
+
         // Loop until a valid payee account is selected and a valid payment amount is entered
         do
         {
             // Get payee details (sort code and account number)
-            TransactionUtilities.GetPayeeDetails(out string sortCode, out string accountNumber,invalidAccountNumbers);
+            TransactionUtilities.GetPayeeDetails(out string sortCode, out string accountNumber, invalidAccountNumbers, ref exit);
+
+            if (exit) { return; }
+
             payeeAccount = AccountUtilities.LoadAccountDetails($"{accountNumber}", CustomerReference); // Load payee account details based on the provided account number
 
             // Checks if the payee is a savings account if so we provide an error prompt and return preventing the payment
@@ -235,19 +304,24 @@ public abstract class Account
                 Console.Clear();
             }
 
-        } while (payeeAccount == null);
+        } while (payeeAccount == null && !exit);
 
+        StringBuilder helpPrompt = new StringBuilder();
         do
         {
             // Display account details and payment header including account from and to
             Console.Clear();
             DisplayAccountDetails();
             Console.WriteLine($"""
-                ------- Payment -------
-                From: {this.AccountNumber}
-                To: {payeeAccount.AccountNumber}
-                -----------------------
-                """);
+
+            ------- Payment -------
+            From: {this.AccountNumber}
+            To: {payeeAccount.AccountNumber}
+            -----------------------
+            ## Provide an amount for the payment.
+            ?? Enter '?' for help.
+            <- Enter 'x' to exit.
+            """);
 
             // Display any previous error messages
             Console.ForegroundColor = ConsoleColor.Red;
@@ -256,29 +330,39 @@ public abstract class Account
             invalidPrompt.Clear();
 
             // Ask for input
-            Console.Write("Enter an amount: ");
+            Console.Write("Amount: ");
+            // Save the current cursor position
+            int currentLeft = Console.CursorLeft;
+            int currentTop = Console.CursorTop;
+
+            // Display help information
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine(helpPrompt.ToString());
+            Console.ResetColor();
+            helpPrompt.Clear();
+
+            Console.SetCursorPosition(currentLeft, currentTop);
             input = InputUtilities.GetInputWithinTimeLimit();
 
-        } while (!ValidateWithdrawInput(ref amount, input, ref invalidPrompt) || !payeeAccount.ValidateDepositInput(ref amount, input, ref invalidPrompt)); // Repeat loop until both withdrawal and deposit validations pass
+            if (input.ToLower() == "x")
+                return;
+            else if (input.ToLower() == "?")
+                helpPrompt.Append("""
 
-        //ask for reference
-        //Regex.IsMatch(userInput, @"^(?![,\d\s]*$)[^\d,]*$")
-        /*^ and $ ensure that the entire string matches the pattern.
-         * (?![,\d\s]*$) is a negative lookahead assertion that ensures the string doesn't consist only of commas, digits, and spaces. This prevents empty strings as well.
-         *[^\d,]* matches any character that is not a digit or comma, ensuring that commas and numbers are not allowed. */
 
-        //Console.WriteLine($"""
-        //    ------- Payment -------
-        //    From: {this.AccountNumber}
-        //    To: {payeeAccount.AccountNumber}
-        //    Amount: {amount:C}
-        //    -----------------------
-        //    """);
+                    -------- Help ---------
+                    For a payment the input:
+                    + Must be a number
+                    + Must be greater than 0
+                    + Account must have sufficient funds including overdraft in some cases
+                    + Cannot make a payment to an ISA account. Use transfer instead
+                    -----------------------
+                    """);
 
-        //could confirm payment here
+        } while (!ValidateWithdrawInput(ref amount, input, ref invalidPrompt) || !payeeAccount.ValidateDepositInput(ref amount, input, ref invalidPrompt) && !exit); // Repeat loop until both withdrawal and deposit validations pass
 
         // Deduct the payment amount from the sender's account
-        this.DeductFromBalance(amount,TransactionType.Payment);
+        this.DeductFromBalance(amount, TransactionType.Payment);
 
         Console.WriteLine();
         // Add the payment amount to the payee's account
@@ -289,6 +373,7 @@ public abstract class Account
         Console.WriteLine("Payment successful!");
         Console.ResetColor();
         Thread.Sleep(1000);
+        
     }
 
     protected void Transfer()
@@ -306,24 +391,23 @@ public abstract class Account
         {
             //ask for option
             Console.Clear();
-            Console.Write("""
+            Console.WriteLine("""
             --- Transfer: Account Selection ---
-            Please enter the ID or account number to select
-            Enter 'x' to exit.
-            
-            Enter: 
+            ## Please enter the ID or account number to select.
+            <- Enter 'x' to exit. 
             """);
 
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(invalidOptionPrompt);
+            invalidOptionPrompt.Clear();
+            Console.ResetColor();
+
+            Console.Write("Enter: ");
             // Save the current cursor position
             int currentLeft = Console.CursorLeft;
             int currentTop = Console.CursorTop;
 
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"\n{invalidOptionPrompt}");
-            invalidOptionPrompt.Clear();
-            Console.ResetColor();
-
-            Console.WriteLine("=======================");
+            Console.WriteLine("\n\n====== Account(s) =====");
             int count = 1;
             foreach (string accountNumber in accountNumbers)
             {
@@ -360,7 +444,7 @@ public abstract class Account
             }
             else
             {
-                invalidOptionPrompt.AppendLine("!!! Invalid ID !!!");
+                invalidOptionPrompt.Append("!!! Invalid ID !!!");
             }
         }
     }
@@ -460,7 +544,11 @@ public abstract class Account
 
     protected bool ValidateWithdrawInput(ref decimal amount, string? input, ref StringBuilder invalidPrompt)
     {
-        if (!decimal.TryParse(input, out amount)) // Validate input is a decimal number
+        if (input == "x" || input == "?")
+        {
+            return false;
+        }
+        else if (!decimal.TryParse(input, out amount)) // Validate input is a decimal number
         {
             invalidPrompt.Append("!!! invalid input !!!");
         } 
@@ -485,7 +573,11 @@ public abstract class Account
 
     protected bool ValidateDepositInput(ref decimal amount, string? input, ref StringBuilder invalidPrompt)
     {
-        if (!decimal.TryParse(input, out amount)) // Validate input is a decimal number
+        if (input == "x" || input == "?")
+        {
+            return false;
+        }
+        else if (!decimal.TryParse(input, out amount)) // Validate input is a decimal number
         {
             invalidPrompt.Append("!!! invalid input !!!");
         } 

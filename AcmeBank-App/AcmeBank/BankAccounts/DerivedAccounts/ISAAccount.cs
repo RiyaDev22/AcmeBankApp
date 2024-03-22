@@ -105,13 +105,15 @@ public class ISAAccount : Account, IDepositLimitedAccount
     protected override void DisplayAccountOptions()
     {
         Console.WriteLine("""
+
                 --- Account options ---
                 1. Deposit
                 2. Withdraw
                 3. Transfer
-                4. Calculate interest (Test)
+                4. Calculate Interest
                 5. Statement
-                X. Exit
+
+                x. Exit
                 -----------------------
                 """);
     }
@@ -131,7 +133,7 @@ public class ISAAccount : Account, IDepositLimitedAccount
                 Transfer();
                 break;
             case "4":
-                CalculateAndApplyInterest();
+                CalculateInterest();
                 break;
             case "x":
                 // Exit the loop if the user chooses to exit
@@ -148,7 +150,7 @@ public class ISAAccount : Account, IDepositLimitedAccount
         return false; //does not exit the loop
     }
 
-    private void CalculateAndApplyInterest()
+    private void CalculateInterest()
     {
         // Load transaction history
         List<Transaction>transactionHistory = TransactionUtilities.LoadTransactionHistory(AccountNumber);
@@ -208,12 +210,16 @@ public class ISAAccount : Account, IDepositLimitedAccount
         yearlBalanceSum += previousBalance * daysGap;
 
         decimal interestGained = (yearlBalanceSum / daysSum) * 0.0275m;
-        AddToBalance(interestGained, TransactionType.Interest);
+        //AddToBalance(interestGained, TransactionType.Interest);
 
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"You have recieved: {interestGained:C2} in interest");
+        Console.WriteLine($"""
+
+            From {targetDate:D} -> {currentDate.Date:D}
+            You have gained {interestGained:C2} in interest
+            """);
         Console.ResetColor();
-        Thread.Sleep(1500); // Pauses for 1.5seconds
+        Thread.Sleep(4000); // Pauses for 4 seconds
     }
     #endregion
 
