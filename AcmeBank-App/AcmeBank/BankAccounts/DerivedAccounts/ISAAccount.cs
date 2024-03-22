@@ -110,7 +110,6 @@ public class ISAAccount : Account, IDepositLimitedAccount
                 1. Deposit
                 2. Withdraw
                 3. Transfer
-                4. Calculate interest (Test)
                 5. Statement
 
                 x. Exit
@@ -131,9 +130,6 @@ public class ISAAccount : Account, IDepositLimitedAccount
                 break;
             case "3":
                 Transfer();
-                break;
-            case "4":
-                CalculateAndApplyInterest();
                 break;
             case "x":
                 // Exit the loop if the user chooses to exit

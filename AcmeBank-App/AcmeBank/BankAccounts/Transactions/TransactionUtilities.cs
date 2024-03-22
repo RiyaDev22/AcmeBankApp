@@ -33,6 +33,8 @@ internal class TransactionUtilities
         accountNumber = "";
 
         StringBuilder invalidPrompt = new StringBuilder();
+        StringBuilder helpPrompt = new StringBuilder();
+
         bool validInputs = false;
         do
         {
@@ -40,7 +42,7 @@ internal class TransactionUtilities
             Console.Clear();
             Console.WriteLine("""
                 ---- Payee details ----
-                ## Please provide the details of the account they want to make a payment to
+                ## Please provide the details of the account they want to make a payment to.
                 <- Enter x at any point to exit.
                 """);
 
@@ -61,7 +63,7 @@ internal class TransactionUtilities
             { 
                 exit = true;
                 return;
-            } 
+            }
             else if(!TransactionUtilities.VerifySortCode(sortCode))
             {
                 invalidPrompt.Append("!!! Invalid sort code !!!");

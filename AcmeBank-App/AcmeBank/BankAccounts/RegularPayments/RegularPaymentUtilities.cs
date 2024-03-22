@@ -186,7 +186,9 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 Console.Write("Amount: ");
                 amountInput = Console.ReadLine();
 
-                if (!decimal.TryParse(amountInput, out amount))
+                if (amountInput.ToLower() == "x")
+                    return;
+                else if (!decimal.TryParse(amountInput, out amount))
                     amountInvalidPrompt.Append("!!! Must be a number !!!");
                 else if (amount <= 0)
                     amountInvalidPrompt.Append("!!! Must be greater than 0 !!!");
@@ -225,6 +227,8 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 startDateInput = Console.ReadLine();
 
                 bool checkDate = DateTime.TryParse(startDateInput, out startDate);
+                if (startDateInput.ToLower() == "x")
+                    return;
                 if (!(dateRegex.IsMatch(startDateInput) && checkDate))
                     startDateInvalidPrompt.Append("!!! Invalid date - must follow the format (DD-MM-YYYY) !!!");
                 else if (startDate <= DateTime.Today)
