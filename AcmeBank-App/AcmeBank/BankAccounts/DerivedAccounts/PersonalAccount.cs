@@ -141,7 +141,7 @@ public class PersonalAccount : Account, IOverdraftAccount
     protected void RequestDebitCard()
     {
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"A new debit card will be sent to {Address}");
+        Console.WriteLine($"A new debit card will be sent to this account's address at {Address}");
         Console.ResetColor();
         Thread.Sleep(1500);
     }

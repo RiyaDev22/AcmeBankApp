@@ -79,7 +79,7 @@ public abstract class Account
 
             // Ask the user to enter an option
             Console.Write("Enter an option: ");
-            string optionInput = Console.ReadLine();
+            string optionInput = InputUtilities.GetInputWithinTimeLimit();
 
             exit = HandleOption(optionInput, ref invalidPrompt);
         }
@@ -425,7 +425,7 @@ public abstract class Account
             Console.SetCursorPosition(currentLeft, currentTop);
 
             // Then provide the option to send statement or exit
-            string? input = Console.ReadLine();
+            string? input = InputUtilities.GetInputWithinTimeLimit();
             int id;
             bool validID = int.TryParse(input, out id);
             if (input.ToLower() == "x")
@@ -475,7 +475,7 @@ public abstract class Account
 
             // Ask for input
             Console.Write("Enter an amount: ");
-            input = Console.ReadLine();
+            input = InputUtilities.GetInputWithinTimeLimit();
 
         } while (!ValidateWithdrawInput(ref amount, input, ref invalidPrompt) || !TransferToAccount.ValidateDepositInput(ref amount, input, ref invalidPrompt));
 

@@ -119,7 +119,7 @@ internal class Statements
         Console.SetCursorPosition(currentLeft, currentTop);
 
         // Then provide the option to send statement or exit
-        string? input = Console.ReadLine();
+        string? input = InputUtilities.GetInputWithinTimeLimit();
         if (input.ToLower() == "y")
         {
             Account account = AccountUtilities.LoadAccountDetails(accountNumber,_currentCustomer);

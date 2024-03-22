@@ -41,7 +41,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
 
                 // Ask the user to enter an option
                 Console.Write("Enter an option: ");
-                string optionInput = Console.ReadLine();
+                string optionInput = InputUtilities.GetInputWithinTimeLimit();
 
                 exit = HandleRPOption(optionInput, ref invalidPrompt);
             }
@@ -96,7 +96,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
 
                 // Ask the user to enter an option
                 Console.Write("Enter an option: ");
-                string optionInput = Console.ReadLine();
+                string optionInput = InputUtilities.GetInputWithinTimeLimit();
 
                 exit = HandleSOOption(optionInput, ref invalidPrompt);
             }
@@ -253,7 +253,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 Your choice: 
                 """);
 
-            string? confirmInput = Console.ReadLine();
+            string? confirmInput = InputUtilities.GetInputWithinTimeLimit();
             if (confirmInput.ToLower() == "y")
             {
                 // Save to a file
@@ -411,7 +411,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 Console.SetCursorPosition(currentLeft, currentTop);
 
                 // Then provide the option to send statement or exit
-                string? input = Console.ReadLine();
+                string? input = InputUtilities.GetInputWithinTimeLimit();
                 int id;
                 bool validID = int.TryParse(input, out id);
                 if (input.ToLower() == "x")
@@ -520,7 +520,7 @@ namespace AcmeBank.BankAccounts.RegularPayments
                 Console.SetCursorPosition(currentLeft, currentTop);
 
                 // Then provide the option to send statement or exit
-                string? input = Console.ReadLine();
+                string? input = InputUtilities.GetInputWithinTimeLimit();
                 int id;
                 bool validID = int.TryParse(input, out id);
                 if (input.ToLower() == "x")

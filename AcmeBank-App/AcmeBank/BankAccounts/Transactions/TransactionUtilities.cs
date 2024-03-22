@@ -57,7 +57,7 @@ internal class TransactionUtilities
                 Please enter Sort Code. e.g (123456)
                 Sort Code: 
                 """);
-            sortCode = Console.ReadLine();
+            sortCode = InputUtilities.GetInputWithinTimeLimit();
 
             if(sortCode.ToLower() == "x") 
             { 
@@ -75,7 +75,7 @@ internal class TransactionUtilities
                 Please enter Account Number. e.g (12345678)
                 Account Number: 
                 """);
-            accountNumber = Console.ReadLine();
+            accountNumber = InputUtilities.GetInputWithinTimeLimit();
 
             if (accountNumber.ToLower() == "x")
             {

@@ -60,7 +60,7 @@
             do
             {
                 //Prompt teller to enter their username
-                string? sUsernameInput = Console.ReadLine();
+                string? sUsernameInput = InputUtilities.GetInputWithinTimeLimit();
 
                 if (sUsernameInput.CompareTo("x") == 0)
                 {
@@ -87,7 +87,7 @@
                         //Print the message
                         Console.Write($"""
                                         --- Teller Login ---
-                                        *. Go Back
+                                        [*] Go Back
 
                                         Username: {sUsername}
                                         Password: 
@@ -96,7 +96,7 @@
                         while (!bPasswordValid)
                         {
                             //Prompt teller to enter their password
-                            string? sPasswordInput = Console.ReadLine();
+                            string? sPasswordInput = InputUtilities.GetInputWithinTimeLimit();
                             if (sPasswordInput.CompareTo("*") == 0)
                             {
                                 //Set boolean to false
@@ -106,7 +106,7 @@
                                 //Print initial login screen
                                 Console.Write("""
                                                 --- Teller Login ---
-                                                x. Quit
+                                                [x] Quit
 
                                                 Username: 
                                                 """);
@@ -121,8 +121,8 @@
                                 Console.Clear();
                                 //Print message
                                 Console.Write($"Welcome {sUsername}!");
-                                //Pause the app for 2 seconds for the above message to be displayed
-                                Thread.Sleep(2000);
+                                //Pause the app for 1.5 seconds for the above message to be displayed
+                                Thread.Sleep(1500);
                                 //Clear the console
                                 Console.Clear();
                             }
