@@ -4,17 +4,20 @@
     {
         #region Global Variables
 
+        /*These global variables are used to store the user input values for customer validation*/
         private string? _sFirstName;
         private string? _sLastName;
         private string? _sDob;
         private string? _sPostcode;
+        /*These global variables are used to store the current menu and the title*/
         private string? _sMenu;
         private string? _sMenuTitle = "---Customer Validation---";
 
         #endregion
 
         #region Methods
-        public Customer? ValidateCustomer(List<Customer> clCustomers)
+        /*This function retrieves and validates customer's details, the security question and answer*/
+        public Customer? validateCustomer(List<Customer> clCustomers)
         {
             //Invoke function to retrieve details from user input and store them into the global variables
             retrieveAndStoreDetails();
@@ -61,6 +64,7 @@
             return null;
         }
 
+        /*This function displays the menu and stores data that meets the basic requirements*/
         private void retrieveAndStoreDetails()
         {
             //Clear the console
@@ -94,9 +98,11 @@
             //Print the menu
             Console.WriteLine(sMenu);
 
-            _sMenu = _sMenuTitle + sMenu;
+            //Store the menu title and the current menu into the global variable
+            _sMenu = _sMenuTitle + "\n" + sMenu;
         }
 
+        /*This function prompts the teller to input data and checks if the input meets the basic requirements. This is specifically for the Customer Validation class*/
         private string askForInputAndCheck(string sMenu)
         {
             //Boolean which determines if the input is valid
@@ -130,22 +136,9 @@
             } while (!bInputValid); //Keep executing until the input meets the basic requirements
             //Clear console
             Console.Clear();
-            //Trim leading and trailing whitespaces
             //Return a string that meets the basic requirements
             return sInput;
         }
-
-        /*private bool validateDetails(Customer oCustomer)
-        {
-            if (_sFirstName.ToLower().CompareTo(oCustomer.FirstName.ToLower()) == 0 &&
-                _sLastName.ToLower().CompareTo(oCustomer.LastName.ToLower()) == 0 &&
-                (DateOnly.TryParse(_sDob, out DateOnly doDob) && doDob.CompareTo(oCustomer.DateOfBirth) == 0) &&
-                _sPostcode.ToLower().Replace(" ", "").CompareTo(oCustomer.PostCode.ToLower().Replace(" ", "")) == 0)
-            {
-                return true;
-            }
-            else return false;
-        }*/
         #endregion
     }
 }
