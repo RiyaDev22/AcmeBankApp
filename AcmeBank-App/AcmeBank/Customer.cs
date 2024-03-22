@@ -68,7 +68,7 @@ public class Customer
     public string OtherName
     {
         get { return this._otherName; }
-        set { this._lastName = value; }
+        set { this._otherName = value; }
     }
 
     public DateOnly DateOfBirth
